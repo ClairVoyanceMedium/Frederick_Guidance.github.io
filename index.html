@@ -191,27 +191,26 @@
     <script>
 document.addEventListener("DOMContentLoaded", () => {
     // Ajouter les attributs data-translate pour les éléments textuels
-    const elements = document.querySelectorAll("body *:not(script):not(style):not(meta)");
+    const addDataTranslateAttributes = () => {
+        const elements = document.querySelectorAll("body *:not(script):not(style):not(meta)");
+        elements.forEach((element, index) => {
+            if (
+                element.childNodes.length === 1 &&
+                element.childNodes[0].nodeType === Node.TEXT_NODE &&
+                element.textContent.trim() !== ""
+            ) {
+                element.setAttribute("data-translate", `translate-key-${index}`);
+            }
+        });
+    };
 
-    elements.forEach((element, index) => {
-        if (
-            element.childNodes.length === 1 &&
-            element.childNodes[0].nodeType === Node.TEXT_NODE &&
-            element.textContent.trim() !== ""
-        ) {
-            element.setAttribute("data-translate", `translate-key-${index}`);
-        }
-    });
-
-    // Fonction principale pour détecter la langue et appliquer les traductions
-    async function detectLanguageAndTranslate() {
+    // Détecter la langue et appliquer les traductions
+    const detectLanguageAndTranslate = async () => {
         try {
-            // Détection de la langue via GeoPlugin
             const geoResponse = await fetch('https://secure.geoplugin.net/json.gp');
             const geoData = await geoResponse.json();
             const countryCode = geoData.geoplugin_countryCode || 'FR'; // France par défaut
 
-            // Mapping des pays vers les langues
             const languageMap = {
                 FR: 'fr', US: 'en', GB: 'en', CA: 'en', CN: 'zh', TW: 'zh', HK: 'zh',
                 ES: 'es', MX: 'es', AR: 'es', IN: 'hi', PK: 'ur', JP: 'ja', RU: 'ru',
@@ -220,25 +219,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 ZM: 'sw', KE: 'sw', BD: 'bn', ZA: 'en'
             };
 
-            // Déterminer la langue détectée ou utiliser l'anglais par défaut
             const detectedLanguage = languageMap[countryCode] || 'en';
-
-            // Charger les traductions
             const translations = await loadTranslations(detectedLanguage);
-
-            // Appliquer les traductions sur la page
             applyTranslations(translations);
         } catch (error) {
-            console.error('Erreur lors de la détection ou de la traduction :', error);
-
-            // En cas d'échec, charger les traductions en anglais par défaut
+            console.error('Erreur lors de la détection de la langue :', error);
             const fallbackTranslations = await loadTranslations('en');
             applyTranslations(fallbackTranslations);
         }
-    }
+    };
 
-    // Fonction pour charger les traductions
-    async function loadTranslations(language) {
+    // Charger les fichiers de traductions
+    const loadTranslations = async (language) => {
         try {
             const response = await fetch(`/translations/${language}.json`);
             if (!response.ok) throw new Error('Fichier JSON introuvable.');
@@ -248,20 +240,20 @@ document.addEventListener("DOMContentLoaded", () => {
             const fallbackResponse = await fetch(`/translations/en.json`);
             return await fallbackResponse.json();
         }
-    }
+    };
 
-    // Fonction pour appliquer les traductions aux éléments avec data-translate
-    function applyTranslations(translations) {
+    // Appliquer les traductions aux éléments avec data-translate
+    const applyTranslations = (translations) => {
         const elements = document.querySelectorAll("[data-translate]");
-
         elements.forEach((element) => {
             const key = element.getAttribute("data-translate");
             const translatedText = translations[key] || element.textContent; // Texte original si la traduction manque
             element.textContent = translatedText;
         });
-    }
+    };
 
-    // Lancer la détection et la traduction après le chargement de la page
+    // Lancer les fonctions
+    addDataTranslateAttributes();
     detectLanguageAndTranslate();
 });
 </script>
