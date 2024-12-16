@@ -189,19 +189,6 @@
     </footer>
 
     <script>
-document.addEventListener("DOMContentLoaded", () => {
-    // Sélectionner tous les éléments textuels (à l'intérieur de `body`)
-    const elements = document.querySelectorAll("body *:not(script):not(style):not(meta)");
-
-    elements.forEach((element, index) => {
-        // Vérifier si l'élément contient un texte non vide
-        if (
-            element.childNodes.length === 1 &&
-            element.childNodes[0].nodeType === Node.TEXT_NODE &&
-            element.textContent.trim() !== ""
-        ) {
-            // Générer une clé unique pour chaque élément
-            const translateKey = `translate-key-${index}`;
 
             // Ajouter l'attribut data-translate avec cette clé
             element.setAttribute("data-translate", translateKey);
@@ -215,7 +202,7 @@ document.addEventListener("DOMContentLoaded", () => {
 async function detectLanguageAndTranslate() {
     try {
         // Détection de la langue via GeoPlugin
-        const geoResponse = await fetch('https://www.geoplugin.net/json.gp');
+        const geoResponse = await fetch('https://secure.geoplugin.net/json.gp');
         const geoData = await geoResponse.json();
         const countryCode = geoData.geoplugin_countryCode || 'FR'; // France par défaut
 
