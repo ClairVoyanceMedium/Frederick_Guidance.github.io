@@ -271,6 +271,23 @@ function applyTranslations(translations) {
 // Lancer la détection et la traduction après le chargement de la page
 detectLanguageAndTranslate();
 </script>
+
+<!-- Script pour ajouter les attributs data-translate -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const elements = document.querySelectorAll("body *:not(script):not(style):not(meta)");
+
+    elements.forEach((element, index) => {
+        if (
+            element.childNodes.length === 1 &&
+            element.childNodes[0].nodeType === Node.TEXT_NODE &&
+            element.textContent.trim() !== ""
+        ) {
+            element.setAttribute("data-translate", `translate-key-${index}`);
+        }
+    });
+});
+</script>
 </body>
 
 </html>
