@@ -193,7 +193,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     const addDataTranslateAttributes = () => {
         const elements = document.querySelectorAll("body *:not(script):not(style):not(meta)");
-
         elements.forEach((element, index) => {
             if (
                 element.childNodes.length === 1 &&
@@ -207,10 +206,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const detectLanguageAndTranslate = async () => {
         try {
+            // Détection de la langue
             const geoResponse = await fetch('https://secure.geoplugin.net/json.gp');
             const geoData = await geoResponse.json();
             const countryCode = geoData.geoplugin_countryCode || 'FR';
 
+            // Mapping des langues
             const languageMap = {
                 FR: 'fr', US: 'en', GB: 'en', CA: 'en', CN: 'zh', TW: 'zh', HK: 'zh',
                 ES: 'es', MX: 'es', AR: 'es', IN: 'hi', PK: 'ur', JP: 'ja', RU: 'ru',
@@ -221,21 +222,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const detectedLanguage = languageMap[countryCode] || 'en';
             const translations = await loadTranslations(detectedLanguage);
-
             applyTranslations(translations);
         } catch (error) {
             console.error("Erreur lors de la détection ou du chargement des traductions :", error);
-            alert("Une erreur est survenue lors du chargement des traductions.");
+            alert("Impossible de charger les traductions. Veuillez réessayer.");
         }
     };
 
     const loadTranslations = async (language) => {
         try {
             const response = await fetch(`/translations/${language}.json`);
-            if (!response.ok) throw new Error('Fichier JSON introuvable.');
+            if (!response.ok) throw new Error(`Fichier JSON introuvable pour la langue : ${language}`);
             return await response.json();
         } catch (error) {
-            console.warn(`Traductions introuvables pour la langue : ${language}.`);
+            console.warn(`Traductions non disponibles pour ${language}. Utilisation des traductions par défaut.`);
             const fallbackResponse = await fetch(`/translations/en.json`);
             return await fallbackResponse.json();
         }
@@ -243,13 +243,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const applyTranslations = (translations) => {
         const elements = document.querySelectorAll("[data-translate]");
-
         elements.forEach((element) => {
             const key = element.getAttribute("data-translate");
             element.textContent = translations[key] || element.textContent;
         });
     };
 
+    // Lancer les fonctions
     addDataTranslateAttributes();
     detectLanguageAndTranslate();
 });
