@@ -192,73 +192,61 @@
     <script>
     async function detectLanguageAndTranslate() {
         try {
-            // Détecter la localisation de l'utilisateur avec GeoPlugin
+            // Détection de la localisation utilisateur avec GeoPlugin
             const geoResponse = await fetch('http://www.geoplugin.net/json.gp');
             const geoData = await geoResponse.json();
             const countryCode = geoData.geoplugin_countryCode || 'FR'; // Par défaut : France
 
-            // Correspondance entre les pays et les langues les plus parlées
+            // Mapping des langues par pays
             const languageMap = {
-                FR: 'fr', // Français
-                US: 'en', // Anglais
-                GB: 'en', // Anglais
-                CA: 'en', // Anglais (Canada)
-                CN: 'zh', // Chinois
-                TW: 'zh', // Chinois (Taïwan)
-                HK: 'zh', // Chinois (Hong Kong)
-                ES: 'es', // Espagnol
-                MX: 'es', // Espagnol (Mexique)
-                AR: 'es', // Espagnol (Argentine)
-                IN: 'hi', // Hindi
-                PK: 'ur', // Ourdou
-                JP: 'ja', // Japonais
-                RU: 'ru', // Russe
-                DE: 'de', // Allemand
-                IT: 'it', // Italien
-                PT: 'pt', // Portugais
-                BR: 'pt', // Portugais (Brésil)
-                KR: 'ko', // Coréen
-                VN: 'vi', // Vietnamien
-                ID: 'id', // Indonésien
-                TH: 'th', // Thaïlandais
-                TR: 'tr', // Turc
-                SA: 'ar', // Arabe (Arabie Saoudite)
-                AE: 'ar', // Arabe (Émirats arabes unis)
-                EG: 'ar', // Arabe (Égypte)
-                IR: 'fa', // Persan (Iran)
-                NG: 'yo', // Yoruba
-                ZM: 'sw', // Swahili
-                KE: 'sw', // Swahili (Kenya)
-                BD: 'bn', // Bengali
-                ZA: 'en', // Anglais (Afrique du Sud)
-                // Ajoutez d'autres pays et langues ici si nécessaire
+                FR: 'fr', US: 'en', GB: 'en', CA: 'en', CN: 'zh', TW: 'zh', HK: 'zh',
+                ES: 'es', MX: 'es', AR: 'es', IN: 'hi', PK: 'ur', JP: 'ja', RU: 'ru',
+                DE: 'de', IT: 'it', PT: 'pt', BR: 'pt', KR: 'ko', VN: 'vi', ID: 'id',
+                TH: 'th', TR: 'tr', SA: 'ar', AE: 'ar', EG: 'ar', IR: 'fa', NG: 'yo',
+                ZM: 'sw', KE: 'sw', BD: 'bn', ZA: 'en'
             };
 
-            // Déterminer la langue par défaut ou selon la correspondance
-            const language = languageMap[countryCode] || 'en'; // Par défaut : anglais
+            // Déterminer la langue détectée ou utiliser l'anglais par défaut
+            const detectedLanguage = languageMap[countryCode] || 'en';
 
-            // Charger les traductions correspondantes
-            const response = await fetch(`/translations/${language}.json`);
-            const translations = await response.json();
+            // Charger les traductions de la langue détectée
+            const translations = await loadTranslations(detectedLanguage);
 
             // Appliquer les traductions sur la page
-            document.getElementById('header-text').textContent = translations.header;
-            document.getElementById('main-title').textContent = translations.title;
-            document.getElementById('cta-button').textContent = translations.cta;
-            document.getElementById('description').textContent = translations.description;
-            document.getElementById('tarifs-title').textContent = translations.tarifs.title;
-
-            const tarifsList = document.getElementById('tarifs-list');
-            tarifsList.innerHTML = '';
-            translations.tarifs.items.forEach(item => {
-                const li = document.createElement('li');
-                li.textContent = item;
-                tarifsList.appendChild(li);
-            });
+            applyTranslations(translations);
 
         } catch (error) {
             console.error('Erreur lors de la détection ou de la traduction :', error);
+
+            // En cas d'échec, charger les traductions par défaut (anglais)
+            const fallbackTranslations = await loadTranslations('en');
+            applyTranslations(fallbackTranslations);
         }
+    }
+
+    async function loadTranslations(language) {
+        try {
+            // Charger le fichier JSON de traduction correspondant
+            const response = await fetch(`/translations/${language}.json`);
+            if (!response.ok) throw new Error('Fichier JSON non trouvé.');
+            return await response.json();
+        } catch (error) {
+            console.warn(`Traductions introuvables pour la langue : ${language}. Utilisation de l'anglais.`);
+            // Charger les traductions par défaut (anglais) en cas d'erreur
+            const fallbackResponse = await fetch(`/translations/en.json`);
+            return await fallbackResponse.json();
+        }
+    }
+
+    function applyTranslations(translations) {
+        // Appliquer les traductions dynamiquement
+        const elements = document.querySelectorAll('[data-translate]');
+
+        elements.forEach(element => {
+            const key = element.getAttribute('data-translate');
+            const translatedText = translations[key] || `[[${key}]]`; // Placeholder si traduction manquante
+            element.textContent = translatedText;
+        });
     }
 
     // Appeler la fonction de détection et traduction
