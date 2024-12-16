@@ -193,6 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Ajouter les attributs data-translate pour les éléments textuels
     const addDataTranslateAttributes = () => {
         const elements = document.querySelectorAll("body *:not(script):not(style):not(meta)");
+
         elements.forEach((element, index) => {
             if (
                 element.childNodes.length === 1 &&
@@ -204,7 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // Détecter la langue et appliquer les traductions
+    // Détecter la langue de l'utilisateur et charger les traductions
     const detectLanguageAndTranslate = async () => {
         try {
             const geoResponse = await fetch('https://secure.geoplugin.net/json.gp');
@@ -221,30 +222,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const detectedLanguage = languageMap[countryCode] || 'en';
             const translations = await loadTranslations(detectedLanguage);
+
             applyTranslations(translations);
         } catch (error) {
-            console.error('Erreur lors de la détection de la langue :', error);
+            console.error("Erreur lors de la détection ou du chargement des traductions :", error);
             const fallbackTranslations = await loadTranslations('en');
             applyTranslations(fallbackTranslations);
         }
     };
 
-    // Charger les fichiers de traductions
+    // Charger les traductions depuis un fichier JSON
     const loadTranslations = async (language) => {
         try {
             const response = await fetch(`/translations/${language}.json`);
             if (!response.ok) throw new Error('Fichier JSON introuvable.');
             return await response.json();
         } catch (error) {
-            console.warn(`Traductions introuvables pour la langue : ${language}. Chargement des traductions par défaut.`);
+            console.warn(`Traductions introuvables pour la langue : ${language}. Utilisation des traductions par défaut.`);
             const fallbackResponse = await fetch(`/translations/en.json`);
             return await fallbackResponse.json();
         }
     };
 
-    // Appliquer les traductions aux éléments avec data-translate
+    // Appliquer les traductions sur les éléments avec data-translate
     const applyTranslations = (translations) => {
         const elements = document.querySelectorAll("[data-translate]");
+
         elements.forEach((element) => {
             const key = element.getAttribute("data-translate");
             const translatedText = translations[key] || element.textContent; // Texte original si la traduction manque
@@ -256,6 +259,7 @@ document.addEventListener("DOMContentLoaded", () => {
     addDataTranslateAttributes();
     detectLanguageAndTranslate();
 });
+
 </script>
 </body>
 
