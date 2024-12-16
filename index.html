@@ -191,27 +191,23 @@
 
     <script>
 document.addEventListener("DOMContentLoaded", () => {
-    // Ajouter les attributs data-translate pour les éléments textuels
-    const addDataTranslateAttributes = () => {
-        const elements = document.querySelectorAll("body *:not(script):not(style):not(meta)");
+    const elements = document.querySelectorAll("body *:not(script):not(style):not(meta)");
 
-        elements.forEach((element, index) => {
-            if (
-                element.childNodes.length === 1 &&
-                element.childNodes[0].nodeType === Node.TEXT_NODE &&
-                element.textContent.trim() !== ""
-            ) {
-                element.setAttribute("data-translate", `translate-key-${index}`);
-            }
-        });
-    };
+    elements.forEach((element, index) => {
+        if (
+            element.childNodes.length === 1 &&
+            element.childNodes[0].nodeType === Node.TEXT_NODE &&
+            element.textContent.trim() !== ""
+        ) {
+            element.setAttribute("data-translate", `translate-key-${index}`);
+        }
+    });
 
-    // Détecter la langue de l'utilisateur et charger les traductions
     const detectLanguageAndTranslate = async () => {
         try {
             const geoResponse = await fetch('https://secure.geoplugin.net/json.gp');
             const geoData = await geoResponse.json();
-            const countryCode = geoData.geoplugin_countryCode || 'FR'; // France par défaut
+            const countryCode = geoData.geoplugin_countryCode || 'FR';
 
             const languageMap = {
                 FR: 'fr', US: 'en', GB: 'en', CA: 'en', CN: 'zh', TW: 'zh', HK: 'zh',
@@ -223,7 +219,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const detectedLanguage = languageMap[countryCode] || 'en';
             const translations = await loadTranslations(detectedLanguage);
-
             applyTranslations(translations);
         } catch (error) {
             console.error("Erreur lors de la détection ou du chargement des traductions :", error);
@@ -232,32 +227,26 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // Charger les traductions depuis un fichier JSON
     const loadTranslations = async (language) => {
         try {
             const response = await fetch(`/translations/${language}.json`);
             if (!response.ok) throw new Error('Fichier JSON introuvable.');
             return await response.json();
         } catch (error) {
-            console.warn(`Traductions introuvables pour la langue : ${language}. Utilisation des traductions par défaut.`);
+            console.warn(`Traductions introuvables pour la langue : ${language}.`);
             const fallbackResponse = await fetch(`/translations/en.json`);
             return await fallbackResponse.json();
         }
     };
 
-    // Appliquer les traductions sur les éléments avec data-translate
     const applyTranslations = (translations) => {
         const elements = document.querySelectorAll("[data-translate]");
-
         elements.forEach((element) => {
             const key = element.getAttribute("data-translate");
-            const translatedText = translations[key] || element.textContent; // Texte original si la traduction manque
-            element.textContent = translatedText;
+            element.textContent = translations[key] || element.textContent;
         });
     };
 
-    // Lancer les fonctions
-    addDataTranslateAttributes();
     detectLanguageAndTranslate();
 });
 
