@@ -215,7 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
 async function detectLanguageAndTranslate() {
     try {
         // Détection de la langue via GeoPlugin
-        const geoResponse = await fetch('http://www.geoplugin.net/json.gp');
+        const geoResponse = await fetch('https://www.geoplugin.net/json.gp');
         const geoData = await geoResponse.json();
         const countryCode = geoData.geoplugin_countryCode || 'FR'; // France par défaut
 
