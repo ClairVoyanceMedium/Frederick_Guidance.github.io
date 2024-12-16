@@ -190,67 +190,64 @@
 
     <!-- Script de détection et traduction -->
     <script>
-    async function detectLanguageAndTranslate() {
-        try {
-            // Détection de la localisation utilisateur avec GeoPlugin
-            const geoResponse = await fetch('http://www.geoplugin.net/json.gp');
-            const geoData = await geoResponse.json();
-            const countryCode = geoData.geoplugin_countryCode || 'FR'; // Par défaut : France
+async function detectLanguageAndTranslate() {
+    try {
+        // Détection de la langue via GeoPlugin
+        const geoResponse = await fetch('http://www.geoplugin.net/json.gp');
+        const geoData = await geoResponse.json();
+        const countryCode = geoData.geoplugin_countryCode || 'FR'; // France par défaut
 
-            // Mapping des langues par pays
-            const languageMap = {
-                FR: 'fr', US: 'en', GB: 'en', CA: 'en', CN: 'zh', TW: 'zh', HK: 'zh',
-                ES: 'es', MX: 'es', AR: 'es', IN: 'hi', PK: 'ur', JP: 'ja', RU: 'ru',
-                DE: 'de', IT: 'it', PT: 'pt', BR: 'pt', KR: 'ko', VN: 'vi', ID: 'id',
-                TH: 'th', TR: 'tr', SA: 'ar', AE: 'ar', EG: 'ar', IR: 'fa', NG: 'yo',
-                ZM: 'sw', KE: 'sw', BD: 'bn', ZA: 'en'
-            };
+        // Mapping des pays vers les langues
+        const languageMap = {
+            FR: 'fr', US: 'en', GB: 'en', CA: 'en', CN: 'zh', TW: 'zh', HK: 'zh',
+            ES: 'es', MX: 'es', AR: 'es', IN: 'hi', PK: 'ur', JP: 'ja', RU: 'ru',
+            DE: 'de', IT: 'it', PT: 'pt', BR: 'pt', KR: 'ko', VN: 'vi', ID: 'id',
+            TH: 'th', TR: 'tr', SA: 'ar', AE: 'ar', EG: 'ar', IR: 'fa', NG: 'yo',
+            ZM: 'sw', KE: 'sw', BD: 'bn', ZA: 'en'
+        };
 
-            // Déterminer la langue détectée ou utiliser l'anglais par défaut
-            const detectedLanguage = languageMap[countryCode] || 'en';
+        // Déterminer la langue détectée ou utiliser l'anglais par défaut
+        const detectedLanguage = languageMap[countryCode] || 'en';
 
-            // Charger les traductions de la langue détectée
-            const translations = await loadTranslations(detectedLanguage);
+        // Charger les traductions
+        const translations = await loadTranslations(detectedLanguage);
 
-            // Appliquer les traductions sur la page
-            applyTranslations(translations);
+        // Appliquer les traductions sur la page
+        applyTranslations(translations);
 
-        } catch (error) {
-            console.error('Erreur lors de la détection ou de la traduction :', error);
+    } catch (error) {
+        console.error('Erreur lors de la détection ou de la traduction :', error);
 
-            // En cas d'échec, charger les traductions par défaut (anglais)
-            const fallbackTranslations = await loadTranslations('en');
-            applyTranslations(fallbackTranslations);
-        }
+        // En cas d'échec, charger les traductions en anglais
+        const fallbackTranslations = await loadTranslations('en');
+        applyTranslations(fallbackTranslations);
     }
+}
 
-    async function loadTranslations(language) {
-        try {
-            // Charger le fichier JSON de traduction correspondant
-            const response = await fetch(`/translations/${language}.json`);
-            if (!response.ok) throw new Error('Fichier JSON non trouvé.');
-            return await response.json();
-        } catch (error) {
-            console.warn(`Traductions introuvables pour la langue : ${language}. Utilisation de l'anglais.`);
-            // Charger les traductions par défaut (anglais) en cas d'erreur
-            const fallbackResponse = await fetch(`/translations/en.json`);
-            return await fallbackResponse.json();
-        }
+async function loadTranslations(language) {
+    try {
+        const response = await fetch(`/translations/${language}.json`);
+        if (!response.ok) throw new Error('Fichier JSON introuvable.');
+        return await response.json();
+    } catch (error) {
+        console.warn(`Traductions introuvables pour la langue : ${language}. Chargement des traductions par défaut.`);
+        const fallbackResponse = await fetch(`/translations/en.json`);
+        return await fallbackResponse.json();
     }
+}
 
-    function applyTranslations(translations) {
-        // Appliquer les traductions dynamiquement
-        const elements = document.querySelectorAll('[data-translate]');
+function applyTranslations(translations) {
+    const elements = document.querySelectorAll("[data-translate]");
 
-        elements.forEach(element => {
-            const key = element.getAttribute('data-translate');
-            const translatedText = translations[key] || `[[${key}]]`; // Placeholder si traduction manquante
-            element.textContent = translatedText;
-        });
-    }
+    elements.forEach((element) => {
+        const key = element.getAttribute("data-translate");
+        const translatedText = translations[key] || element.textContent; // Texte original si la traduction manque
+        element.textContent = translatedText;
+    });
+}
 
-    // Appeler la fonction de détection et traduction
-    detectLanguageAndTranslate();
+// Lancer la détection et la traduction après le chargement de la page
+detectLanguageAndTranslate();
 </script>
 </body>
 
