@@ -188,6 +188,28 @@
         <a href="https://www.clairvoyancemedium.com/Reconquerir-son-ex-a-distance-Blanche-cbaaaaasa.asp">&copy; 2025 ClairVoyanceMedium.com - Tous droits réservés</a>
     </footer>
 
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
+    // Sélectionner tous les éléments textuels (à l'intérieur de `body`)
+    const elements = document.querySelectorAll("body *:not(script):not(style):not(meta)");
+
+    elements.forEach((element, index) => {
+        // Vérifier si l'élément contient un texte non vide
+        if (
+            element.childNodes.length === 1 &&
+            element.childNodes[0].nodeType === Node.TEXT_NODE &&
+            element.textContent.trim() !== ""
+        ) {
+            // Générer une clé unique pour chaque élément
+            const translateKey = `translate-key-${index}`;
+
+            // Ajouter l'attribut data-translate avec cette clé
+            element.setAttribute("data-translate", translateKey);
+        }
+    });
+});
+</script>
+
     <!-- Script de détection et traduction -->
     <script>
 async function detectLanguageAndTranslate() {
