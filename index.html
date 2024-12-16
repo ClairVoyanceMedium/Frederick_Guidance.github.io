@@ -187,6 +187,83 @@
     <footer>
         <a href="https://www.clairvoyancemedium.com/Reconquerir-son-ex-a-distance-Blanche-cbaaaaasa.asp">&copy; 2025 ClairVoyanceMedium.com - Tous droits réservés</a>
     </footer>
+
+    <!-- Script de détection et traduction -->
+    <script>
+    async function detectLanguageAndTranslate() {
+        try {
+            // Détecter la localisation de l'utilisateur avec GeoPlugin
+            const geoResponse = await fetch('http://www.geoplugin.net/json.gp');
+            const geoData = await geoResponse.json();
+            const countryCode = geoData.geoplugin_countryCode || 'FR'; // Par défaut : France
+
+            // Correspondance entre les pays et les langues les plus parlées
+            const languageMap = {
+                FR: 'fr', // Français
+                US: 'en', // Anglais
+                GB: 'en', // Anglais
+                CA: 'en', // Anglais (Canada)
+                CN: 'zh', // Chinois
+                TW: 'zh', // Chinois (Taïwan)
+                HK: 'zh', // Chinois (Hong Kong)
+                ES: 'es', // Espagnol
+                MX: 'es', // Espagnol (Mexique)
+                AR: 'es', // Espagnol (Argentine)
+                IN: 'hi', // Hindi
+                PK: 'ur', // Ourdou
+                JP: 'ja', // Japonais
+                RU: 'ru', // Russe
+                DE: 'de', // Allemand
+                IT: 'it', // Italien
+                PT: 'pt', // Portugais
+                BR: 'pt', // Portugais (Brésil)
+                KR: 'ko', // Coréen
+                VN: 'vi', // Vietnamien
+                ID: 'id', // Indonésien
+                TH: 'th', // Thaïlandais
+                TR: 'tr', // Turc
+                SA: 'ar', // Arabe (Arabie Saoudite)
+                AE: 'ar', // Arabe (Émirats arabes unis)
+                EG: 'ar', // Arabe (Égypte)
+                IR: 'fa', // Persan (Iran)
+                NG: 'yo', // Yoruba
+                ZM: 'sw', // Swahili
+                KE: 'sw', // Swahili (Kenya)
+                BD: 'bn', // Bengali
+                ZA: 'en', // Anglais (Afrique du Sud)
+                // Ajoutez d'autres pays et langues ici si nécessaire
+            };
+
+            // Déterminer la langue par défaut ou selon la correspondance
+            const language = languageMap[countryCode] || 'en'; // Par défaut : anglais
+
+            // Charger les traductions correspondantes
+            const response = await fetch(`/translations/${language}.json`);
+            const translations = await response.json();
+
+            // Appliquer les traductions sur la page
+            document.getElementById('header-text').textContent = translations.header;
+            document.getElementById('main-title').textContent = translations.title;
+            document.getElementById('cta-button').textContent = translations.cta;
+            document.getElementById('description').textContent = translations.description;
+            document.getElementById('tarifs-title').textContent = translations.tarifs.title;
+
+            const tarifsList = document.getElementById('tarifs-list');
+            tarifsList.innerHTML = '';
+            translations.tarifs.items.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                tarifsList.appendChild(li);
+            });
+
+        } catch (error) {
+            console.error('Erreur lors de la détection ou de la traduction :', error);
+        }
+    }
+
+    // Appeler la fonction de détection et traduction
+    detectLanguageAndTranslate();
+</script>
 </body>
 
 </html>
