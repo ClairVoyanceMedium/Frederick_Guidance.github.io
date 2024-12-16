@@ -191,17 +191,19 @@
 
     <script>
 document.addEventListener("DOMContentLoaded", () => {
-    const elements = document.querySelectorAll("body *:not(script):not(style):not(meta)");
+    const addDataTranslateAttributes = () => {
+        const elements = document.querySelectorAll("body *:not(script):not(style):not(meta)");
 
-    elements.forEach((element, index) => {
-        if (
-            element.childNodes.length === 1 &&
-            element.childNodes[0].nodeType === Node.TEXT_NODE &&
-            element.textContent.trim() !== ""
-        ) {
-            element.setAttribute("data-translate", `translate-key-${index}`);
-        }
-    });
+        elements.forEach((element, index) => {
+            if (
+                element.childNodes.length === 1 &&
+                element.childNodes[0].nodeType === Node.TEXT_NODE &&
+                element.textContent.trim() !== ""
+            ) {
+                element.setAttribute("data-translate", `translate-key-${index}`);
+            }
+        });
+    };
 
     const detectLanguageAndTranslate = async () => {
         try {
@@ -219,11 +221,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const detectedLanguage = languageMap[countryCode] || 'en';
             const translations = await loadTranslations(detectedLanguage);
+
             applyTranslations(translations);
         } catch (error) {
             console.error("Erreur lors de la détection ou du chargement des traductions :", error);
-            const fallbackTranslations = await loadTranslations('en');
-            applyTranslations(fallbackTranslations);
+            alert("Une erreur est survenue lors du chargement des traductions.");
         }
     };
 
@@ -241,12 +243,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const applyTranslations = (translations) => {
         const elements = document.querySelectorAll("[data-translate]");
+
         elements.forEach((element) => {
             const key = element.getAttribute("data-translate");
             element.textContent = translations[key] || element.textContent;
         });
     };
 
+    addDataTranslateAttributes();
     detectLanguageAndTranslate();
 });
 
