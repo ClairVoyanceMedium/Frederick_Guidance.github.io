@@ -253,8 +253,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const translations = await loadTranslations(detectedLanguage);
             applyTranslations(translations);
         } catch (error) {
-            console.error("Erreur lors de la détection ou du chargement des traductions :", error);
-            alert("Impossible de charger les traductions. Veuillez réessayer.");
+            console.warn("Utilisation du contenu par défaut en raison d'une erreur de traduction.");
         }
     };
 
