@@ -285,6 +285,29 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 </script>
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
+    const userLang = navigator.language || navigator.userLanguage; // Langue du navigateur (ex: "fr-FR")
+    const langMap = {
+        "fr": "fr", "en": "en", "es": "es", "pt": "pt", "zh": "zh",
+        "hi": "hi", "ar": "ar", "ru": "ru", "de": "de", "it": "it",
+        "ja": "ja", "ko": "ko", "bn": "bn", "id": "id", "vi": "vi",
+        "tr": "tr", "th": "th", "nl": "nl", "pl": "pl", "ro": "ro",
+        "sv": "sv", "no": "no", "da": "da", "fi": "fi", "el": "el",
+        "hu": "hu", "cs": "cs", "sk": "sk", "bg": "bg", "uk": "uk",
+        "he": "he", "ms": "ms", "ta": "ta", "te": "te", "mr": "mr",
+        "kn": "kn", "ur": "ur", "fa": "fa", "sw": "sw", "yo": "yo",
+        "am": "am", "zu": "zu"
+    };
+
+    const langCode = userLang.split('-')[0]; // Récupérer uniquement le code langue (ex: "fr" de "fr-FR")
+    const redirectLang = langMap[langCode] || "en"; // Langue par défaut : anglais
+
+    if (redirectLang && !window.location.pathname.includes(redirectLang)) {
+        window.location.href = `/${redirectLang}/index.html`;
+    }
+});
+</script>
 </body>
 
 </html>
