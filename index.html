@@ -359,6 +359,51 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 </script>
+    <!-- Polyfills pour anciens navigateurs -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/3.6.2/fetch.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+<script>
+    ES6Promise.polyfill();
+</script>
+<script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+<!-- Babel pour compatibilité avec IE11 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.12.1/polyfill.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+
+<!-- Fallback pour localStorage -->
+<script>
+    function setItem(key, value) {
+        try {
+            localStorage.setItem(key, value);
+        } catch (e) {
+            document.cookie = `${key}=${value};path=/;max-age=86400`;
+        }
+    }
+
+    function getItem(key) {
+        try {
+            return localStorage.getItem(key) || null;
+        } catch (e) {
+            const cookies = document.cookie.split('; ').find(row => row.startsWith(key));
+            return cookies ? cookies.split('=')[1] : null;
+        }
+    }
+</script>
+
+<!-- Votre script JavaScript existant -->
+<script type="text/babel">
+    document.addEventListener("DOMContentLoaded", async () => {
+        const prixEnEuros = 5;
+
+        try {
+            console.log("Prix initial en EUR :", prixEnEuros);
+            // Votre logique de conversion ici
+        } catch (error) {
+            console.error("Erreur :", error);
+        }
+    });
+</script>
     <script src="assets/script.js" defer></script>
 </body>
 </html>
