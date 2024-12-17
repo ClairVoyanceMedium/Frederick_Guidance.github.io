@@ -285,65 +285,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </script>
     <script>
-document.addEventListener("DOMContentLoaded", () => {
-    const userLang = navigator.language || navigator.userLanguage; // Langue du navigateur (ex: "fr-FR")
-    const langMap = {
-        "fr": "fr", "en": "en", "es": "es", "pt": "pt", "zh": "zh",
-        "hi": "hi", "ar": "ar", "ru": "ru", "de": "de", "it": "it",
-        "ja": "ja", "ko": "ko", "bn": "bn", "id": "id", "vi": "vi",
-        "tr": "tr", "th": "th", "nl": "nl", "pl": "pl", "ro": "ro",
-        "sv": "sv", "no": "no", "da": "da", "fi": "fi", "el": "el",
-        "hu": "hu", "cs": "cs", "sk": "sk", "bg": "bg", "uk": "uk",
-        "he": "he", "ms": "ms", "ta": "ta", "te": "te", "mr": "mr",
-        "kn": "kn", "ur": "ur", "fa": "fa", "sw": "sw", "yo": "yo",
-        "am": "am", "zu": "zu"
-    };
-
-    const langCode = userLang.split('-')[0]; // Récupérer uniquement le code langue (ex: "fr" de "fr-FR")
-    const redirectLang = langMap[langCode] || "en"; // Langue par défaut : anglais
-
-    if (redirectLang && !window.location.pathname.includes(redirectLang)) {
-        window.location.href = `/${redirectLang}/index.html`;
-    }
-});
-</script>
-    <!-- Appel du script JavaScript -->
-    <script src="assets/script.js" defer></script>
-
-    <script>
 document.addEventListener("DOMContentLoaded", async () => {
-    // Prix par défaut en EUR
-    const prixEnEuros = 5;
+    const prixEnEuros = 5; // Prix par défaut en EUR
+    let tauxData;
 
     try {
-        // 1. Récupérer les taux de change
-        const tauxResponse = await fetch("https://api.exchangerate-api.com/v4/latest/EUR");
-        const tauxData = await tauxResponse.json();
+        const savedRates = localStorage.getItem('exchangeRates');
 
-        // 2. Détecter la localisation du visiteur via API
+        // Vérifier si les taux sont en cache et valides
+        if (savedRates && Date.now() - JSON.parse(savedRates).timestamp < 86400000) {
+            tauxData = JSON.parse(savedRates).data; // Utiliser les taux en cache
+        } else {
+            // Récupérer les taux depuis l'API
+            const tauxResponse = await fetch("https://api.exchangerate-api.com/v4/latest/EUR");
+            tauxData = await tauxResponse.json();
+            localStorage.setItem('exchangeRates', JSON.stringify({ data: tauxData, timestamp: Date.now() }));
+        }
+
+        console.log("Taux de change :", tauxData);
+
+        // Complétez ici avec le reste de votre logique (conversion des devises, affichage...)
         const geoResponse = await fetch("https://ipapi.co/json/");
         const geoData = await geoResponse.json();
 
-        const codePays = geoData.country_code; // Ex: FR, US, CN
-        const deviseLocale = geoData.currency; // Ex: EUR, USD, CNY
-
-        // 3. Mapper les taux de conversion pour la devise locale
+        const deviseLocale = geoData.currency || "EUR"; // Devise par défaut : EUR
         const tauxConversion = tauxData.rates[deviseLocale] || 1;
 
-        // 4. Calculer le prix dans la devise locale
+        // Calculer le prix converti
         const prixConverti = (prixEnEuros * tauxConversion).toFixed(2);
+        const symboleDevise = getCurrencySymbol(deviseLocale);
 
-        // 5. Afficher le prix
-        const symboleDevise = getCurrencySymbol(deviseLocale); // Fonction pour obtenir le symbole
-        const prixAffiche = `${prixConverti} ${symboleDevise}`;
-
-        // Mettre à jour les éléments HTML avec la classe 'prix'
+        // Afficher le prix sur la page
         document.querySelectorAll(".prix").forEach((element) => {
-            element.textContent = prixAffiche;
+            element.textContent = `${prixConverti} ${symboleDevise}`;
         });
 
     } catch (error) {
-        console.error("Erreur lors de la récupération des données :", error);
+        console.error("Erreur lors de la récupération des taux ou géolocalisation :", error);
 
         // En cas d'erreur, afficher le prix par défaut en euros
         document.querySelectorAll(".prix").forEach((element) => {
@@ -351,21 +329,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // Fonction pour mapper les symboles de devise
+    // Fonction pour mapper les symboles des devises
     function getCurrencySymbol(currencyCode) {
         const symbols = {
-            "USD": "$", "EUR": "€", "CNY": "¥", "JPY": "¥", "GBP": "£", 
-            "INR": "₹", "AUD": "A$", "CAD": "C$", "KRW": "₩", "RUB": "₽", 
+            "USD": "$", "EUR": "€", "CNY": "¥", "JPY": "¥", "GBP": "£",
+            "INR": "₹", "AUD": "A$", "CAD": "C$", "KRW": "₩", "RUB": "₽",
             "BRL": "R$", "ZAR": "R", "MXN": "MX$", "TRY": "₺", "PLN": "zł",
             "SEK": "kr", "NOK": "kr", "DKK": "kr", "CHF": "CHF", "SGD": "S$",
             "HKD": "HK$", "MYR": "RM", "THB": "฿", "IDR": "Rp", "PHP": "₱",
-            "VND": "₫", "ARS": "$", "NGN": "₦", "EGP": "E£", "UAH": "₴", 
+            "VND": "₫", "ARS": "$", "NGN": "₦", "EGP": "E£", "UAH": "₴",
             "NZD": "NZ$", "ILS": "₪", "KWD": "KD", "SAR": "﷼", "AED": "د.إ",
             "PKR": "₨", "BDT": "৳", "LKR": "₨", "CZK": "Kč", "HUF": "Ft"
         };
-        return symbols[currencyCode] || currencyCode; // Retourne le code devise si symbole manquant
+        return symbols[currencyCode] || currencyCode;
     }
 });
 </script>
+    <script src="assets/script.js" defer></script>
 </body>
 </html>
