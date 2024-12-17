@@ -206,28 +206,28 @@
 
     <script>
 document.addEventListener("DOMContentLoaded", async () => {
-    const prixEnEuros = 5;
+    const prixEnEuros = [5, 12, 20]; // Liste des prix par défaut en EUR
 
     try {
+        // Récupération de la devise locale et du taux de conversion
         const geoResponse = await fetch("https://ipapi.co/json/");
         const geoData = await geoResponse.json();
         const deviseLocale = geoData.currency || "EUR";
 
         const tauxResponse = await fetch("https://api.exchangerate-api.com/v4/latest/EUR");
         const tauxData = await tauxResponse.json();
-
         const tauxConversion = tauxData.rates[deviseLocale] || 1;
-        const prixConverti = (prixEnEuros * tauxConversion).toFixed(2);
 
-        document.querySelectorAll(".prix").forEach((element) => {
+        // Mise à jour des prix en fonction de la devise locale
+        document.querySelectorAll(".prix").forEach((element, index) => {
+            const prixConverti = (prixEnEuros[index] * tauxConversion).toFixed(2);
             element.textContent = `${prixConverti} ${getCurrencySymbol(deviseLocale)}`;
         });
 
-        console.log(`Prix converti : ${prixConverti} ${deviseLocale}`);
     } catch (error) {
-        console.error("Erreur de conversion :", error);
-        document.querySelectorAll(".prix").forEach((element) => {
-            element.textContent = `${prixEnEuros} €`;
+        console.error("Erreur lors de la conversion des prix :", error);
+        document.querySelectorAll(".prix").forEach((element, index) => {
+            element.textContent = `${prixEnEuros[index]} €`;
         });
     }
 
