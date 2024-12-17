@@ -259,16 +259,16 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const loadTranslations = async (language) => {
-        try {
-            const response = await fetch(`/translations/${language}.json`);
-            if (!response.ok) throw new Error(`Fichier JSON introuvable pour la langue : ${language}`);
-            return await response.json();
-        } catch (error) {
-            console.warn(`Traductions non disponibles pour ${language}. Utilisation des traductions par défaut.`);
-            const fallbackResponse = await fetch(`/translations/en.json`);
-            return await fallbackResponse.json();
-        }
-    };
+    try {
+        const response = await fetch(`/translations/${language}.json`);
+        if (!response.ok) throw new Error(`Fichier JSON introuvable pour la langue : ${language}`);
+        return await response.json();
+    } catch (error) {
+        console.warn(`Traductions non disponibles pour ${language}. Utilisation des traductions par défaut.`);
+        const fallbackResponse = await fetch(`/translations/en-US.json`);
+        return await fallbackResponse.json();
+    }
+};
 
     const applyTranslations = (translations) => {
         const elements = document.querySelectorAll("[data-translate]");
