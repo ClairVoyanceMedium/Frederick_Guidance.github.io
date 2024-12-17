@@ -206,20 +206,16 @@
 
     <script>
 document.addEventListener("DOMContentLoaded", async () => {
-    const prixEnEuros = 5; // Prix par défaut en EUR
+    const prixEnEuros = 5;
 
     try {
-        // Récupérer les informations géolocalisées depuis ipapi.co
         const geoResponse = await fetch("https://ipapi.co/json/");
         const geoData = await geoResponse.json();
+        const deviseLocale = geoData.currency || "EUR";
 
-        const deviseLocale = geoData.currency || "EUR"; // Devise locale
-
-        // Récupérer les taux de conversion depuis exchangerate-api
         const tauxResponse = await fetch("https://api.exchangerate-api.com/v4/latest/EUR");
         const tauxData = await tauxResponse.json();
 
-        // Calcul du prix converti
         const tauxConversion = tauxData.rates[deviseLocale] || 1;
         const prixConverti = (prixEnEuros * tauxConversion).toFixed(2);
 
@@ -227,35 +223,26 @@ document.addEventListener("DOMContentLoaded", async () => {
             element.textContent = `${prixConverti} ${getCurrencySymbol(deviseLocale)}`;
         });
 
+        console.log(`Prix converti : ${prixConverti} ${deviseLocale}`);
     } catch (error) {
-        console.error("Erreur lors de la récupération des données :", error);
-
-        // Afficher le prix par défaut en euros
+        console.error("Erreur de conversion :", error);
         document.querySelectorAll(".prix").forEach((element) => {
             element.textContent = `${prixEnEuros} €`;
         });
     }
 
-    // Fonction pour mapper les symboles des devises
     function getCurrencySymbol(currencyCode) {
-        const symbols = {
-            "USD": "$", "EUR": "€", "GBP": "£", "JPY": "¥", "CNY": "¥", "INR": "₹"
-        };
+        const symbols = { "USD": "$", "EUR": "€", "GBP": "£", "JPY": "¥", "CNY": "¥", "INR": "₹" };
         return symbols[currencyCode] || currencyCode;
     }
 });
 </script>
 
 <!-- Votre script JavaScript existant -->
-<script
-    document.addEventListener("DOMContentLoaded", async () => {
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
         const prixEnEuros = 5;
-
-        try {
-            console.log("Prix initial en EUR :", prixEnEuros);
-        } catch (error) {
-            console.error("Erreur :", error);
-        }
+        console.log("Prix initial en EUR :", prixEnEuros);
     });
 </script>
     
