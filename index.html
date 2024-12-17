@@ -362,26 +362,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     <!-- Polyfills pour anciens navigateurs -->
 <script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=fetch,Promise,Array.from,Object.assign" defer></script>
 
-<!-- Fallback pour localStorage -->
-<script>
-    function setItem(key, value) {
-        try {
-            localStorage.setItem(key, value);
-        } catch (e) {
-            document.cookie = `${key}=${value};path=/;max-age=86400`;
-        }
-    }
-
-    function getItem(key) {
-        try {
-            return localStorage.getItem(key) || null;
-        } catch (e) {
-            const cookies = document.cookie.split('; ').find(row => row.startsWith(key));
-            return cookies ? cookies.split('=')[1] : null;
-        }
-    }
-</script>
-
 <!-- Votre script JavaScript existant -->
 <script type="text/babel">
     document.addEventListener("DOMContentLoaded", async () => {
