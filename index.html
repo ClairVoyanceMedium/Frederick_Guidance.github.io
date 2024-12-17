@@ -292,52 +292,32 @@ document.addEventListener("DOMContentLoaded", async () => {
     const prixEnEuros = 5; // Prix par défaut en EUR
 
     try {
-        // Récupérer les informations de géolocalisation via ipapi.co
+        // Récupérer les informations géolocalisées depuis ipapi.co
         const geoResponse = await fetch("https://ipapi.co/json/");
         const geoData = await geoResponse.json();
 
         const deviseLocale = geoData.currency || "EUR"; // Devise locale
-        const pays = geoData.country_name || "France"; // Pays local
-
-        console.log("Pays détecté :", pays);
-        console.log("Devise détectée :", deviseLocale);
 
         // Récupérer les taux de conversion depuis exchangerate-api
         const tauxResponse = await fetch("https://api.exchangerate-api.com/v4/latest/EUR");
         const tauxData = await tauxResponse.json();
 
-        const tauxConversion = tauxData.rates[deviseLocale] || 1; // Taux par rapport à l'EUR
-
-        // Calculer le prix converti
+        // Calcul du prix converti
+        const tauxConversion = tauxData.rates[deviseLocale] || 1;
         const prixConverti = (prixEnEuros * tauxConversion).toFixed(2);
-        const symboleDevise = getCurrencySymbol(deviseLocale);
 
-        // Afficher le prix converti sur les éléments ayant la classe .prix
         document.querySelectorAll(".prix").forEach((element) => {
-            element.textContent = `${prixConverti} ${symboleDevise}`;
+            element.textContent = `${prixConverti} ${getCurrencySymbol(deviseLocale)}`;
         });
-
     } catch (error) {
         console.error("Erreur lors de la récupération des données :", error);
-
-        // En cas d'erreur, afficher le prix par défaut en euros
         document.querySelectorAll(".prix").forEach((element) => {
             element.textContent = `${prixEnEuros} €`;
         });
     }
 
-    // Fonction pour récupérer les symboles de devise
     function getCurrencySymbol(currencyCode) {
-        const symbols = {
-            "USD": "$", "EUR": "€", "CNY": "¥", "JPY": "¥", "GBP": "£",
-            "INR": "₹", "AUD": "A$", "CAD": "C$", "KRW": "₩", "RUB": "₽",
-            "BRL": "R$", "ZAR": "R", "MXN": "MX$", "TRY": "₺", "PLN": "zł",
-            "SEK": "kr", "NOK": "kr", "DKK": "kr", "CHF": "CHF", "SGD": "S$",
-            "HKD": "HK$", "MYR": "RM", "THB": "฿", "IDR": "Rp", "PHP": "₱",
-            "VND": "₫", "ARS": "$", "NGN": "₦", "EGP": "E£", "UAH": "₴",
-            "NZD": "NZ$", "ILS": "₪", "KWD": "KD", "SAR": "﷼", "AED": "د.إ",
-            "PKR": "₨", "BDT": "৳", "LKR": "₨", "CZK": "Kč", "HUF": "Ft"
-        };
+        const symbols = { "USD": "$", "EUR": "€", "GBP": "£", "JPY": "¥", "CNY": "¥", "INR": "₹" };
         return symbols[currencyCode] || currencyCode;
     }
 });
