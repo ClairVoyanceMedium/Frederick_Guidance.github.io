@@ -360,12 +360,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 </script>
     <!-- Polyfills pour anciens navigateurs -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/3.6.2/fetch.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
-<script>
-    ES6Promise.polyfill();
-</script>
-<script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=default"></script>
+<script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=fetch,Promise,Array.from,Object.assign" defer></script>
 
 <!-- Babel pour compatibilité avec IE11 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.12.1/polyfill.min.js"></script>
