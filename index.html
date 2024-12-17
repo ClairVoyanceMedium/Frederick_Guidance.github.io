@@ -244,23 +244,25 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.querySelectorAll(".prix").forEach((element) => {
             element.textContent = `${prixConverti} ${getCurrencySymbol(deviseLocale)}`;
         });
+
     } catch (error) {
         console.error("Erreur lors de la récupération des données :", error);
+
+        // Afficher le prix par défaut en euros
         document.querySelectorAll(".prix").forEach((element) => {
             element.textContent = `${prixEnEuros} €`;
         });
     }
 
+    // Fonction pour mapper les symboles des devises
     function getCurrencySymbol(currencyCode) {
-        const symbols = { "USD": "$", "EUR": "€", "GBP": "£", "JPY": "¥", "CNY": "¥", "INR": "₹" };
+        const symbols = {
+            "USD": "$", "EUR": "€", "GBP": "£", "JPY": "¥", "CNY": "¥", "INR": "₹"
+        };
         return symbols[currencyCode] || currencyCode;
     }
 });
-    }
-});
 </script>
-    <!-- Polyfills pour anciens navigateurs -->
-<script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=fetch,Promise,Array.from,Object.assign" defer></script>
 
 <!-- Votre script JavaScript existant -->
 <script type="text/babel">
