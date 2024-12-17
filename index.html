@@ -10,6 +10,20 @@
     <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#000">
 
+    <!-- Polyfills pour anciens navigateurs -->
+<!-- Polyfill pour fetch API -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/3.6.2/fetch.min.js"></script>
+
+<!-- Polyfill pour Promises -->
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+<script>
+    ES6Promise.polyfill();
+</script>
+
+<!-- Polyfill pour fonctions modernes (Object.assign, Array.from, etc.) -->
+<script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=default"></script>
+    
+    
     <!-- Meta pour les moteurs de recherche -->
     <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
     <meta name="bingbot" content="index, follow">
