@@ -287,6 +287,29 @@
         }
     });
 </script>
+    
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+    const userLang = navigator.language || navigator.userLanguage; // Détecte la langue du navigateur
+    const supportedLangs = ["fr", "en", "es", "zh", "hi", "ar", "pt", "ru", "ja", "de", "it", "ko", "bn"]; // Langues supportées
+    const defaultLang = "fr"; // Langue par défaut
 
+    // Extraction du code de langue principal (ex. : "fr-FR" -> "fr")
+    const langCode = userLang.split("-")[0];
+
+    // Vérifie si la langue est supportée et redirige
+    if (supportedLangs.includes(langCode)) {
+        if (!window.location.pathname.includes(`/${langCode}/`)) {
+            window.location.href = `/${langCode}/`; // Redirige vers la version linguistique
+        }
+    } else {
+        // Si non supporté, redirige vers la langue par défaut (français)
+        if (!window.location.pathname.includes(`/${defaultLang}/`)) {
+            window.location.href = `/${defaultLang}/`;
+        }
+    }
+});
+</script>
+    
 </body>
 </html>
