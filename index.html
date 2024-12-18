@@ -245,6 +245,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Prix initial en EUR :", prixEnEuros);
     });
 </script>
-    
+    <script>
+document.addEventListener("DOMContentLoaded", async () => {
+    let deviseLocale = localStorage.getItem('deviseLocale');
+    if (!deviseLocale) {
+        try {
+            const geoResponse = await fetch("https://ipapi.co/json/");
+            const geoData = await geoResponse.json();
+            deviseLocale = geoData.currency || "EUR";
+            localStorage.setItem('deviseLocale', deviseLocale);
+            console.log("Devise détectée et sauvegardée :", deviseLocale);
+        } catch (error) {
+            console.error("Erreur lors de la récupération de la devise :", error);
+        }
+    } else {
+        console.log("Devise déjà sauvegardée :", deviseLocale);
+    }
+});
+</script>
+
 </body>
 </html>
