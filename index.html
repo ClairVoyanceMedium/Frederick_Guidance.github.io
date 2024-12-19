@@ -315,5 +315,17 @@
 });
 </script>
     
+    <script>
+    const stripe = Stripe('pk_live_Cmzt2YN9ITdo6hUpO1lSZblJ'); // C'est ma clé publique Stripe
+
+    document.getElementById('checkout-button').addEventListener('click', async () => {
+        const response = await fetch('/create-checkout-session', { method: 'POST' });
+        const session = await response.json();
+
+        // Redirection vers Stripe Checkout
+        stripe.redirectToCheckout({ sessionId: session.id });
+    });
+</script>
+
 </body>
 </html>
