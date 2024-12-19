@@ -314,17 +314,26 @@
     }
 });
 </script>
-    
     <script>
-    const stripe = Stripe('pk_live_Cmzt2YN9ITdo6hUpO1lSZblJ'); // C'est ma clé publique Stripe
+    const stripe = Stripe('pk_live_Cmzt2YN9ITdo6hUpO1lSZblJ'); // votre clé publique Stripe
 
-    document.getElementById('checkout-button').addEventListener('click', async () => {
-        const response = await fetch('/create-checkout-session', { method: 'POST' });
+    // Fonction pour gérer les paiements
+    async function handleCheckout(priceId) {
+        const response = await fetch('/create-checkout-session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ priceId }), // Envoyer l'ID du prix au backend
+        });
         const session = await response.json();
 
-        // Redirection vers Stripe Checkout
+        // Rediriger vers Stripe Checkout
         stripe.redirectToCheckout({ sessionId: session.id });
-    });
+    }
+
+    // Associer les boutons aux actions
+    document.getElementById('checkout-button-1').addEventListener('click', () => handleCheckout('price_1')); // ID pour 6 €
+    document.getElementById('checkout-button-2').addEventListener('click', () => handleCheckout('price_2')); // ID pour 15 €
+    document.getElementById('checkout-button-3').addEventListener('click', () => handleCheckout('price_3')); // ID pour 28 €
 </script>
 
 </body>
