@@ -223,92 +223,100 @@
 
     <script>
     document.addEventListener("DOMContentLoaded", async () => {
-        const prixEnEuros = [6, 15, 28]; // Liste des prix en euros
-        const tauxExpiration = 24 * 60 * 60 * 1000; // Expiration du cache (24 heures)
-        const elementsPrix = document.querySelectorAll(".prix");
+    const prixEnEuros = [6, 15, 28]; // Liste des prix en euros
+    const tauxExpiration = 24 * 60 * 60 * 1000; // Expiration du cache (24 heures)
+    const elementsPrix = document.querySelectorAll(".prix");
+    const messageFallback = "La conversion des devises est indisponible. Les prix sont affichés en euros.";
 
-        if (!elementsPrix.length) {
-            console.warn("Aucun élément .prix trouvé pour l'affichage des prix.");
-            return;
-        }
-
-        // Affichage temporaire "chargement" pendant la conversion
-        elementsPrix.forEach((element) => (element.textContent = "Chargement..."));
-
-        let deviseLocale = localStorage.getItem("deviseLocale");
-        let tauxConversion = JSON.parse(localStorage.getItem("tauxConversion"));
-
-        try {
-            // Récupérer devise locale si non présente
-            if (!deviseLocale) {
-                const geoResponse = await fetchWithTimeout("https://ipapi.co/json/", {}, 7000);
-                const geoData = await geoResponse.json();
-                deviseLocale = geoData.currency || "EUR";
-                localStorage.setItem("deviseLocale", deviseLocale);
-                console.log("Devise détectée et sauvegardée :", deviseLocale);
-            } else {
-                console.log("Devise déjà sauvegardée :", deviseLocale);
-            }
-
-            try {
-       // Vérifiez si les taux de conversion sont déjà stockés et valides
-    if (tauxConversion && Date.now() - tauxConversion.timestamp <= tauxExpiration) {
-        console.log("Taux de conversion récupérés du cache.");
-    } else {
-        console.log("Taux expirés ou absents. Récupération des nouveaux taux...");
-        
-        const tauxResponse = await fetchWithTimeout("https://api.exchangerate-api.com/v4/latest/EUR", {}, 7000);
-        const tauxData = await tauxResponse.json();
-
-        tauxConversion = {
-            rates: tauxData.rates,
-            symbols: tauxData.symbols || {}, // Ajout des symboles si l'API les fournit
-            timestamp: Date.now()
-        };
-
-        // Sauvegardez les taux dans localStorage
-        localStorage.setItem("tauxConversion", JSON.stringify(tauxConversion));
-        console.log("Taux de conversion mis à jour et sauvegardés.");
+    if (!elementsPrix.length) {
+        console.warn("Aucun élément .prix trouvé pour l'affichage des prix.");
+        return;
     }
 
-    // Utilisation des taux récupérés
-    const taux = tauxConversion.rates[deviseLocale] || 1;
-    elementsPrix.forEach((element, index) => {
-        const prixConverti = (prixEnEuros[index] * taux).toFixed(2);
-        element.textContent = `${prixConverti} ${getCurrencySymbol(deviseLocale, tauxConversion)}`;
-    });
-} catch (error) {
-    console.error("Erreur lors de la gestion des taux de conversion :", error);
-    elementsPrix.forEach((element, index) => {
-        element.textContent = `${prixEnEuros[index]} €`; // Fallback sur les prix en euros
-    });
-}
+    // Affichage temporaire "chargement" pendant la conversion
+    elementsPrix.forEach((element) => (element.textContent = "Chargement..."));
 
-        // Fonction pour obtenir le symbole de la devise
-        function getCurrencySymbol(currencyCode, ratesData) {
-            const defaultSymbols = { "USD": "$", "EUR": "€", "GBP": "£", "JPY": "¥", "CNY": "¥", "INR": "₹" };
-            if (ratesData && ratesData.symbols && ratesData.symbols[currencyCode]) {
-                return ratesData.symbols[currencyCode];
-            }
-            return defaultSymbols[currencyCode] || currencyCode;
+    let deviseLocale = localStorage.getItem("deviseLocale");
+    let tauxConversion = JSON.parse(localStorage.getItem("tauxConversion"));
+
+    try {
+        // Récupérer devise locale si non présente
+        if (!deviseLocale) {
+            const geoResponse = await fetchWithTimeout("https://ipapi.co/json/", {}, 7000);
+            const geoData = await geoResponse.json();
+            deviseLocale = geoData.currency || "EUR";
+            localStorage.setItem("deviseLocale", deviseLocale);
+            console.log("Devise détectée et sauvegardée :", deviseLocale);
+        } else {
+            console.log("Devise déjà sauvegardée :", deviseLocale);
         }
 
-        // Fonction utilitaire pour fetch avec timeout
-        async function fetchWithTimeout(resource, options = {}, timeout = 5000) {
-            const controller = new AbortController();
-            const signal = controller.signal;
-            const timer = setTimeout(() => controller.abort(), timeout);
+        // Vérifiez si les taux de conversion sont déjà stockés et valides
+        if (!tauxConversion || Date.now() - tauxConversion.timestamp > tauxExpiration) {
+            console.log("Récupération des nouveaux taux...");
+            const tauxResponse = await fetchWithTimeout("https://api.exchangerate-api.com/v4/latest/EUR", {}, 7000);
+            const tauxData = await tauxResponse.json();
 
-            try {
-                const response = await fetch(resource, { ...options, signal });
-                clearTimeout(timer);
-                return response;
-            } catch (error) {
-                console.error("Fetch timeout ou erreur :", error);
-                throw error;
-            }
+            tauxConversion = {
+                rates: tauxData.rates,
+                symbols: tauxData.symbols || {}, // Ajout des symboles si l'API les fournit
+                timestamp: Date.now()
+            };
+
+            localStorage.setItem("tauxConversion", JSON.stringify(tauxConversion));
+            console.log("Taux de conversion mis à jour et sauvegardés.");
         }
-    });
+
+        // Utilisation des taux récupérés
+        const taux = tauxConversion.rates[deviseLocale] || 1;
+        elementsPrix.forEach((element, index) => {
+            const prixConverti = (prixEnEuros[index] * taux).toFixed(2);
+            element.textContent = `${prixConverti} ${getCurrencySymbol(deviseLocale, tauxConversion)}`;
+        });
+    } catch (error) {
+        console.error("Erreur lors de la gestion des taux de conversion :", error);
+
+        // Fallback : Afficher un message et les prix en euros
+        elementsPrix.forEach((element, index) => {
+            element.textContent = `${prixEnEuros[index]} €`;
+        });
+
+        const messageContainer = document.createElement("p");
+        messageContainer.style.color = "red";
+        messageContainer.style.textAlign = "center";
+        messageContainer.textContent = messageFallback;
+
+        const mainElement = document.querySelector("main");
+        if (mainElement) {
+            mainElement.insertBefore(messageContainer, mainElement.firstChild);
+        }
+    }
+
+    // Fonction pour obtenir le symbole de la devise
+    function getCurrencySymbol(currencyCode, ratesData) {
+        const defaultSymbols = { "USD": "$", "EUR": "€", "GBP": "£", "JPY": "¥", "CNY": "¥", "INR": "₹" };
+        if (ratesData && ratesData.symbols && ratesData.symbols[currencyCode]) {
+            return ratesData.symbols[currencyCode];
+        }
+        return defaultSymbols[currencyCode] || currencyCode;
+    }
+
+    // Fonction utilitaire pour fetch avec timeout
+    async function fetchWithTimeout(resource, options = {}, timeout = 5000) {
+        const controller = new AbortController();
+        const signal = controller.signal;
+        const timer = setTimeout(() => controller.abort(), timeout);
+
+        try {
+            const response = await fetch(resource, { ...options, signal });
+            clearTimeout(timer);
+            return response;
+        } catch (error) {
+            console.error("Fetch timeout ou erreur :", error);
+            throw error;
+        }
+    }
+});
 </script>
     
 <script>
