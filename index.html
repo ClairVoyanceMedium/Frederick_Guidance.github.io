@@ -250,33 +250,39 @@
                 console.log("Devise déjà sauvegardée :", deviseLocale);
             }
 
-            // Récupérer les taux de conversion si non en cache ou expirés
-            if (!tauxConversion || Date.now() - tauxConversion.timestamp > tauxExpiration) {
-                const tauxResponse = await fetchWithTimeout("https://api.exchangerate-api.com/v4/latest/EUR", {}, 7000);
-                const tauxData = await tauxResponse.json();
-                tauxConversion = {
-                    rates: tauxData.rates,
-                    symbols: tauxData.symbols || {}, // Ajout des symboles si l'API les fournit
-                    timestamp: Date.now()
-                };
-                localStorage.setItem("tauxConversion", JSON.stringify(tauxConversion));
-                console.log("Taux de conversion mis à jour et sauvegardés.");
-            } else {
-                console.log("Taux de conversion récupérés du cache.");
-            }
+            try {
+       // Vérifiez si les taux de conversion sont déjà stockés et valides
+    if (tauxConversion && Date.now() - tauxConversion.timestamp <= tauxExpiration) {
+        console.log("Taux de conversion récupérés du cache.");
+    } else {
+        console.log("Taux expirés ou absents. Récupération des nouveaux taux...");
+        
+        const tauxResponse = await fetchWithTimeout("https://api.exchangerate-api.com/v4/latest/EUR", {}, 7000);
+        const tauxData = await tauxResponse.json();
 
-            // Utilisation des taux pour convertir les prix
-            const taux = tauxConversion.rates[deviseLocale] || 1;
-            elementsPrix.forEach((element, index) => {
-                const prixConverti = (prixEnEuros[index] * taux).toFixed(2);
-                element.textContent = `${prixConverti} ${getCurrencySymbol(deviseLocale, tauxConversion)}`;
-            });
-        } catch (error) {
-            console.error("Erreur lors de la conversion des prix :", error);
-            elementsPrix.forEach((element, index) => {
-                element.textContent = `${prixEnEuros[index]} €`;
-            });
-        }
+        tauxConversion = {
+            rates: tauxData.rates,
+            symbols: tauxData.symbols || {}, // Ajout des symboles si l'API les fournit
+            timestamp: Date.now()
+        };
+
+        // Sauvegardez les taux dans localStorage
+        localStorage.setItem("tauxConversion", JSON.stringify(tauxConversion));
+        console.log("Taux de conversion mis à jour et sauvegardés.");
+    }
+
+    // Utilisation des taux récupérés
+    const taux = tauxConversion.rates[deviseLocale] || 1;
+    elementsPrix.forEach((element, index) => {
+        const prixConverti = (prixEnEuros[index] * taux).toFixed(2);
+        element.textContent = `${prixConverti} ${getCurrencySymbol(deviseLocale, tauxConversion)}`;
+    });
+} catch (error) {
+    console.error("Erreur lors de la gestion des taux de conversion :", error);
+    elementsPrix.forEach((element, index) => {
+        element.textContent = `${prixEnEuros[index]} €`; // Fallback sur les prix en euros
+    });
+}
 
         // Fonction pour obtenir le symbole de la devise
         function getCurrencySymbol(currencyCode, ratesData) {
