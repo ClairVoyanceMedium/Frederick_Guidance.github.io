@@ -289,16 +289,6 @@
         fallbackContainer.style.display = "block"; // Afficher le message de fallback
     }
 }
-        const messageContainer = document.createElement("p");
-        messageContainer.style.color = "red";
-        messageContainer.style.textAlign = "center";
-        messageContainer.textContent = messageFallback;
-
-        const mainElement = document.querySelector("main");
-        if (mainElement) {
-            mainElement.insertBefore(messageContainer, mainElement.firstChild);
-        }
-    }
 
     // Fonction pour obtenir le symbole de la devise
     function getCurrencySymbol(currencyCode, ratesData) {
