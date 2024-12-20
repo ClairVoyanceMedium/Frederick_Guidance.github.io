@@ -272,18 +272,23 @@
 
         // Utilisation des taux récupérés
         const taux = tauxConversion.rates[deviseLocale] || 1;
-        elementsPrix.forEach((element, index) => {
-            const prixConverti = (prixEnEuros[index] * taux).toFixed(2);
-            element.textContent = `${prixConverti} ${getCurrencySymbol(deviseLocale, tauxConversion)}`;
-        });
-    } catch (error) {
-        console.error("Erreur lors de la gestion des taux de conversion :", error);
+    elementsPrix.forEach((element, index) => {
+        const prixConverti = (prixEnEuros[index] * taux).toFixed(2);
+        element.textContent = `${prixConverti} ${getCurrencySymbol(deviseLocale, tauxConversion)}`;
+    });
+} catch (error) {
+    console.error("Erreur lors de la gestion des taux de conversion :", error);
 
-        // Fallback : Afficher un message et les prix en euros
-        elementsPrix.forEach((element, index) => {
-            element.textContent = `${prixEnEuros[index]} €`;
-        });
+        // Fallback : Afficher un message d'erreur et les prix en euros
+    elementsPrix.forEach((element, index) => {
+        element.textContent = `${prixEnEuros[index]} €`;
+    });
 
+    const fallbackContainer = document.getElementById("fallback-message");
+    if (fallbackContainer) {
+        fallbackContainer.style.display = "block"; // Afficher le message de fallback
+    }
+}
         const messageContainer = document.createElement("p");
         messageContainer.style.color = "red";
         messageContainer.style.textAlign = "center";
