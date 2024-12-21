@@ -322,29 +322,28 @@
     
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        const supportedLangs = ["fr", "en", "es", "zh", "hi", "ar", "pt", "ru", "ja", "de", "it", "ko", "bn"];
-        const defaultLang = "fr";
-        const currentPath = window.location.pathname;
-        const currentSearch = window.location.search; // Paramètres de l'URL
-        const currentHash = window.location.hash; // Ancre de l'URL
-        const langCode = (navigator.language || navigator.userLanguage).split("-")[0];
+    const supportedLangs = ["fr", "en", "es", "zh", "hi", "ar", "pt", "ru", "ja", "de", "it", "ko", "bn"];
+    const defaultLang = "fr";
+    const currentPath = window.location.pathname;
+    const currentSearch = window.location.search; // Paramètres de l'URL
+    const currentHash = window.location.hash; // Ancre de l'URL
+    const langCode = (navigator.language || navigator.userLanguage).split("-")[0];
 
-        function isSupportedLang(path) {
-            return supportedLangs.some(lang => path.includes(`/${lang}/`));
-        }
+    function isSupportedLang(path) {
+        return supportedLangs.some(lang => path.includes(`/${lang}/`));
+    }
 
-        // Redirection intelligente avec logs
-        if (!isSupportedLang(currentPath)) {
-            const targetLang = supportedLangs.includes(langCode) ? langCode : defaultLang;
-            if (!currentPath.includes(`/${targetLang}/`)) {
-                console.log(`Redirection vers la langue : ${targetLang}`);
-                window.location.href = `/${targetLang}/${currentPath}${currentSearch}${currentHash}`;
-            } else {
-                console.log(`L'utilisateur est déjà sur la version correcte : ${currentPath}`);
-            }
+    // Redirection intelligente avec logs
+    if (!isSupportedLang(currentPath)) {
+        const targetLang = supportedLangs.includes(langCode) ? langCode : defaultLang;
+        if (!currentPath.includes(`/${targetLang}/`)) {
+            console.log(`Redirection vers la langue : ${targetLang}`);
+            window.location.href = `/${targetLang}/${currentPath}${currentSearch}${currentHash}`;
+        } else {
+            console.log(`L'utilisateur est déjà sur la version correcte : ${currentPath}`);
         }
-    }   
-    });
+    }
+});
 </script>
     
     <script src="https://js.stripe.com/v3/" async></script>
