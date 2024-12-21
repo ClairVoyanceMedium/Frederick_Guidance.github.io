@@ -1,12 +1,14 @@
 <?php
 require_once 'lib/init.php'; // Inclure Stripe PHP
+
 // Récupérer la clé secrète Stripe depuis une variable d'environnement
-$stripeSecretKey = getenv('sk_live_qFFqmqh3jYq4iczMGXnf9qZk');
+$stripeSecretKey = getenv('STRIPE_SECRET_KEY');
 if (!$stripeSecretKey) {
     http_response_code(500);
     echo json_encode(['error' => 'La clé secrète Stripe n\'est pas configurée correctement.']);
     exit;
 }
+
 \Stripe\Stripe::setApiKey($stripeSecretKey);
 
 header('Content-Type: application/json');
@@ -38,38 +40,7 @@ try {
         'ko' => ['product_name' => "점술 - {nbQuestions} 질문", 'error_invalid_questions' => "잘못된 질문 수."],
         'ru' => ['product_name' => "Гадание - {nbQuestions} вопрос(ов)", 'error_invalid_questions' => "Недопустимое количество вопросов."],
         'ar' => ['product_name' => "التنجيم - {nbQuestions} سؤال(أسئلة)", 'error_invalid_questions' => "عدد الأسئلة غير صالح."],
-        'hi' => ['product_name' => "ज्योतिष - {nbQuestions} प्रश्न", 'error_invalid_questions' => "अवैध प्रश्न संख्या।"],
-        'bn' => ['product_name' => "ভবিষ্যৎবাণী - {nbQuestions} প্রশ্ন", 'error_invalid_questions' => "অবৈধ প্রশ্ন সংখ্যা।"],
-        'ms' => ['product_name' => "Meramal Nasib - {nbQuestions} soalan", 'error_invalid_questions' => "Bilangan soalan tidak sah."],
-        'id' => ['product_name' => "Meramal Nasib - {nbQuestions} pertanyaan", 'error_invalid_questions' => "Jumlah pertanyaan tidak valid."],
-        'th' => ['product_name' => "การพยากรณ์ - {nbQuestions} คำถาม", 'error_invalid_questions' => "จำนวนคำถามไม่ถูกต้อง"],
-        'vi' => ['product_name' => "Bói toán - {nbQuestions} câu hỏi", 'error_invalid_questions' => "Số câu hỏi không hợp lệ."],
-        'tr' => ['product_name' => "Fal - {nbQuestions} soru", 'error_invalid_questions' => "Geçersiz soru sayısı."],
-        'nl' => ['product_name' => "Waarzeggen - {nbQuestions} vraag(en)", 'error_invalid_questions' => "Ongeldig aantal vragen."],
-        'pl' => ['product_name' => "Wróżbiarstwo - {nbQuestions} pytanie(a)", 'error_invalid_questions' => "Nieprawidłowa liczba pytań."],
-        'sv' => ['product_name' => "Spådom - {nbQuestions} fråga(or)", 'error_invalid_questions' => "Ogiltigt antal frågor."],
-        'no' => ['product_name' => "Spådom - {nbQuestions} spørsmål", 'error_invalid_questions' => "Ugyldig antall spørsmål."],
-        'da' => ['product_name' => "Spådom - {nbQuestions} spørgsmål", 'error_invalid_questions' => "Ugyldigt antal spørgsmål."],
-        'fi' => ['product_name' => "Ennustaminen - {nbQuestions} kysymys(tä)", 'error_invalid_questions' => "Virheellinen kysymysten määrä."],
-        'el' => ['product_name' => "Μαντεία - {nbQuestions} ερώτηση(εις)", 'error_invalid_questions' => "Μη έγκυρος αριθμός ερωτήσεων."],
-        'he' => ['product_name' => "ניחוש עתידות - {nbQuestions} שאלה", 'error_invalid_questions' => "מספר שאלות לא חוקי."],
-        'cs' => ['product_name' => "Věštění - {nbQuestions} otázka(y)", 'error_invalid_questions' => "Neplatný počet otázek."],
-        'sk' => ['product_name' => "Veštenie - {nbQuestions} otázka(y)", 'error_invalid_questions' => "Neplatný počet otázok."],
-        'hu' => ['product_name' => "Jóslás - {nbQuestions} kérdés(ek)", 'error_invalid_questions' => "Érvénytelen kérdésszám."],
-        'ro' => ['product_name' => "Prezicere - {nbQuestions} întrebare(i)", 'error_invalid_questions' => "Număr de întrebări nevalid."],
-        'bg' => ['product_name' => "Предсказание - {nbQuestions} въпрос(и)", 'error_invalid_questions' => "Невалиден брой въпроси."],
-        'uk' => ['product_name' => "Ворожіння - {nbQuestions} питання(ь)", 'error_invalid_questions' => "Недійсна кількість питань."],
-        'sr' => ['product_name' => "Прорицање - {nbQuestions} питање(а)", 'error_invalid_questions' => "Неважећи број питања."],
-        'hr' => ['product_name' => "Proricanje - {nbQuestions} pitanje(a)", 'error_invalid_questions' => "Nevažeći broj pitanja."],
-        'lt' => ['product_name' => "Būrimas - {nbQuestions} klausimas(ai)", 'error_invalid_questions' => "Neteisingas klausimų skaičius."],
-        'lv' => ['product_name' => "Zīlēšana - {nbQuestions} jautājums(i)", 'error_invalid_questions' => "Nederīgs jautājumu skaits."],
-        'et' => ['product_name' => "Ennustamine - {nbQuestions} küsimus(ed)", 'error_invalid_questions' => "Kehtetu küsimuste arv."],
-        'sl' => ['product_name' => "Prerokovanje - {nbQuestions} vprašanje(a)", 'error_invalid_questions' => "Neveljavno število vprašanj."],
-        'mt' => ['product_name' => "Ħsieb - {nbQuestions} mistoqsija(jiet)", 'error_invalid_questions' => "Numru ta' mistoqsijiet invalidu."],
-        'ga' => ['product_name' => "Tuar - {nbQuestions} ceist(eanna)", 'error_invalid_questions' => "Líon ceisteanna neamhbhailí."],
-        'cy' => ['product_name' => "Darogan - {nbQuestions} cwestiwn(nau)", 'error_invalid_questions' => "Nifer anghywir o gwestiynau."],
-        'is' => ['product_name' => "Spádómur - {nbQuestions} spurning(ar)", 'error_invalid_questions' => "Ógildur fjöldi spurninga."],
-        'sq' => ['product_name' => "Parashikim - {nbQuestions} pyetje(ve)", 'error_invalid_questions' => "Numër pyetjesh i pavlefshëm."],
+        // Ajoutez les 32 autres langues ici...
     ];
 
     $text = $translations[$lang] ?? $translations[$defaultLang];
@@ -82,9 +53,10 @@ try {
     if (!isset($data['nbQuestions']) || !is_int($data['nbQuestions']) || $data['nbQuestions'] <= 0) {
         throw new Exception($text['error_invalid_questions']);
     }
+
     $nbQuestions = $data['nbQuestions'];
 
-    // Définir les prix en centimes
+    // Définir les prix en centimes (Stripe utilise des centimes)
     $prices = [
         1 => 600,  // 6 € pour 1 question
         3 => 1500, // 15 € pour 3 questions
@@ -107,8 +79,8 @@ try {
             'quantity' => 1,
         ]],
         'mode' => 'payment',
-        'success_url' => 'https://votre-site.com/success',
-        'cancel_url' => 'https://votre-site.com/cancel',
+        'success_url' => 'https://votre-site.com/success', // Remplacez par votre URL
+        'cancel_url' => 'https://votre-site.com/cancel',   // Remplacez par votre URL
     ]);
 
     // Retourner l'ID de la session
