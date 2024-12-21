@@ -1,6 +1,13 @@
 <?php
 require_once 'lib/init.php'; // Inclure Stripe PHP
-\Stripe\Stripe::setApiKey(getenv('STRIPE_SECRET_KEY')); // Utilisez une variable d'environnement pour la clé secrète Stripe
+// Récupérer la clé secrète Stripe depuis une variable d'environnement
+$stripeSecretKey = getenv('sk_live_qFFqmqh3jYq4iczMGXnf9qZk');
+if (!$stripeSecretKey) {
+    http_response_code(500);
+    echo json_encode(['error' => 'La clé secrète Stripe n\'est pas configurée correctement.']);
+    exit;
+}
+\Stripe\Stripe::setApiKey($stripeSecretKey);
 
 header('Content-Type: application/json');
 
