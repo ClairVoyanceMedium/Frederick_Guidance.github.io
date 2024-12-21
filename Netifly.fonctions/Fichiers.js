@@ -1,4 +1,4 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripe = require('stripe')(process.env.sk_live_qFFqmqh3jYq4iczMGXnf9qZk);
 
 exports.handler = async (event) => {
     const sig = event.headers['stripe-signature'];
