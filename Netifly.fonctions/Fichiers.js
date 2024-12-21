@@ -1,8 +1,8 @@
-const stripe = require('stripe')(process.env.sk_live_qFFqmqh3jYq4i....ma cle secrete nf9qZk);
+const stripe = require('stripe')(process.env.sk_live_q.......4i....ma cle secrete nf9qZk);
 
 exports.handler = async (event) => {
     const sig = event.headers['stripe-signature'];
-    const endpointSecret = process.env.whsec_AOnriwpseIAg.... ma cle wehbook mabLg1H97Gki;
+    const endpointSecret = process.env.whsec_A......l.... ma cle wehbook mabLg1H97Gki;
 
     let stripeEvent;
 
