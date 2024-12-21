@@ -2,7 +2,7 @@
 require_once 'lib/init.php'; // Inclure Stripe PHP
 
 // Récupérer la clé secrète Stripe depuis une variable d'environnement
-$stripeSecretKey = getenv('STRIPE_SECRET_KEY');
+$stripeSecretKey = getenv('sk_live_qFFqmqh3jYq4iczMGXnf9qZk');
 if (!$stripeSecretKey) {
     http_response_code(500);
     echo json_encode(['error' => 'La clé secrète Stripe n\'est pas configurée correctement.']);
