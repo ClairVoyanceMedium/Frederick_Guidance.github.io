@@ -1,7 +1,7 @@
 <?php
 require_once 'lib/init.php'; // Inclure Stripe PHP
 
-\Stripe\Stripe::setApiKey('sk_live_votre_cle_secrete'); // Remplacez par votre clé secrète
+\Stripe\Stripe::setApiKey('sk_live_qFFqmqh3jYq4iczMGXnf9qZk'); // Remplacez par votre clé secrète
 
 header('Content-Type: application/json');
 
