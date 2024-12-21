@@ -322,26 +322,29 @@
 </script>
     
 <script>
+    <script>
     document.addEventListener("DOMContentLoaded", () => {
-    const userLang = navigator.language || navigator.userLanguage; // Détecte la langue du navigateur
-    const supportedLangs = ["fr", "en", "es", "zh", "hi", "ar", "pt", "ru", "ja", "de", "it", "ko", "bn"]; // Langues supportées
-    const defaultLang = "fr"; // Langue par défaut
+        const supportedLangs = ["fr", "en", "es", "zh", "hi", "ar", "pt", "ru", "ja", "de", "it", "ko", "bn"];
+        const defaultLang = "fr"; // Langue par défaut
+        const currentPath = window.location.pathname; // Chemin actuel de l'URL
+        const langCode = (navigator.language || navigator.userLanguage).split("-")[0]; // Langue du navigateur
 
-    // Extraction du code de langue principal (ex. : "fr-FR" -> "fr")
-    const langCode = userLang.split("-")[0];
-
-    // Vérifie si la langue est supportée et redirige
-    if (supportedLangs.includes(langCode)) {
-        if (!window.location.pathname.includes(`/${langCode}/`)) {
-            window.location.href = `/${langCode}/`; // Redirige vers la version linguistique
+        function isSupportedLang(path) {
+            return supportedLangs.some(lang => path.includes(`/${lang}/`));
         }
-    } else {
-        // Si non supporté, redirige vers la langue par défaut (français)
-        if (!window.location.pathname.includes(`/${defaultLang}/`)) {
+
+        if (isSupportedLang(currentPath)) {
+            console.log("L'utilisateur est déjà sur la bonne version linguistique :", currentPath);
+            return;
+        }
+
+        if (supportedLangs.includes(langCode)) {
+            window.location.href = `/${langCode}/`;
+        } else {
             window.location.href = `/${defaultLang}/`;
         }
-    }
-});
+    });
+</script>
 </script>
     <script src="https://js.stripe.com/v3/" async></script>
 <script>
