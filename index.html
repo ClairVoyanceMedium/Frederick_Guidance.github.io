@@ -234,6 +234,13 @@
     const elementsPrix = document.querySelectorAll(".prix");
     const messageFallback = "La conversion des devises est indisponible. Les prix sont affichés en euros.";
 
+    // Taux de conversion par défaut (en cas d'échec des API)
+    const tauxConversionParDefaut = {
+        USD: 1.1,
+        GBP: 0.85,
+        EUR: 1,
+    };
+
     if (!elementsPrix.length) {
         console.warn("Aucun élément .prix trouvé pour l'affichage des prix.");
         return;
@@ -265,8 +272,7 @@
 
             tauxConversion = {
                 rates: tauxData.rates,
-                symbols: tauxData.symbols || {}, // Ajout des symboles si l'API les fournit
-                timestamp: Date.now()
+                timestamp: Date.now(),
             };
 
             localStorage.setItem("tauxConversion", JSON.stringify(tauxConversion));
@@ -274,31 +280,30 @@
         }
 
         // Utilisation des taux récupérés
-        const taux = tauxConversion.rates[deviseLocale] || 1;
-    elementsPrix.forEach((element, index) => {
-        const prixConverti = (prixEnEuros[index] * taux).toFixed(2);
-        element.textContent = `${prixConverti} ${getCurrencySymbol(deviseLocale, tauxConversion)}`;
-    });
-} catch (error) {
-    console.error("Erreur lors de la gestion des taux de conversion :", error);
+        const taux = tauxConversion.rates[deviseLocale] || tauxConversionParDefaut[deviseLocale] || 1;
+        elementsPrix.forEach((element, index) => {
+            const prixConverti = (prixEnEuros[index] * taux).toFixed(2);
+            element.textContent = `${prixConverti} ${getCurrencySymbol(deviseLocale, tauxConversion)}`;
+        });
+    } catch (error) {
+        console.error("Erreur lors de la gestion des taux de conversion :", error);
 
-        // Fallback : Afficher un message d'erreur et les prix en euros
-    elementsPrix.forEach((element, index) => {
-        element.textContent = `${prixEnEuros[index]} €`;
-    });
+        // Fallback : Utiliser les taux de conversion par défaut
+        const taux = tauxConversionParDefaut[deviseLocale] || 1;
+        elementsPrix.forEach((element, index) => {
+            const prixConverti = (prixEnEuros[index] * taux).toFixed(2);
+            element.textContent = `${prixConverti} ${getCurrencySymbol(deviseLocale, null)}`;
+        });
 
-    const fallbackContainer = document.getElementById("fallback-message");
-    if (fallbackContainer) {
-        fallbackContainer.style.display = "block"; // Afficher le message de fallback
+        const fallbackContainer = document.getElementById("fallback-message");
+        if (fallbackContainer) {
+            fallbackContainer.style.display = "block"; // Afficher le message de fallback
+        }
     }
-}
 
     // Fonction pour obtenir le symbole de la devise
     function getCurrencySymbol(currencyCode, ratesData) {
-        const defaultSymbols = { "USD": "$", "EUR": "€", "GBP": "£", "JPY": "¥", "CNY": "¥", "INR": "₹" };
-        if (ratesData && ratesData.symbols && ratesData.symbols[currencyCode]) {
-            return ratesData.symbols[currencyCode];
-        }
+        const defaultSymbols = { USD: "$", EUR: "€", GBP: "£", JPY: "¥", CNY: "¥", INR: "₹" };
         return defaultSymbols[currencyCode] || currencyCode;
     }
 
