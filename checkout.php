@@ -1,33 +1,31 @@
 <?php
-require_once 'lib/init.php'; // Inclure Stripe PHP
+// Charger les fichiers nécessaires et initialiser Stripe
+require_once 'lib/init.php';
 
-// Récupérer la clé secrète Stripe depuis une variable d'environnement
+// Utiliser un fichier de configuration ou une variable d'environnement pour stocker la clé secrète
 $stripeSecretKey = getenv('sk_live_qFFqmqh3jYq4iczMGXnf9qZk');
 if (!$stripeSecretKey) {
     http_response_code(500);
-    echo json_encode(['error' => 'La clé secrète Stripe n\'est pas configurée correctement.']);
+    echo json_encode(['error' => "La configuration de la clé secrète Stripe est manquante ou incorrecte."]);
     exit;
 }
 
+// Initialiser Stripe avec la clé secrète
 \Stripe\Stripe::setApiKey($stripeSecretKey);
 
+// Définir les en-têtes de réponse JSON
 header('Content-Type: application/json');
 
 try {
-    // Langue par défaut et langues supportées
+    // Définir la langue par défaut et les langues supportées
     $defaultLang = 'fr';
-    $supportedLangs = [
-        'fr', 'en', 'es', 'de', 'it', 'pt', 'zh', 'ja', 'ko', 'ru', 'ar', 'hi',
-        'bn', 'ms', 'id', 'th', 'vi', 'tr', 'nl', 'pl', 'sv', 'no', 'da', 'fi',
-        'el', 'he', 'cs', 'sk', 'hu', 'ro', 'bg', 'uk', 'sr', 'hr', 'lt', 'lv',
-        'et', 'sl', 'mt', 'ga', 'cy', 'is', 'sq'
-    ];
+    $supportedLangs = ['fr', 'en', 'es', 'de', 'it', 'pt', 'zh', 'ja', 'ko', 'ru', 'ar', 'hi', 'bn', 'ms', 'id', 'th', 'vi', 'tr', 'nl', 'pl', 'sv', 'no', 'da', 'fi', 'el', 'he', 'cs', 'sk', 'hu', 'ro', 'bg', 'uk', 'sr', 'hr', 'lt', 'lv', 'et', 'sl', 'mt', 'ga', 'cy', 'is', 'sq'];
 
-    // Détecter la langue du client
+    // Détecter la langue client
     $clientLang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? $defaultLang, 0, 2);
     $lang = in_array($clientLang, $supportedLangs) ? $clientLang : $defaultLang;
 
-    // Traductions pour les 42 langues
+    // Chargement des traductions par langue
     $translations = [
         'fr' => ['product_name' => "Voyance - {nbQuestions} question(s)", 'error_invalid_questions' => "Nombre de questions invalide."],
         'en' => ['product_name' => "Fortune Telling - {nbQuestions} question(s)", 'error_invalid_questions' => "Invalid number of questions."],
@@ -73,10 +71,9 @@ try {
         'is' => ['product_name' => "Spádómur - {nbQuestions} spurning(ar)", 'error_invalid_questions' => "Ógildur fjöldi spurninga."],
         'sq' => ['product_name' => "Parashikim - {nbQuestions} pyetje(ve)", 'error_invalid_questions' => "Numër pyetjesh i pavlefshëm."],
     ];
-
     $text = $translations[$lang] ?? $translations[$defaultLang];
 
-    // Lire les données envoyées par le frontend
+    // Lire les données d'entrée envoyées par le client
     $input = file_get_contents('php://input');
     $data = json_decode($input, true);
 
@@ -84,10 +81,9 @@ try {
     if (!isset($data['nbQuestions']) || !is_int($data['nbQuestions']) || $data['nbQuestions'] <= 0) {
         throw new Exception($text['error_invalid_questions']);
     }
-
     $nbQuestions = $data['nbQuestions'];
 
-    // Définir les prix en centimes (Stripe utilise des centimes)
+    // Définir les prix en centimes
     $prices = [
         1 => 600,  // 6 € pour 1 question
         3 => 1500, // 15 € pour 3 questions
@@ -98,27 +94,28 @@ try {
         throw new Exception($text['error_invalid_questions']);
     }
 
-    // Créer une session Stripe
+    // Créer une session Stripe Checkout
     $session = \Stripe\Checkout\Session::create([
         'payment_method_types' => ['card'],
         'line_items' => [[
             'price_data' => [
                 'currency' => 'eur',
-                'product_data' => ['name' => str_replace('{nbQuestions}', $nbQuestions, $text['product_name'])],
+                'product_data' => [
+                    'name' => str_replace('{nbQuestions}', $nbQuestions, $text['product_name']),
+                ],
                 'unit_amount' => $prices[$nbQuestions],
             ],
             'quantity' => 1,
         ]],
         'mode' => 'payment',
-        'success_url' => 'https://votre-site.com/success', // Remplacez par votre URL
-        'cancel_url' => 'https://votre-site.com/cancel',   // Remplacez par votre URL
+        'success_url' => 'https://votre-site.com/success', // URL de redirection après succès
+        'cancel_url' => 'https://votre-site.com/cancel',   // URL de redirection après annulation
     ]);
 
-    // Retourner l'ID de la session
+    // Retourner l'ID de la session au client
     echo json_encode(['id' => $session->id]);
 } catch (Exception $e) {
     // Gérer les erreurs
     http_response_code(500);
     echo json_encode(['error' => $e->getMessage()]);
 }
-?>
