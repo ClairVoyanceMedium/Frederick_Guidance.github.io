@@ -323,25 +323,47 @@
 <script>
     document.addEventListener("DOMContentLoaded", () => {
     const supportedLangs = ["fr", "en", "es", "zh", "hi", "ar", "pt", "ru", "ja", "de", "it", "ko", "bn"];
-    const defaultLang = "fr";
-    const currentPath = window.location.pathname;
-    const currentSearch = window.location.search; // Paramètres de l'URL
-    const currentHash = window.location.hash; // Ancre de l'URL
-    const langCode = (navigator.language || navigator.userLanguage).split("-")[0];
+    const defaultLang = "fr"; // Langue par défaut
+    const langCode = (navigator.language || navigator.userLanguage).split("-")[0]; // Langue du navigateur
+    const currentPath = window.location.pathname; // Chemin actuel de la page
+    const currentSearch = window.location.search; // Paramètres dans l'URL
+    const currentHash = window.location.hash; // Ancre dans l'URL
 
+    /**
+     * Fonction pour vérifier si le chemin contient une langue supportée.
+     * @param {string} path - Chemin de l'URL.
+     * @returns {boolean}
+     */
     function isSupportedLang(path) {
-        return supportedLangs.some(lang => path.includes(`/${lang}/`));
+        return supportedLangs.some(lang => path.startsWith(`/${lang}/`));
     }
 
-    // Redirection intelligente avec logs
+    /**
+     * Fonction pour générer un chemin normalisé.
+     * @param {string} path - Chemin à normaliser.
+     * @returns {string}
+     */
+    function normalizePath(path) {
+        return path.startsWith("/") ? path : `/${path}`;
+    }
+
+    /**
+     * Redirection vers la langue cible si nécessaire.
+     */
     if (!isSupportedLang(currentPath)) {
-        const targetLang = supportedLangs.includes(langCode) ? langCode : defaultLang;
-        if (!currentPath.includes(`/${targetLang}/`)) {
-            console.log(`Redirection vers la langue : ${targetLang}`);
-            window.location.href = `/${targetLang}/${currentPath}${currentSearch}${currentHash}`;
+        const targetLang = supportedLangs.includes(langCode) ? langCode : defaultLang; // Langue cible
+        const normalizedPath = normalizePath(currentPath);
+
+        // Vérifie si la redirection est nécessaire (évite les boucles)
+        if (!normalizedPath.startsWith(`/${targetLang}/`)) {
+            const newPath = `/${targetLang}${normalizedPath}${currentSearch}${currentHash}`;
+            console.log(`Redirection vers : ${newPath}`);
+            window.location.href = newPath; // Redirection vers la langue cible
         } else {
-            console.log(`L'utilisateur est déjà sur la version correcte : ${currentPath}`);
+            console.log("Aucune redirection nécessaire : Langue déjà correcte.");
         }
+    } else {
+        console.log("Aucune redirection nécessaire : Chemin contient une langue supportée.");
     }
 });
 </script>
