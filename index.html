@@ -288,6 +288,7 @@ upgrade-insecure-requests;">
     <a href="Protections et Politiques de Confidentialité.html" target="_blank" rel="noopener noreferrer">
         Politique de Confidentialité
     </a>
+    <a href="#" id="revoke-cookies-link">Réinitialiser vos préférences</a>
 </footer>
 
     <script>
@@ -497,6 +498,8 @@ upgrade-insecure-requests;">
     const banner = document.getElementById('cookie-banner');
     const acceptBtn = document.getElementById('accept-cookies');
     const customizeBtn = document.getElementById('customize-cookies');
+    const revokeBtn = document.getElementById('revoke-cookies');
+    const revokeLink = document.getElementById('revoke-cookies-link'); // Lien dans le footer pour réinitialiser
     const consent = JSON.parse(localStorage.getItem('cookieConsent')) || null;
 
     // Initialiser les préférences des cookies
@@ -510,7 +513,7 @@ upgrade-insecure-requests;">
     // Gestion des clics sur le bouton "Accepter"
     acceptBtn.addEventListener('click', () => {
         const preferences = { essential: true, analytics: true, marketing: true };
-        saveConsent(preferences);
+        saveConsent(preferences, 'accepted');
         applyCookiePreferences(preferences);
         banner.style.display = 'none';
     });
@@ -522,15 +525,32 @@ upgrade-insecure-requests;">
             analytics: confirm('Acceptez-vous les cookies analytiques ?'),
             marketing: confirm('Acceptez-vous les cookies marketing ?')
         };
-        saveConsent(preferences);
+        saveConsent(preferences, 'customized');
         applyCookiePreferences(preferences);
         banner.style.display = 'none';
     });
 
-    /**
-     * Applique les préférences des cookies
-     * @param {Object} preferences - Préférences utilisateur
-     */
+    // Gestion des clics sur le bouton "Réinitialiser"
+    revokeBtn.addEventListener('click', () => resetConsent());
+    
+    // Gestion des clics sur le lien "Réinitialiser" dans le footer
+    if (revokeLink) {
+        revokeLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            resetConsent();
+        });
+    }
+
+    // Fonction pour réinitialiser les préférences
+    function resetConsent() {
+        localStorage.removeItem('cookieConsent');
+        deleteAllCookies();
+        banner.style.display = 'block';
+        blockScripts(); // Bloquer tous les scripts non essentiels
+        console.log("Consentement utilisateur réinitialisé.");
+    }
+
+    // Appliquer les préférences des cookies
     function applyCookiePreferences(preferences) {
         if (!preferences.analytics) {
             blockScripts();
@@ -542,31 +562,33 @@ upgrade-insecure-requests;">
         }
     }
 
-    /**
-     * Bloque les scripts non essentiels (analytiques et marketing)
-     */
+    // Bloquer les scripts non essentiels (analytiques et marketing)
     function blockScripts() {
         document.querySelectorAll('script[data-cookie="analytics"], script[data-cookie="marketing"]').forEach((script) => {
             script.remove();
         });
     }
 
-    /**
-     * Supprime les cookies spécifiés
-     * @param {Array} cookieNames - Noms des cookies à supprimer
-     */
+    // Supprimer les cookies spécifiés
     function deleteCookies(cookieNames) {
         cookieNames.forEach((cookie) => {
             document.cookie = `${cookie}=; Max-Age=0; path=/; domain=.clairvoyancemedium.github.io; Secure; SameSite=Strict`;
         });
     }
 
-    /**
-     * Sauvegarde les préférences des cookies dans le localStorage
-     * @param {Object} preferences - Préférences utilisateur
-     */
-    function saveConsent(preferences) {
+    // Supprimer tous les cookies
+    function deleteAllCookies() {
+        document.cookie.split(';').forEach((cookie) => {
+            const eqPos = cookie.indexOf('=');
+            const name = eqPos > -1 ? cookie.substring(0, eqPos) : cookie;
+            document.cookie = `${name}=; Max-Age=0; path=/; domain=.clairvoyancemedium.github.io; Secure; SameSite=Strict`;
+        });
+    }
+
+    // Sauvegarder les préférences des cookies dans le localStorage
+    function saveConsent(preferences, action) {
         localStorage.setItem('cookieConsent', JSON.stringify(preferences));
+        console.log(`Consentement utilisateur : ${action}`);
     }
 });
     </script>
