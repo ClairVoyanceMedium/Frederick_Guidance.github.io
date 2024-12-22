@@ -52,11 +52,18 @@
     <!-- Content Security Policy -->
     <meta http-equiv="Content-Security-Policy" content="
     default-src 'self'; 
-    script-src 'self' https://js.stripe.com; 
-    style-src 'self' https://fonts.googleapis.com; 
-    font-src https://fonts.gstatic.com; 
+    script-src 'self' https://js.stripe.com 'strict-dynamic' 'unsafe-eval'; 
+    style-src 'self' https://fonts.googleapis.com 'nonce-{NONCE_VALUE}'; 
+    font-src https://fonts.gstatic.com 'self'; 
     img-src 'self' https: data:; 
-    connect
+    connect-src 'self' https://ipapi.co https://api.exchangerate-api.com https://js.stripe.com; 
+    frame-src 'self' https://js.stripe.com; 
+    object-src 'none'; 
+    base-uri 'self'; 
+    form-action 'self'; 
+    block-all-mixed-content; 
+    upgrade-insecure-requests; 
+    report-uri /csp-report-endpoint;">
 
     <link rel="canonical" href="https://clairvoyancemedium.github.io/VoyanceparEmail">
     <link rel="preconnect" href="https://fonts.googleapis.com">
