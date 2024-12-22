@@ -13,6 +13,32 @@ if (!$stripeSecretKey) {
 // Initialiser Stripe avec la clé secrète
 \Stripe\Stripe::setApiKey($stripeSecretKey);
 
+try {
+    // Vérifiez si le cookie existe déjà
+    if (!isset($_COOKIE['deviseLocale'])) {
+        // Détection de la devise via une API (ou une méthode personnalisée)
+        $geoResponse = file_get_contents('https://ipapi.co/json/');
+        $geoData = json_decode($geoResponse, true);
+        $deviseLocale = $geoData['currency'] ?? $defaultCurrency;
+
+        // Définir un cookie sécurisé
+        setcookie('deviseLocale', $deviseLocale, [
+            'expires' => time() + 86400, // 1 jour
+            'path' => '/',
+            'domain' => 'clairvoyancemedium.github.io', // Assurez-vous que cela correspond à votre domaine
+            'secure' => true, // HTTPS obligatoire
+            'httponly' => true, // Interdit l'accès au JavaScript
+            'samesite' => 'Strict', // Empêche les envois inter-sites
+        ]);
+    } else {
+        // Récupérer la devise depuis le cookie
+        $deviseLocale = $_COOKIE['deviseLocale'];
+    }
+} catch (Exception $e) {
+    // En cas d'erreur, utiliser la devise par défaut
+    $deviseLocale = $defaultCurrency;
+}
+
 // Définir les en-têtes de réponse JSON
 header('Content-Type: application/json');
 
