@@ -529,6 +529,10 @@ upgrade-insecure-requests;">
                 if (!preferences.analytics) {
                     // Désactivez les scripts analytiques
                     console.log("Désactivation des cookies analytiques.");
+                if (!consent) {
+            // Bloquer tous les cookies non essentiels
+            applyCookiePreferences({ essential: true, analytics: false, marketing: false });
+            }
                 }
                 if (!preferences.marketing) {
                     // Désactivez les scripts marketing
