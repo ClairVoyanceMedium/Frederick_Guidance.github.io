@@ -41,7 +41,7 @@ function encryptKey(key) {
     return { iv: iv.toString('hex'), content: encrypted.toString('hex') };
 }
 
-// Fonction pour déchiffrer les clés
+// Fonction pour déchiffrer une clé
 function decryptKey(encryptedKey) {
     try {
         const algorithm = 'aes-256-cbc';
@@ -81,22 +81,39 @@ function rotateKeys() {
     const keys = loadKeys();
 
     if (now - keys.lastRotation > KEY_ROTATION_INTERVAL) {
-        logger.info('Rotation des clés chiffrées en cours.');
-        const newKeys = {
-            STRIPE_SECRET_KEY: encryptKey(keys.STRIPE_SECRET_KEY),
-            STRIPE_ENDPOINT_SECRET: encryptKey(keys.STRIPE_ENDPOINT_SECRET),
+        logger.info('Rotation des clés Stripe en cours.');
+        const newStripeKeys = {
+            STRIPE_SECRET_KEY: encryptKey(`sk_live_${crypto.randomBytes(24).toString('hex')}`),
+            STRIPE_ENDPOINT_SECRET: encryptKey(`whsec_${crypto.randomBytes(24).toString('hex')}`),
             lastRotation: now
         };
-        fs.writeFileSync(ENCRYPTED_KEYS_FILE, JSON.stringify(newKeys, null, 2));
-        logger.info('Rotation des clés terminée avec succès.');
+        fs.writeFileSync(ENCRYPTED_KEYS_FILE, JSON.stringify(newStripeKeys, null, 2));
+        logger.info('Rotation des clés Stripe terminée avec succès.');
     }
 }
 
+// Appel à la rotation des clés au démarrage
 rotateKeys();
 
 // Chargement sécurisé des clés Stripe
 const keys = loadKeys();
 const stripeInstance = stripe(keys.STRIPE_SECRET_KEY);
+
+// Gestion centralisée des événements Stripe
+const eventHandlers = {
+    'checkout.session.completed': (data) => {
+        logger.info(`Paiement confirmé pour la session: ${data.id}`);
+        // Logique métier spécifique ici (mise à jour DB, envoi d'emails, etc.)
+    },
+    'invoice.payment_succeeded': (data) => {
+        logger.info(`Paiement réussi pour la facture: ${data.id}`);
+        // Logique métier spécifique ici
+    },
+    'payment_intent.succeeded': (data) => {
+        logger.info(`Paiement réussi pour le paiement intent: ${data.id}`);
+        // Logique métier spécifique ici
+    },
+};
 
 // Validation des données Stripe
 function validateStripeData(type, data) {
@@ -114,6 +131,11 @@ function validateStripeData(type, data) {
                 throw new Error(`Validation échouée pour ${type}: ID de facture manquant ou invalide.`);
             }
         },
+        'payment_intent.succeeded': () => {
+            if (!data.id || typeof data.id !== 'string') {
+                throw new Error(`Validation échouée pour ${type}: ID de paiement intent manquant ou invalide.`);
+            }
+        },
     };
 
     if (validations[type]) {
@@ -123,6 +145,7 @@ function validateStripeData(type, data) {
     }
 }
 
+// Handler pour le webhook
 exports.handler = async (event) => {
     if (!event || !event.headers || !event.body) {
         logger.error('Requête mal formée. Vérifiez les entrées.');
@@ -150,12 +173,11 @@ exports.handler = async (event) => {
     try {
         validateStripeData(stripeEvent.type, stripeEvent.data.object);
 
-        if (stripeEvent.type === 'checkout.session.completed') {
-            const session = stripeEvent.data.object;
-            logger.info(`Paiement confirmé pour la session: ${session.id}`);
-            // Insérez ici votre logique métier (mise à jour de DB, envoi d'emails, etc.)
+        const handler = eventHandlers[stripeEvent.type];
+        if (handler) {
+            handler(stripeEvent.data.object);
         } else {
-            logger.warn(`Événement non pris en charge: ${stripeEvent.type}`);
+            logger.warn(`Aucun gestionnaire pour l'événement: ${stripeEvent.type}`);
         }
 
         return {
@@ -170,11 +192,3 @@ exports.handler = async (event) => {
         };
     }
 };
-
-// Suggestions supplémentaires pour la sécurité et la maintenance :
-// 1. Tests unitaires et d'intégration :
-//    Créez une suite de tests couvrant les cas de succès, d'erreur de signature et d'autres scénarios.
-// 2. Amélioration du monitoring :
-//    Intégrez des alertes avec des outils comme AWS CloudWatch, Datadog ou Sentry pour détecter les anomalies rapidement.
-// 3. Documentation :
-//    Documentez les étapes de configuration, de test et de déploiement pour une maintenance simplifiée.
