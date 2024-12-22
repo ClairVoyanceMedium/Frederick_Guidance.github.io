@@ -26,6 +26,20 @@ if (!process.env.KEY_SECRET) {
 
 // Fichier contenant les clés chiffrées
 const ENCRYPTED_KEYS_FILE = path.resolve(__dirname, './encrypted_keys.json');
+const KEY_ROTATION_INTERVAL = 30 * 24 * 60 * 60 * 1000; // 30 jours
+
+// Fonction pour chiffrer une clé
+function encryptKey(key) {
+    const algorithm = 'aes-256-cbc';
+    const secretKey = process.env.KEY_SECRET;
+    const iv = crypto.randomBytes(16);
+
+    const cipher = crypto.createCipheriv(algorithm, Buffer.from(secretKey, 'hex'), iv);
+    let encrypted = cipher.update(key);
+    encrypted = Buffer.concat([encrypted, cipher.final()]);
+
+    return { iv: iv.toString('hex'), content: encrypted.toString('hex') };
+}
 
 // Fonction pour déchiffrer les clés
 function decryptKey(encryptedKey) {
@@ -53,12 +67,32 @@ function loadKeys() {
         return {
             STRIPE_SECRET_KEY: decryptKey(encryptedKeys.STRIPE_SECRET_KEY),
             STRIPE_ENDPOINT_SECRET: decryptKey(encryptedKeys.STRIPE_ENDPOINT_SECRET),
+            lastRotation: encryptedKeys.lastRotation
         };
     } catch (err) {
         logger.error('Erreur lors du chargement des clés:', err);
         throw new Error('Impossible de charger les clés. Vérifiez le fichier des clés chiffrées.');
     }
 }
+
+// Rotation automatique des clés
+function rotateKeys() {
+    const now = Date.now();
+    const keys = loadKeys();
+
+    if (now - keys.lastRotation > KEY_ROTATION_INTERVAL) {
+        logger.info('Rotation des clés chiffrées en cours.');
+        const newKeys = {
+            STRIPE_SECRET_KEY: encryptKey(keys.STRIPE_SECRET_KEY),
+            STRIPE_ENDPOINT_SECRET: encryptKey(keys.STRIPE_ENDPOINT_SECRET),
+            lastRotation: now
+        };
+        fs.writeFileSync(ENCRYPTED_KEYS_FILE, JSON.stringify(newKeys, null, 2));
+        logger.info('Rotation des clés terminée avec succès.');
+    }
+}
+
+rotateKeys();
 
 // Chargement sécurisé des clés Stripe
 const keys = loadKeys();
@@ -138,11 +172,9 @@ exports.handler = async (event) => {
 };
 
 // Suggestions supplémentaires pour la sécurité et la maintenance :
-// 1. Régénération périodique des clés :
-//    Implémentez un processus automatisé pour régénérer les clés chiffrées à intervalle régulier.
-// 2. Tests unitaires et d'intégration :
+// 1. Tests unitaires et d'intégration :
 //    Créez une suite de tests couvrant les cas de succès, d'erreur de signature et d'autres scénarios.
-// 3. Amélioration du monitoring :
+// 2. Amélioration du monitoring :
 //    Intégrez des alertes avec des outils comme AWS CloudWatch, Datadog ou Sentry pour détecter les anomalies rapidement.
-// 4. Documentation :
+// 3. Documentation :
 //    Documentez les étapes de configuration, de test et de déploiement pour une maintenance simplifiée.
