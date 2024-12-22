@@ -492,52 +492,44 @@ upgrade-insecure-requests;">
     <!-- Script du gestionnaire de cookies -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const banner = document.getElementById('cookie-banner');
-            const acceptBtn = document.getElementById('accept-cookies');
-            const customizeBtn = document.getElementById('customize-cookies');
+    const banner = document.getElementById('cookie-banner');
+    const acceptBtn = document.getElementById('accept-cookies');
+    const customizeBtn = document.getElementById('customize-cookies');
 
-            // Vérifiez si le consentement est déjà donné
-            const consent = localStorage.getItem('cookieConsent');
-            if (consent) {
-                banner.style.display = 'none';
-                applyCookiePreferences(JSON.parse(consent));
-            }
+    const consent = localStorage.getItem('cookieConsent');
+    if (consent) {
+        applyCookiePreferences(JSON.parse(consent));
+        banner.style.display = 'none';
+    }
 
-            // Action lors du clic sur "Accepter"
-            acceptBtn.addEventListener('click', () => {
-                localStorage.setItem('cookieConsent', JSON.stringify({ essential: true, analytics: true, marketing: true }));
-                banner.style.display = 'none';
-                applyCookiePreferences({ essential: true, analytics: true, marketing: true });
-            });
+    acceptBtn.addEventListener('click', () => {
+        const preferences = { essential: true, analytics: true, marketing: true };
+        localStorage.setItem('cookieConsent', JSON.stringify(preferences));
+        applyCookiePreferences(preferences);
+        banner.style.display = 'none';
+    });
 
-            // Action lors du clic sur "Personnaliser"
-            customizeBtn.addEventListener('click', () => {
-                const userPreferences = {
-                    essential: true, // Toujours activé
-                    analytics: confirm('Acceptez-vous les cookies analytiques ?'),
-                    marketing: confirm('Acceptez-vous les cookies marketing ?'),
-                };
-                localStorage.setItem('cookieConsent', JSON.stringify(userPreferences));
-                banner.style.display = 'none';
-                applyCookiePreferences(userPreferences);
-            });
+    customizeBtn.addEventListener('click', () => {
+        const preferences = {
+            essential: true,
+            analytics: confirm('Acceptez-vous les cookies analytiques ?'),
+            marketing: confirm('Acceptez-vous les cookies marketing ?')
+        };
+        localStorage.setItem('cookieConsent', JSON.stringify(preferences));
+        applyCookiePreferences(preferences);
+        banner.style.display = 'none';
+    });
 
-            // Fonction pour appliquer les préférences
-            function applyCookiePreferences(preferences) {
-                if (!preferences.analytics) {
-                    // Désactivez les scripts analytiques
-                    console.log("Désactivation des cookies analytiques.");
-                if (!consent) {
-            // Bloquer tous les cookies non essentiels
-            applyCookiePreferences({ essential: true, analytics: false, marketing: false });
-            }
-                }
-                if (!preferences.marketing) {
-                    // Désactivez les scripts marketing
-                    console.log("Désactivation des cookies marketing.");
-                }
-            }
-        });
+    function applyCookiePreferences(preferences) {
+        if (!preferences.analytics) blockScripts();
+        if (!preferences.marketing) blockScripts();
+    }
+
+    function blockScripts() {
+        const scriptTags = document.querySelectorAll('script[data-cookie="analytics"], script[data-cookie="marketing"]');
+        scriptTags.forEach((script) => script.remove());
+    }
+});
     </script>
 
 </body>
