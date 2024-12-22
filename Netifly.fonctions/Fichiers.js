@@ -64,6 +64,31 @@ function loadKeys() {
 const keys = loadKeys();
 const stripeInstance = stripe(keys.STRIPE_SECRET_KEY);
 
+// Validation des données Stripe
+function validateStripeData(type, data) {
+    const validations = {
+        'checkout.session.completed': () => {
+            if (!data.id || typeof data.id !== 'string') {
+                throw new Error(`Validation échouée pour ${type}: ID de session manquant ou invalide.`);
+            }
+            if (!data.amount_total || typeof data.amount_total !== 'number') {
+                throw new Error(`Validation échouée pour ${type}: Montant total manquant ou invalide.`);
+            }
+        },
+        'invoice.payment_succeeded': () => {
+            if (!data.id || typeof data.id !== 'string') {
+                throw new Error(`Validation échouée pour ${type}: ID de facture manquant ou invalide.`);
+            }
+        },
+    };
+
+    if (validations[type]) {
+        validations[type]();
+    } else {
+        logger.warn(`Aucune validation spécifique définie pour le type d'événement: ${type}`);
+    }
+}
+
 exports.handler = async (event) => {
     if (!event || !event.headers || !event.body) {
         logger.error('Requête mal formée. Vérifiez les entrées.');
@@ -89,6 +114,8 @@ exports.handler = async (event) => {
     }
 
     try {
+        validateStripeData(stripeEvent.type, stripeEvent.data.object);
+
         if (stripeEvent.type === 'checkout.session.completed') {
             const session = stripeEvent.data.object;
             logger.info(`Paiement confirmé pour la session: ${session.id}`);
