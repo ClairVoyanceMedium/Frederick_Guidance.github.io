@@ -3,17 +3,35 @@ const stripe = require('stripe');
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
+const winston = require('winston'); // Pour un logging avancé
 
-// Chemin sécurisé pour les clés chiffrées
+// Configuration du logger
+const logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json()
+    ),
+    transports: [
+        new winston.transports.Console(),
+        new winston.transports.File({ filename: 'webhook.log' })
+    ]
+});
+
+// Vérification de la clé de chiffrement au démarrage
+if (!process.env.KEY_SECRET) {
+    logger.error('La clé de chiffrement (KEY_SECRET) est absente. Vérifiez les variables d\'environnement.');
+    throw new Error('KEY_SECRET manquante. L\'application ne peut pas démarrer.');
+}
+
+// Fichier contenant les clés chiffrées
 const ENCRYPTED_KEYS_FILE = path.resolve(__dirname, './encrypted_keys.json');
 
-// Fonction pour déchiffrer une clé avec gestion des erreurs
+// Fonction pour déchiffrer les clés
 function decryptKey(encryptedKey) {
     try {
         const algorithm = 'aes-256-cbc';
-        const secretKey = process.env.KEY_SECRET; // Clé de déchiffrement stockée en environnement
-        if (!secretKey) throw new Error('Clé de chiffrement absente dans les variables d’environnement.');
-
+        const secretKey = process.env.KEY_SECRET;
         const iv = Buffer.from(encryptedKey.iv, 'hex');
         const encryptedText = Buffer.from(encryptedKey.content, 'hex');
 
@@ -23,40 +41,35 @@ function decryptKey(encryptedKey) {
 
         return decrypted.toString();
     } catch (err) {
-        console.error('Erreur lors du déchiffrement des clés:', err);
+        logger.error('Erreur lors du déchiffrement des clés:', err);
         throw new Error('Échec du déchiffrement des clés. Vérifiez la configuration.');
     }
 }
 
-// Chargement des clés Stripe depuis un fichier chiffré
+// Chargement et déchiffrement des clés
 function loadKeys() {
     try {
-        if (!fs.existsSync(ENCRYPTED_KEYS_FILE)) {
-            throw new Error(`Fichier ${ENCRYPTED_KEYS_FILE} introuvable.`);
-        }
-
         const encryptedKeys = JSON.parse(fs.readFileSync(ENCRYPTED_KEYS_FILE, 'utf8'));
         return {
             STRIPE_SECRET_KEY: decryptKey(encryptedKeys.STRIPE_SECRET_KEY),
             STRIPE_ENDPOINT_SECRET: decryptKey(encryptedKeys.STRIPE_ENDPOINT_SECRET),
         };
     } catch (err) {
-        console.error('Erreur lors du chargement des clés Stripe:', err);
-        throw new Error('Impossible de charger les clés Stripe.');
+        logger.error('Erreur lors du chargement des clés:', err);
+        throw new Error('Impossible de charger les clés. Vérifiez le fichier des clés chiffrées.');
     }
 }
 
-// Initialisation de Stripe avec les clés déchiffrées
+// Chargement sécurisé des clés Stripe
 const keys = loadKeys();
 const stripeInstance = stripe(keys.STRIPE_SECRET_KEY);
 
 exports.handler = async (event) => {
-    // Vérification des données entrantes
     if (!event || !event.headers || !event.body) {
-        console.error('Requête mal formée. Vérifiez les données entrantes.');
+        logger.error('Requête mal formée. Vérifiez les entrées.');
         return {
             statusCode: 400,
-            body: JSON.stringify({ error: 'Requête mal formée' }),
+            body: JSON.stringify({ error: 'Bad Request' }),
         };
     }
 
@@ -66,47 +79,22 @@ exports.handler = async (event) => {
     let stripeEvent;
 
     try {
-        // Vérification initiale avec Stripe
         stripeEvent = stripeInstance.webhooks.constructEvent(event.body, sig, endpointSecret);
-
-        // Vérification supplémentaire (intégrité des données)
-        const computedSignature = crypto
-            .createHmac('sha256', endpointSecret)
-            .update(event.body, 'utf8')
-            .digest('hex');
-
-        if (!event.headers['stripe-signature'].includes(computedSignature)) {
-            throw new Error('Signature calculée non valide.');
-        }
     } catch (err) {
-        console.error('Erreur lors de la vérification de la signature Stripe:', err);
+        logger.error('Échec de la vérification de la signature du webhook:', err);
         return {
             statusCode: 400,
-            body: JSON.stringify({ error: 'Signature invalide' }),
+            body: JSON.stringify({ error: 'Webhook signature verification failed' }),
         };
     }
 
-    // Traitement de l'événement Stripe
     try {
-        switch (stripeEvent.type) {
-            case 'checkout.session.completed':
-                const session = stripeEvent.data.object;
-                console.log('Paiement confirmé pour la session:', session.id);
-                // Ajouter ici la logique métier (mise à jour DB, notifications, etc.)
-                break;
-
-            case 'invoice.payment_succeeded':
-                console.log('Paiement de facture réussi:', stripeEvent.data.object.id);
-                // Gérer ici les paiements réussis pour les factures
-                break;
-
-            case 'customer.subscription.deleted':
-                console.log('Abonnement annulé pour le client:', stripeEvent.data.object.customer);
-                // Gérer ici les abonnements annulés
-                break;
-
-            default:
-                console.warn('Type d’événement non pris en charge:', stripeEvent.type);
+        if (stripeEvent.type === 'checkout.session.completed') {
+            const session = stripeEvent.data.object;
+            logger.info(`Paiement confirmé pour la session: ${session.id}`);
+            // Insérez ici votre logique métier (mise à jour de DB, envoi d'emails, etc.)
+        } else {
+            logger.warn(`Événement non pris en charge: ${stripeEvent.type}`);
         }
 
         return {
@@ -114,18 +102,20 @@ exports.handler = async (event) => {
             body: JSON.stringify({ received: true }),
         };
     } catch (err) {
-        console.error('Erreur lors du traitement de l’événement Stripe:', err);
+        logger.error('Erreur lors du traitement de l’événement Stripe:', err);
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: 'Erreur interne du serveur' }),
+            body: JSON.stringify({ error: 'Internal Server Error' }),
         };
     }
 };
 
-// Notes pour maximiser la sécurité :
-// 1. Utilisez un gestionnaire de secrets (AWS Secrets Manager, Azure Key Vault).
-// 2. Appliquez des permissions restrictives au fichier des clés chiffrées : `chmod 600 encrypted_keys.json`.
-// 3. Protégez `KEY_SECRET` en le stockant uniquement dans des variables d’environnement ou des secrets sécurisés.
-// 4. Testez le webhook avec `stripe listen --forward-to` pour simuler des événements et vérifier la logique.
-// 5. Ajoutez des alertes sur les logs pour surveiller les anomalies.
-
+// Suggestions supplémentaires pour la sécurité et la maintenance :
+// 1. Régénération périodique des clés :
+//    Implémentez un processus automatisé pour régénérer les clés chiffrées à intervalle régulier.
+// 2. Tests unitaires et d'intégration :
+//    Créez une suite de tests couvrant les cas de succès, d'erreur de signature et d'autres scénarios.
+// 3. Amélioration du monitoring :
+//    Intégrez des alertes avec des outils comme AWS CloudWatch, Datadog ou Sentry pour détecter les anomalies rapidement.
+// 4. Documentation :
+//    Documentez les étapes de configuration, de test et de déploiement pour une maintenance simplifiée.
