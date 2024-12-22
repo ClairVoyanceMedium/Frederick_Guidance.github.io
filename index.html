@@ -532,7 +532,7 @@ upgrade-insecure-requests;">
 
     // Gestion des clics sur le bouton "Réinitialiser"
     revokeBtn.addEventListener('click', () => resetConsent());
-    
+
     // Gestion des clics sur le lien "Réinitialiser" dans le footer
     if (revokeLink) {
         revokeLink.addEventListener('click', (e) => {
@@ -543,11 +543,16 @@ upgrade-insecure-requests;">
 
     // Fonction pour réinitialiser les préférences
     function resetConsent() {
-        localStorage.removeItem('cookieConsent');
-        deleteAllCookies();
-        banner.style.display = 'block';
-        blockScripts(); // Bloquer tous les scripts non essentiels
-        console.log("Consentement utilisateur réinitialisé.");
+        try {
+            localStorage.removeItem('cookieConsent');
+            deleteAllCookies();
+            banner.style.display = 'block';
+            blockScripts(); // Bloquer tous les scripts non essentiels
+            console.log("Consentement utilisateur réinitialisé.");
+            alert("Vos préférences ont été réinitialisées.");
+        } catch (e) {
+            console.error("Erreur lors de la réinitialisation du consentement :", e);
+        }
     }
 
     // Appliquer les préférences des cookies
@@ -587,8 +592,12 @@ upgrade-insecure-requests;">
 
     // Sauvegarder les préférences des cookies dans le localStorage
     function saveConsent(preferences, action) {
-        localStorage.setItem('cookieConsent', JSON.stringify(preferences));
-        console.log(`Consentement utilisateur : ${action}`);
+        try {
+            localStorage.setItem('cookieConsent', JSON.stringify(preferences));
+            console.log(`Consentement utilisateur : ${action}`);
+        } catch (e) {
+            console.warn("Impossible de sauvegarder les préférences des cookies :", e);
+        }
     }
 });
     </script>
