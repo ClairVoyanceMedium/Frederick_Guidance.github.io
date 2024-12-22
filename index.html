@@ -482,12 +482,11 @@ upgrade-insecure-requests;">
             document.getElementById('loading-indicator').style.display = 'none';
         }
     }
-    <!-- Bannière de cookies -->
-    <div id="cookie-banner" style="display: block;">
-        <p>Nous utilisons des cookies pour améliorer votre expérience. <a href="politique.html">En savoir plus</a></p>
-        <button id="accept-cookies">Accepter</button>
-        <button id="customize-cookies">Personnaliser</button>
-    </div>
+    // Associer chaque bouton à une session Stripe
+    document.getElementById('checkout-link-1').addEventListener('click', () => handleCheckout(1)); // 1 question
+    document.getElementById('checkout-link-2').addEventListener('click', () => handleCheckout(3)); // 3 questions
+    document.getElementById('checkout-link-3').addEventListener('click', () => handleCheckout(5)); // 5 questions
+</script>
 
     <!-- Script du gestionnaire de cookies -->
     <script>
@@ -535,12 +534,6 @@ upgrade-insecure-requests;">
             }
         });
     </script>
-    
-    // Associer chaque bouton à une session Stripe
-    document.getElementById('checkout-link-1').addEventListener('click', () => handleCheckout(1)); // 1 question
-    document.getElementById('checkout-link-2').addEventListener('click', () => handleCheckout(3)); // 3 questions
-    document.getElementById('checkout-link-3').addEventListener('click', () => handleCheckout(5)); // 5 questions
-</script>
 
 </body>
 </html>
