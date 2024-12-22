@@ -13,6 +13,8 @@ if (!$stripeSecretKey) {
 // Initialiser Stripe avec la clé secrète
 \Stripe\Stripe::setApiKey($stripeSecretKey);
 
+$defaultCurrency = 'EUR'; // Exemple de devise par défaut
+
 try {
     // Vérifiez si le cookie existe déjà
     if (!isset($_COOKIE['deviseLocale'])) {
