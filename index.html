@@ -53,18 +53,18 @@
 
     <!-- Content Security Policy -->
     <meta http-equiv="Content-Security-Policy" content="
-default-src 'self'; 
-script-src 'self'; 
-style-src 'self' https://fonts.googleapis.com; 
-font-src https://fonts.gstatic.com; 
-img-src 'self' https: data:; 
-connect-src 'self' https://ipapi.co https://api.exchangerate-api.com; 
-frame-src 'self'; 
-object-src 'none'; 
-base-uri 'self'; 
-form-action 'self'; 
-block-all-mixed-content; 
-upgrade-insecure-requests;">
+    default-src 'self';
+    script-src 'self' https://js.stripe.com;
+    style-src 'self' https://fonts.googleapis.com;
+    font-src https://fonts.gstatic.com;
+    img-src 'self' https: data:;
+    connect-src 'self' https://api.stripe.com https://ipapi.co https://api.exchangerate-api.com;
+    frame-src https://js.stripe.com;
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self';
+    upgrade-insecure-requests;
+">
 
     <link rel="canonical" href="https://clairvoyancemedium.github.io/VoyanceparEmail">
     <link rel="preconnect" href="https://fonts.googleapis.com">
