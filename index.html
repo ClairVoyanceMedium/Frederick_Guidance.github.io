@@ -495,39 +495,76 @@ upgrade-insecure-requests;">
     const banner = document.getElementById('cookie-banner');
     const acceptBtn = document.getElementById('accept-cookies');
     const customizeBtn = document.getElementById('customize-cookies');
+    const consent = JSON.parse(localStorage.getItem('cookieConsent')) || null;
 
-    const consent = localStorage.getItem('cookieConsent');
+    // Initialiser les préférences des cookies
     if (consent) {
-        applyCookiePreferences(JSON.parse(consent));
+        applyCookiePreferences(consent);
         banner.style.display = 'none';
+    } else {
+        blockScripts(); // Bloquer les scripts non essentiels par défaut
     }
 
+    // Gestion des clics sur le bouton "Accepter"
     acceptBtn.addEventListener('click', () => {
         const preferences = { essential: true, analytics: true, marketing: true };
-        localStorage.setItem('cookieConsent', JSON.stringify(preferences));
+        saveConsent(preferences);
         applyCookiePreferences(preferences);
         banner.style.display = 'none';
     });
 
+    // Gestion des clics sur le bouton "Personnaliser"
     customizeBtn.addEventListener('click', () => {
         const preferences = {
             essential: true,
             analytics: confirm('Acceptez-vous les cookies analytiques ?'),
             marketing: confirm('Acceptez-vous les cookies marketing ?')
         };
-        localStorage.setItem('cookieConsent', JSON.stringify(preferences));
+        saveConsent(preferences);
         applyCookiePreferences(preferences);
         banner.style.display = 'none';
     });
 
+    /**
+     * Applique les préférences des cookies
+     * @param {Object} preferences - Préférences utilisateur
+     */
     function applyCookiePreferences(preferences) {
-        if (!preferences.analytics) blockScripts();
-        if (!preferences.marketing) blockScripts();
+        if (!preferences.analytics) {
+            blockScripts();
+            deleteCookies(['_ga', '_gid']); // Supprimer les cookies analytiques
+        }
+        if (!preferences.marketing) {
+            blockScripts();
+            deleteCookies(['_fbp']); // Supprimer les cookies marketing
+        }
     }
 
+    /**
+     * Bloque les scripts non essentiels (analytiques et marketing)
+     */
     function blockScripts() {
-        const scriptTags = document.querySelectorAll('script[data-cookie="analytics"], script[data-cookie="marketing"]');
-        scriptTags.forEach((script) => script.remove());
+        document.querySelectorAll('script[data-cookie="analytics"], script[data-cookie="marketing"]').forEach((script) => {
+            script.remove();
+        });
+    }
+
+    /**
+     * Supprime les cookies spécifiés
+     * @param {Array} cookieNames - Noms des cookies à supprimer
+     */
+    function deleteCookies(cookieNames) {
+        cookieNames.forEach((cookie) => {
+            document.cookie = `${cookie}=; Max-Age=0; path=/; domain=.clairvoyancemedium.github.io; Secure; SameSite=Strict`;
+        });
+    }
+
+    /**
+     * Sauvegarde les préférences des cookies dans le localStorage
+     * @param {Object} preferences - Préférences utilisateur
+     */
+    function saveConsent(preferences) {
+        localStorage.setItem('cookieConsent', JSON.stringify(preferences));
     }
 });
     </script>
