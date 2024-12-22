@@ -482,7 +482,60 @@ upgrade-insecure-requests;">
             document.getElementById('loading-indicator').style.display = 'none';
         }
     }
+    <!-- Bannière de cookies -->
+    <div id="cookie-banner" style="display: block;">
+        <p>Nous utilisons des cookies pour améliorer votre expérience. <a href="politique.html">En savoir plus</a></p>
+        <button id="accept-cookies">Accepter</button>
+        <button id="customize-cookies">Personnaliser</button>
+    </div>
 
+    <!-- Script du gestionnaire de cookies -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const banner = document.getElementById('cookie-banner');
+            const acceptBtn = document.getElementById('accept-cookies');
+            const customizeBtn = document.getElementById('customize-cookies');
+
+            // Vérifiez si le consentement est déjà donné
+            const consent = localStorage.getItem('cookieConsent');
+            if (consent) {
+                banner.style.display = 'none';
+                applyCookiePreferences(JSON.parse(consent));
+            }
+
+            // Action lors du clic sur "Accepter"
+            acceptBtn.addEventListener('click', () => {
+                localStorage.setItem('cookieConsent', JSON.stringify({ essential: true, analytics: true, marketing: true }));
+                banner.style.display = 'none';
+                applyCookiePreferences({ essential: true, analytics: true, marketing: true });
+            });
+
+            // Action lors du clic sur "Personnaliser"
+            customizeBtn.addEventListener('click', () => {
+                const userPreferences = {
+                    essential: true, // Toujours activé
+                    analytics: confirm('Acceptez-vous les cookies analytiques ?'),
+                    marketing: confirm('Acceptez-vous les cookies marketing ?'),
+                };
+                localStorage.setItem('cookieConsent', JSON.stringify(userPreferences));
+                banner.style.display = 'none';
+                applyCookiePreferences(userPreferences);
+            });
+
+            // Fonction pour appliquer les préférences
+            function applyCookiePreferences(preferences) {
+                if (!preferences.analytics) {
+                    // Désactivez les scripts analytiques
+                    console.log("Désactivation des cookies analytiques.");
+                }
+                if (!preferences.marketing) {
+                    // Désactivez les scripts marketing
+                    console.log("Désactivation des cookies marketing.");
+                }
+            }
+        });
+    </script>
+    
     // Associer chaque bouton à une session Stripe
     document.getElementById('checkout-link-1').addEventListener('click', () => handleCheckout(1)); // 1 question
     document.getElementById('checkout-link-2').addEventListener('click', () => handleCheckout(3)); // 3 questions
