@@ -2,21 +2,184 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Formulaire Questions</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire Professionnel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            color: #000;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .form-container {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        .form-container h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .form-container label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+            color: #555;
+            margin-top: 15px;
+        }
+        .form-container input, .form-container select, .form-container textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fff;
+            color: #000;
+        }
+        .form-container input[type="file"] {
+            border: none;
+        }
+        .form-container button {
+            background-color: #ff69b4;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+        .form-container button:hover {
+            background-color: #ff85c1;
+        }
+        .form-container .optional {
+            font-style: italic;
+            font-size: 0.9em;
+            color: #bbb;
+        }
+        .grid-container {
+            display: none;
+            grid-template-columns: repeat(9, 1fr);
+            gap: 5px;
+            margin-top: 10px;
+        }
+        .grid-item {
+            padding: 10px;
+            background-color: #e0e0e0;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 4px;
+            user-select: none;
+        }
+        .grid-item.selected {
+            background-color: #ff69b4;
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
-    <h1>Posez vos questions</h1>
-    <form name="questions" method="POST" data-netlify="true">
-        <input type="hidden" name="form-name" value="questions">
-        <label>Nom :</label><br>
-        <input type="text" name="nom" required><br>
-        <label>Email :</label><br>
-        <input type="email" name="email" required><br>
-        <label>Téléphone :</label><br>
-        <input type="text" name="telephone" required><br>
-        <label>Questions :</label><br>
-        <textarea name="questions" rows="5" required></textarea><br>
-        <button type="submit">Envoyer</button>
-    </form>
+    <div class="form-container">
+        <h1>Formulaire Professionnel</h1>
+        <form name="questions" method="POST" data-netlify="true" enctype="multipart/form-data">
+            <input type="hidden" name="form-name" value="questions">
+
+            <label for="nom">Nom / Prénom :</label>
+            <input type="text" id="nom" name="nom" required>
+
+            <label for="email">Email :</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="telephone">Téléphone :</label>
+            <input type="text" id="telephone" name="telephone">
+
+            <label for="date_naissance">Date de naissance :</label>
+            <input type="text" id="date_naissance" name="date_naissance" required>
+
+            <label for="heure_naissance">Heure de naissance <span class="optional">(facultatif)</span> :</label>
+            <input type="text" id="heure_naissance" name="heure_naissance">
+
+            <label for="lieu_naissance">Lieu de naissance :</label>
+            <input type="text" id="lieu_naissance" name="lieu_naissance">
+
+            <label for="signe_zodiacal">Signe zodiacal :</label>
+            <select id="signe_zodiacal" name="signe_zodiacal" required>
+                <option value="">-- Choisissez --</option>
+                <option value="Capricorne">Capricorne (22 Déc - 19 Jan)</option>
+                <option value="Verseau">Verseau (20 Jan - 18 Fév)</option>
+                <option value="Poissons">Poissons (19 Fév - 20 Mar)</option>
+                <option value="Bélier">Bélier (21 Mar - 19 Avr)</option>
+                <option value="Taureau">Taureau (20 Avr - 20 Mai)</option>
+                <option value="Gémeaux">Gémeaux (21 Mai - 20 Juin)</option>
+                <option value="Cancer">Cancer (21 Juin - 22 Juil)</option>
+                <option value="Lion">Lion (23 Juil - 22 Août)</option>
+                <option value="Vierge">Vierge (23 Août - 22 Sep)</option>
+                <option value="Balance">Balance (23 Sep - 22 Oct)</option>
+                <option value="Scorpion">Scorpion (23 Oct - 21 Nov)</option>
+                <option value="Sagittaire">Sagittaire (22 Nov - 21 Déc)</option>
+            </select>
+
+            <label for="chiffres">Choisissez 3 chiffres entre 0 et 84 :</label>
+            <input type="text" id="chiffres" name="chiffres" readonly required>
+            <div id="grid-container" class="grid-container"></div>
+
+            <label for="photo">Photo de face <span class="optional">(facultatif)</span> :</label>
+            <input type="file" id="photo" name="photo" accept="image/*">
+
+            <label for="questions">Vos questions :</label>
+            <textarea id="questions" name="questions" rows="5" required></textarea>
+
+            <button type="submit">Envoyer</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const gridContainer = document.getElementById("grid-container");
+            const chiffresInput = document.getElementById("chiffres");
+            let selectedNumbers = [];
+
+            // Générer les cases de 0 à 84
+            for (let i = 0; i <= 84; i++) {
+                const gridItem = document.createElement("div");
+                gridItem.classList.add("grid-item");
+                gridItem.textContent = i;
+
+                gridItem.addEventListener("click", () => {
+                    const number = gridItem.textContent;
+
+                    if (selectedNumbers.includes(number)) {
+                        selectedNumbers = selectedNumbers.filter(num => num !== number);
+                        gridItem.classList.remove("selected");
+                    } else if (selectedNumbers.length < 3) {
+                        selectedNumbers.push(number);
+                        gridItem.classList.add("selected");
+                    }
+
+                    chiffresInput.value = selectedNumbers.join(", ");
+
+                    // Masquer la grille lorsque 3 chiffres sont choisis
+                    if (selectedNumbers.length === 3) {
+                        gridContainer.style.display = "none";
+                    }
+                });
+
+                gridContainer.appendChild(gridItem);
+            }
+
+            // Afficher la grille au clic sur le champ
+            chiffresInput.addEventListener("focus", () => {
+                gridContainer.style.display = "grid";
+            });
+        });
+    </script>
 </body>
 </html>
