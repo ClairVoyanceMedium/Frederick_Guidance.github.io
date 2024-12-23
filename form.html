@@ -34,6 +34,26 @@
             text-align: center;
             margin-bottom: 40px;
         }
+        #google_translate_element {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .goog-te-gadget {
+            font-size: 18px !important;
+            text-align: center !important;
+        }
+        .goog-te-combo {
+            width: 700px !important; /* Agrandi */
+            height: 45px !important;
+            font-size: 18px !important;
+            border-radius: 8px !important;
+            text-align: center;
+        }
+        .goog-te-gadget > span {
+            font-size: 12px !important;
+            color: #888;
+            display: inline !important;
+        }
         .form-container label {
             display: block;
             margin: 10px 0 5px;
@@ -70,23 +90,17 @@
             border: 1px solid #ccc;
             border-radius: 6px;
             padding: 10px;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-        }
-        .form-container textarea:focus {
-            background-color: #fff;
-            border-color: #ff69b4;
-            outline: none;
         }
         .form-container .contact-link {
             text-align: center;
             margin-top: 40px;
             font-family: "Georgia", serif;
-            font-size: 14px; /* Réduction de la taille */
+            font-size: 14px;
         }
         .form-container .contact-link a {
             color: #000;
             text-decoration: none;
-            font-weight: normal; /* Texte normal pour une apparence plus discrète */
+            font-weight: normal;
         }
         .form-container .contact-link a:hover {
             text-decoration: underline;
@@ -110,68 +124,15 @@
             color: #fff;
         }
     </style>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const chiffresInput = document.getElementById("chiffres");
-            const gridContainer = document.querySelector(".grid-container");
-
-            // Crée les options 0 à 84 dynamiquement
-            for (let i = 0; i <= 84; i++) {
-                const div = document.createElement("div");
-                div.classList.add("grid-item");
-                div.textContent = i;
-                gridContainer.appendChild(div);
-            }
-
-            const gridItems = document.querySelectorAll(".grid-item");
-            let selectedNumbers = [];
-
-            // Rendre le champ cliquable
-            chiffresInput.addEventListener("click", () => {
-                gridContainer.style.display = "grid";
-            });
-
-            // Gestion de la sélection des chiffres
-            gridItems.forEach(item => {
-                item.addEventListener("click", () => {
-                    const number = parseInt(item.textContent);
-                    if (selectedNumbers.includes(number)) {
-                        // Si déjà sélectionné, on retire
-                        selectedNumbers = selectedNumbers.filter(n => n !== number);
-                        item.classList.remove("selected");
-                    } else if (selectedNumbers.length < 3) {
-                        // Ajouter un nouveau chiffre si moins de 3 sont sélectionnés
-                        selectedNumbers.push(number);
-                        item.classList.add("selected");
-                    }
-                    chiffresInput.value = selectedNumbers.join(", ");
-
-                    // Cacher le sélecteur si 3 chiffres sont sélectionnés
-                    if (selectedNumbers.length === 3) {
-                        gridContainer.style.display = "none";
-                    }
-                });
-            });
-
-            // Détection automatique de la langue
-            const userLang = navigator.language || navigator.userLanguage;
-
-            // Traduction automatique (Simulation)
-            const translatePage = (language) => {
-                if (language !== "fr") {
-                    // Implémentez ici une API ou une logique pour traduire automatiquement la page
-                    console.log(`Page traduite automatiquement en ${language}`);
-                }
-            };
-
-            translatePage(userLang);
-        });
-    </script>
 </head>
 <body>
     <div class="logo-container">
         <img src="https://raw.githubusercontent.com/ClairVoyanceMedium/Frederick_Guidance.github.io/main/Images/logo2.jpg" alt="Logo Voyance" class="logo">
     </div>
+
+    <!-- Google Translate Widget -->
+    <div id="google_translate_element"></div>
+
     <div class="form-container">
         <h1>Voyance privée par email</h1>
         <form id="formulaire" action="VOTRE_URL_WEBHOOK_MAKE" method="POST">
@@ -228,5 +189,52 @@
             </div>
         </form>
     </div>
+
+    <script>
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'fr',
+                includedLanguages: 'af,am,ar,az,be,bg,bn,bs,ca,ceb,co,cs,cy,da,de,el,en,eo,es,et,eu,fa,fi,fr,fy,ga,gd,gl,gu,ha,haw,hi,hmn,hr,ht,hu,hy,id,ig,is,it,iw,ja,jw,ka,kk,km,kn,ko,ku,ky,la,lb,lo,lt,lv,mg,mi,mk,ml,mn,mr,ms,mt,my,ne,nl,no,ny,or,pa,pl,ps,pt,ro,ru,rw,sd,si,sk,sl,sm,sn,so,sq,sr,st,su,sv,sw,ta,te,tg,th,tk,tr,tt,ug,uk,ur,uz,vi,xh,yi,yo,zh-CN,zh-TW,zu',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const chiffresInput = document.getElementById("chiffres");
+            const gridContainer = document.querySelector(".grid-container");
+
+            for (let i = 0; i <= 84; i++) {
+                const div = document.createElement("div");
+                div.classList.add("grid-item");
+                div.textContent = i;
+                gridContainer.appendChild(div);
+            }
+
+            const gridItems = document.querySelectorAll(".grid-item");
+            let selectedNumbers = [];
+
+            chiffresInput.addEventListener("click", () => {
+                gridContainer.style.display = "grid";
+            });
+
+            gridItems.forEach(item => {
+                item.addEventListener("click", () => {
+                    const number = parseInt(item.textContent);
+                    if (selectedNumbers.includes(number)) {
+                        selectedNumbers = selectedNumbers.filter(n => n !== number);
+                        item.classList.remove("selected");
+                    } else if (selectedNumbers.length < 3) {
+                        selectedNumbers.push(number);
+                        item.classList.add("selected");
+                    }
+                    chiffresInput.value = selectedNumbers.join(", ");
+                    if (selectedNumbers.length === 3) {
+                        gridContainer.style.display = "none";
+                    }
+                });
+            });
+        });
+    </script>
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
