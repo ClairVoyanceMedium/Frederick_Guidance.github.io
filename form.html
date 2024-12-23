@@ -2,11 +2,8 @@
 <html lang="fr">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Formulaire voyance rapide par email</title>
 
     <!-- Importation des polices Google Fonts -->
@@ -45,7 +42,7 @@
         .form-container h1 {
             text-align: center;
             margin-bottom: 40px;
-            font-family: 'Cinzel', serif; /* Police élégante Cinzel */
+            font-family: 'Cinzel', serif;
             font-size: 28px;
             font-weight: 700;
             color: #333;
@@ -57,15 +54,17 @@
         }
 
         .goog-te-gadget {
-            font-size: 18px !important;
+            font-size: 16px !important;
             text-align: center !important;
         }
 
         .goog-te-combo {
-            width: 700px !important;
+            width: 100% !important;
+            max-width: 90vw !important;
             height: 45px !important;
-            font-size: 18px !important;
+            font-size: 16px !important;
             border-radius: 8px !important;
+            margin: 0 auto;
             text-align: center;
         }
 
@@ -106,7 +105,7 @@
         }
 
         .form-container textarea {
-            font-family: 'Playfair Display', serif; /* Police encore plus élégante */
+            font-family: 'Playfair Display', serif;
             font-size: 18px;
             line-height: 1.5;
             color: #333;
@@ -161,7 +160,6 @@
             text-decoration: underline;
         }
     </style>
-
 </head>
 
 <body>
@@ -231,12 +229,22 @@
     <script>
         function googleTranslateElementInit() {
             const userLang = navigator.language || navigator.userLanguage;
+            const languageCode = userLang.split('-')[0];
+
             new google.translate.TranslateElement({
                 pageLanguage: 'fr',
-                includedLanguages: 'af,am,ar,az,be,bg,bn,bs,ca,ceb,co,cs,cy,da,de,el,en,eo,es,et,eu,fa,fi,fr,fy,ga,gd,gl,gu,ha,haw,hi,hmn,hr,ht,hu,hy,id,ig,is,it,iw,ja,jw,ka,kk,km,kn,ko,ku,ky,la,lb,lo,lt,lv,mg,mi,mk,ml,mn,mr,ms,mt,my,ne,nl,no,ny,or,pa,pl,ps,pt,ro,ru,rw,sd,si,sk,sl,sm,sn,so,sq,sr,st,su,sv,sw,ta,te,tg,th,tk,tr,tt,ug,uk,ur,uz,vi,xh,yi,yo,zh-CN,zh-TW,zu',
+                includedLanguages: 'en,es,zh-CN,hi,ar,pt,ru,ja,de,ko,fr,vi,it,tr,pl,uk,nl,th,sv,cs,el,da,fi,he,hu,id,ms,no,ro,sk,sl,af,bg,hr,lt,lv,sr,et,ta,te,mr,ml,ur,bn,gu,si,sw,zu,iw,fa,ka,am,km',
                 autoDisplay: false,
                 layout: google.translate.TranslateElement.InlineLayout.SIMPLE
             }, 'google_translate_element');
+
+            setTimeout(() => {
+                const translateCombo = document.querySelector('.goog-te-combo');
+                if (translateCombo) {
+                    translateCombo.value = languageCode;
+                    translateCombo.dispatchEvent(new Event('change'));
+                }
+            }, 1000);
         }
 
         document.addEventListener("DOMContentLoaded", () => {
