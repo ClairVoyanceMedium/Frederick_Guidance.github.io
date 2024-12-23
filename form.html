@@ -17,10 +17,10 @@
             margin: 20px 0;
         }
         .logo {
-            max-width: 252px; /* Agrandissement supplémentaire */
-            height: auto; /* Maintient les proportions */
-            border-radius: 8px; /* Ajoute des coins arrondis pour un look plus harmonieux */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ajoute une ombre subtile */
+            max-width: 252px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         .form-container {
             max-width: 500px;
@@ -77,11 +77,25 @@
             border-color: #ff69b4;
             outline: none;
         }
+        .form-container .contact-link {
+            text-align: center;
+            margin-top: 40px;
+            font-family: "Georgia", serif;
+            font-size: 14px; /* Réduction de la taille */
+        }
+        .form-container .contact-link a {
+            color: #000;
+            text-decoration: none;
+            font-weight: normal; /* Texte normal pour une apparence plus discrète */
+        }
+        .form-container .contact-link a:hover {
+            text-decoration: underline;
+        }
         .grid-container {
             display: none;
-            grid-template-columns: repeat(9, 1fr);
+            grid-template-columns: repeat(10, 1fr); /* 10 options par rangée */
             gap: 5px;
-            margin-bottom: 15px;
+            margin-top: 10px;
         }
         .grid-item {
             padding: 10px;
@@ -138,12 +152,24 @@
                     }
                 });
             });
+
+            // Détection automatique de la langue
+            const userLang = navigator.language || navigator.userLanguage;
+
+            // Traduction automatique (Simulation)
+            const translatePage = (language) => {
+                if (language !== "fr") {
+                    // Implémentez ici une API ou une logique pour traduire automatiquement la page
+                    console.log(`Page traduite automatiquement en ${language}`);
+                }
+            };
+
+            translatePage(userLang);
         });
     </script>
 </head>
 <body>
     <div class="logo-container">
-        <!-- Intégration du logo depuis GitHub -->
         <img src="https://raw.githubusercontent.com/ClairVoyanceMedium/Frederick_Guidance.github.io/main/Images/logo2.jpg" alt="Logo Voyance" class="logo">
     </div>
     <div class="form-container">
@@ -195,6 +221,11 @@
             <textarea id="questions" name="questions" rows="5" required></textarea>
 
             <button type="submit">Envoyer</button>
+            <div class="contact-link">
+                <a href="mailto:contact.clairvoyancemedium@gmail.com">
+                    Contact ClairVoyanceMedium.com
+                </a>
+            </div>
         </form>
     </div>
 </body>
