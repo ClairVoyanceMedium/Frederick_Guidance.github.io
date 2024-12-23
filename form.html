@@ -17,7 +17,7 @@
             margin: 20px 0;
         }
         .logo {
-            max-width: 150px; /* Limite la largeur pour garder une esthétique */
+            max-width: 252px; /* Agrandissement supplémentaire */
             height: auto; /* Maintient les proportions */
             border-radius: 8px; /* Ajoute des coins arrondis pour un look plus harmonieux */
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ajoute une ombre subtile */
@@ -77,12 +77,74 @@
             border-color: #ff69b4;
             outline: none;
         }
+        .grid-container {
+            display: none;
+            grid-template-columns: repeat(9, 1fr);
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+        .grid-item {
+            padding: 10px;
+            background-color: #e0e0e0;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 4px;
+            user-select: none;
+        }
+        .grid-item.selected {
+            background-color: #ff69b4;
+            color: #fff;
+        }
     </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const chiffresInput = document.getElementById("chiffres");
+            const gridContainer = document.querySelector(".grid-container");
+
+            // Crée les options 0 à 84 dynamiquement
+            for (let i = 0; i <= 84; i++) {
+                const div = document.createElement("div");
+                div.classList.add("grid-item");
+                div.textContent = i;
+                gridContainer.appendChild(div);
+            }
+
+            const gridItems = document.querySelectorAll(".grid-item");
+            let selectedNumbers = [];
+
+            // Rendre le champ cliquable
+            chiffresInput.addEventListener("click", () => {
+                gridContainer.style.display = "grid";
+            });
+
+            // Gestion de la sélection des chiffres
+            gridItems.forEach(item => {
+                item.addEventListener("click", () => {
+                    const number = parseInt(item.textContent);
+                    if (selectedNumbers.includes(number)) {
+                        // Si déjà sélectionné, on retire
+                        selectedNumbers = selectedNumbers.filter(n => n !== number);
+                        item.classList.remove("selected");
+                    } else if (selectedNumbers.length < 3) {
+                        // Ajouter un nouveau chiffre si moins de 3 sont sélectionnés
+                        selectedNumbers.push(number);
+                        item.classList.add("selected");
+                    }
+                    chiffresInput.value = selectedNumbers.join(", ");
+
+                    // Cacher le sélecteur si 3 chiffres sont sélectionnés
+                    if (selectedNumbers.length === 3) {
+                        gridContainer.style.display = "none";
+                    }
+                });
+            });
+        });
+    </script>
 </head>
 <body>
     <div class="logo-container">
-        <!-- Utilisez le chemin correct vers votre fichier -->
-        <img src="1 - logo e 499x450.webp" alt="Logo Voyance" class="logo">
+        <!-- Intégration du logo depuis GitHub -->
+        <img src="https://raw.githubusercontent.com/ClairVoyanceMedium/Frederick_Guidance.github.io/main/Images/logo2.jpg" alt="Logo Voyance" class="logo">
     </div>
     <div class="form-container">
         <h1>Voyance privée par email</h1>
@@ -124,6 +186,7 @@
 
             <label for="chiffres">Choisissez 3 chiffres entre 0 et 84 :</label>
             <input type="text" id="chiffres" name="chiffres" readonly required>
+            <div class="grid-container"></div>
 
             <label for="photo">Photo de face (facultatif) :</label>
             <input type="file" id="photo" name="photo" accept="image/*">
