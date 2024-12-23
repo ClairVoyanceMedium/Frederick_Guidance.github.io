@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulaire Professionnel</title>
+    <title>Formulaire voyance rapide par email</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,6 +11,16 @@
             color: #000;
             margin: 0;
             padding: 0;
+        }
+        .logo-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .logo {
+            max-width: 150px; /* Limite la largeur pour garder une esthétique */
+            height: auto; /* Maintient les proportions */
+            border-radius: 8px; /* Ajoute des coins arrondis pour un look plus harmonieux */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ajoute une ombre subtile */
         }
         .form-container {
             max-width: 500px;
@@ -22,7 +32,7 @@
         }
         .form-container h1 {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 40px;
         }
         .form-container label {
             display: block;
@@ -51,67 +61,32 @@
         .form-container button:hover {
             background-color: #ff85c1;
         }
-        .grid-container {
-            display: none;
-            grid-template-columns: repeat(9, 1fr);
-            gap: 5px;
-            margin-bottom: 15px;
-        }
-        .grid-item {
+        .form-container textarea {
+            font-family: "Georgia", serif;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #333;
+            background-color: #f4f4f4;
+            border: 1px solid #ccc;
+            border-radius: 6px;
             padding: 10px;
-            background-color: #e0e0e0;
-            text-align: center;
-            cursor: pointer;
-            border-radius: 4px;
-            user-select: none;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
-        .grid-item.selected {
-            background-color: #ff69b4;
-            color: #fff;
+        .form-container textarea:focus {
+            background-color: #fff;
+            border-color: #ff69b4;
+            outline: none;
         }
     </style>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const chiffresInput = document.getElementById("chiffres");
-            const gridContainer = document.querySelector(".grid-container");
-            const gridItems = Array.from({ length: 85 }, (_, i) => {
-                const div = document.createElement("div");
-                div.classList.add("grid-item");
-                div.textContent = i;
-                return div;
-            });
-
-            gridContainer.append(...gridItems);
-
-            let selectedNumbers = [];
-
-            chiffresInput.addEventListener("click", () => {
-                gridContainer.style.display = "grid";
-            });
-
-            gridItems.forEach(item => {
-                item.addEventListener("click", () => {
-                    const number = item.textContent;
-                    if (selectedNumbers.includes(number)) {
-                        selectedNumbers = selectedNumbers.filter(num => num !== number);
-                        item.classList.remove("selected");
-                    } else if (selectedNumbers.length < 3) {
-                        selectedNumbers.push(number);
-                        item.classList.add("selected");
-                    }
-                    chiffresInput.value = selectedNumbers.join(", ");
-                    if (selectedNumbers.length === 3) {
-                        gridContainer.style.display = "none";
-                    }
-                });
-            });
-        });
-    </script>
 </head>
 <body>
+    <div class="logo-container">
+        <!-- Utilisez le chemin correct vers votre fichier -->
+        <img src="1 - logo e 499x450.webp" alt="Logo Voyance" class="logo">
+    </div>
     <div class="form-container">
         <h1>Voyance privée par email</h1>
-            <form id="formulaire" action="VOTRE_URL_WEBHOOK_MAKE" method="POST">
+        <form id="formulaire" action="VOTRE_URL_WEBHOOK_MAKE" method="POST">
             <label for="nom">Nom / Prénom :</label>
             <input type="text" id="nom" name="nom" required>
 
@@ -149,7 +124,6 @@
 
             <label for="chiffres">Choisissez 3 chiffres entre 0 et 84 :</label>
             <input type="text" id="chiffres" name="chiffres" readonly required>
-            <div class="grid-container"></div>
 
             <label for="photo">Photo de face (facultatif) :</label>
             <input type="file" id="photo" name="photo" accept="image/*">
