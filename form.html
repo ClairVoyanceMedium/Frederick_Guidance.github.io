@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulaire voyance rapide par email</title>
-
     <!-- Importation des polices Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
-
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,18 +14,15 @@
             background: #fff;
             color: #000;
         }
-
         .logo-container {
             text-align: center;
             margin: 15px 0;
         }
-
         .logo {
             max-width: 255px;
             height: auto;
             border-radius: 8px;
         }
-
         .form-container {
             max-width: 500px;
             margin: 15px auto;
@@ -37,24 +31,18 @@
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-
         h1 {
             text-align: center;
             font-family: 'Cinzel', serif;
             font-size: 24px;
             margin-bottom: 15px;
         }
-
         label {
             font-weight: bold;
             margin: 10px 0 5px;
             display: block;
         }
-
-        input,
-        select,
-        textarea,
-        button {
+        input, select, textarea, button {
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
@@ -62,29 +50,24 @@
             border-radius: 4px;
             box-sizing: border-box;
         }
-
         textarea {
             font-family: 'Playfair Display', serif;
             font-size: 16px;
         }
-
         button {
             background: #ff69b4;
             color: #fff;
             cursor: pointer;
             border: none;
         }
-
         button:hover {
             background: #ff85c1;
         }
-
         .grid-container {
             display: none;
             grid-template-columns: repeat(10, 1fr);
             gap: 5px;
         }
-
         .grid-item {
             padding: 10px;
             background: #e0e0e0;
@@ -93,58 +76,45 @@
             border-radius: 4px;
             user-select: none;
         }
-
         .grid-item.selected {
             background: #ff69b4;
             color: #fff;
         }
-
         .contact-link {
             text-align: center;
             font-size: 14px;
         }
-
         .contact-link a {
             color: #000;
             text-decoration: none;
         }
-
         #google_translate_element {
             margin-bottom: 15px;
             text-align: center;
         }
     </style>
 </head>
-
 <body>
     <div class="logo-container">
         <img src="https://raw.githubusercontent.com/ClairVoyanceMedium/Frederick_Guidance.github.io/main/Images/logo2.jpg" alt="Logo Voyance" class="logo">
     </div>
-
     <!-- Google Translate Widget -->
     <div id="google_translate_element"></div>
-
     <div class="form-container">
         <h1>Voyance privée par email</h1>
         <form id="formulaire" action="https://formspree.io/f/xjkkkywn" method="POST" enctype="multipart/form-data">
             <label for="nom">Nom / Prénom :</label>
             <input type="text" id="nom" name="nom" required>
-
             <label for="email">Email :</label>
             <input type="email" id="email" name="email" required>
-
             <label for="telephone">Téléphone :</label>
             <input type="text" id="telephone" name="telephone">
-
             <label for="date_naissance">Date de naissance :</label>
             <input type="date" id="date_naissance" name="date_naissance" required>
-
             <label for="heure_naissance">Heure de naissance (facultatif) :</label>
             <input type="time" id="heure_naissance" name="heure_naissance">
-
             <label for="lieu_naissance">Lieu de naissance :</label>
             <input type="text" id="lieu_naissance" name="lieu_naissance">
-
             <label for="signe_zodiacal">Signe zodiacal :</label>
             <select id="signe_zodiacal" name="signe_zodiacal" required>
                 <option value="">-- Choisissez --</option>
@@ -161,63 +131,43 @@
                 <option value="Scorpion">Scorpion (23 octobre - 21 novembre)</option>
                 <option value="Sagittaire">Sagittaire (22 novembre - 21 décembre)</option>
             </select>
-
             <label for="chiffres">Choisissez 3 chiffres entre 0 et 84 :</label>
             <input type="text" id="chiffres" name="chiffres" readonly required>
             <div class="grid-container"></div>
-
             <label for="photo">Ajouter une photo (facultatif) :</label>
             <input type="file" id="photo" name="photo" accept="image/*">
-
             <label for="questions">Vos questions :</label>
             <textarea id="questions" name="questions" rows="5" required></textarea>
-
             <button type="submit">Envoyer</button>
             <div class="contact-link">
                 <a href="mailto:contact.clairvoyancemedium@gmail.com">Contact ClairVoyanceMedium.com</a>
             </div>
         </form>
     </div>
-
     <script defer>
         function googleTranslateElementInit() {
-            const userLang = navigator.language || navigator.userLanguage;
-            const languageCode = userLang.split('-')[0] || 'fr'; // Default to French if language is undefined
-
             new google.translate.TranslateElement({
                 pageLanguage: 'fr',
-                includedLanguages: 'en,es,zh-CN,hi,ar,pt,ru,ja,de,ko,fr,vi,it,tr,pl,uk,nl,th,sv,cs,el,da,fi,he,hu,id,ms,no,ro,sk,sl,af,bg,hr,lt,lv,sr,et,ta,te,mr,ml,ur,bn,gu,si,sw,zu,iw,fa,ka,am,km',
+                includedLanguages: 'en,es,zh-CN,hi,ar,pt,ru,ja,de,ko,fr,vi,it,tr,pl,uk,nl,th,sv,cs,el,da,fi,he,hu,id,ms,no,ro,sk,sl,af,bg,hr,lt,lv,sr,et,ta,te,mr,ml,ur,bn,gu,si,sw,zu,iw,fa,ka,am,km,kn,lo,my,ne,pa,ps,xh,ig,yo',
                 autoDisplay: false,
                 layout: google.translate.TranslateElement.InlineLayout.SIMPLE
             }, 'google_translate_element');
-
-            setTimeout(() => {
-                const translateCombo = document.querySelector('.goog-te-combo');
-                if (translateCombo) {
-                    translateCombo.value = languageCode;
-                    translateCombo.dispatchEvent(new Event('change'));
-                }
-            }, 2000); // Ensure sufficient delay for Google Translate to load
         }
 
         document.addEventListener("DOMContentLoaded", () => {
             const chiffresInput = document.getElementById("chiffres");
             const gridContainer = document.querySelector(".grid-container");
-
             for (let i = 0; i <= 84; i++) {
                 const div = document.createElement("div");
                 div.classList.add("grid-item");
                 div.textContent = i;
                 gridContainer.appendChild(div);
             }
-
             const gridItems = document.querySelectorAll(".grid-item");
             let selectedNumbers = [];
-
             chiffresInput.addEventListener("click", () => {
                 gridContainer.style.display = "grid";
             });
-
             gridItems.forEach(item => {
                 item.addEventListener("click", () => {
                     const number = parseInt(item.textContent);
@@ -238,10 +188,14 @@
 
         window.addEventListener('load', () => {
             const script = document.createElement('script');
-            script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+            script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+            script.async = true;
+            script.onerror = () => {
+                document.getElementById('google_translate_element').innerHTML =
+                    '<p style="color: red; text-align: center;">Translation unavailable. Please refresh or try again later.</p>';
+            };
             document.body.appendChild(script);
         });
     </script>
 </body>
-
 </html>
