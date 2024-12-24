@@ -35,7 +35,7 @@
             text-align: center;
             font-family: 'Cinzel', serif;
             font-size: 24px;
-            margin-bottom: 15px;
+            margin-bottom: 25px; /* Ajout de l'espacement */
         }
         label {
             font-weight: bold;
@@ -131,7 +131,7 @@
                 <option value="Scorpion">Scorpion (23 octobre - 21 novembre)</option>
                 <option value="Sagittaire">Sagittaire (22 novembre - 21 décembre)</option>
             </select>
-            <label for="chiffres">Choisissez 3 chiffres entre 0 et 84 :</label>
+            <label for="chiffres">Sélectionnez exactement 3 chiffres entre 0 et 84 :</label>
             <input type="text" id="chiffres" name="chiffres" readonly required>
             <div class="grid-container"></div>
             <label for="photo">Ajouter une photo (facultatif) :</label>
@@ -146,13 +146,33 @@
     </div>
     <script defer>
         function googleTranslateElementInit() {
-            new google.translate.TranslateElement({
+            const translateElement = new google.translate.TranslateElement({
                 pageLanguage: 'fr',
                 includedLanguages: 'en,es,zh-CN,hi,ar,pt,ru,ja,de,ko,fr,vi,it,tr,pl,uk,nl,th,sv,cs,el,da,fi,he,hu,id,ms,no,ro,sk,sl,af,bg,hr,lt,lv,sr,et,ta,te,mr,ml,ur,bn,gu,si,sw,zu,iw,fa,ka,am,km,kn,lo,my,ne,pa,ps,xh,ig,yo',
-                autoDisplay: false,
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
             }, 'google_translate_element');
+
+            // Forcer la traduction en anglais automatiquement
+            setTimeout(() => {
+                const translateCombo = document.querySelector('.goog-te-combo');
+                if (translateCombo) {
+                    translateCombo.value = 'en'; // Forcer la langue anglaise
+                    translateCombo.dispatchEvent(new Event('change'));
+                }
+            }, 2000);
         }
+
+        window.addEventListener('load', () => {
+            const script = document.createElement('script');
+            script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+            script.async = true;
+            script.onerror = () => {
+                document.getElementById('google_translate_element').innerHTML =
+                    '<p style="color: red; text-align: center;">Translation unavailable. Please refresh or try again later.</p>';
+            };
+            document.body.appendChild(script);
+        });
 
         document.addEventListener("DOMContentLoaded", () => {
             const chiffresInput = document.getElementById("chiffres");
@@ -184,17 +204,6 @@
                     }
                 });
             });
-        });
-
-        window.addEventListener('load', () => {
-            const script = document.createElement('script');
-            script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-            script.async = true;
-            script.onerror = () => {
-                document.getElementById('google_translate_element').innerHTML =
-                    '<p style="color: red; text-align: center;">Translation unavailable. Please refresh or try again later.</p>';
-            };
-            document.body.appendChild(script);
         });
     </script>
 </body>
