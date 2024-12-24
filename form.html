@@ -35,7 +35,7 @@
             text-align: center;
             font-family: 'Cinzel', serif;
             font-size: 24px;
-            margin-bottom: 25px; /* Espacement ajusté */
+            margin-bottom: 25px;
         }
         label {
             font-weight: bold;
@@ -53,7 +53,7 @@
         textarea {
             font-family: 'Playfair Display', serif;
             font-size: 16px;
-            margin-bottom: 20px; /* Espacement ajouté avant le bouton */
+            margin-bottom: 20px;
         }
         button {
             background: #ff69b4;
@@ -132,7 +132,7 @@
                 <option value="Scorpion">Scorpion (23 octobre - 21 novembre)</option>
                 <option value="Sagittaire">Sagittaire (22 novembre - 21 décembre)</option>
             </select>
-            <label for="chiffres">Sélectionnez exactement 3 chiffres entre 0 et 84 :</label>
+            <label for="chiffres">Sélectionnez 3 chiffres entre 0 et 84 :</label>
             <input type="text" id="chiffres" name="chiffres" readonly required>
             <div class="grid-container"></div>
             <label for="photo">Ajouter une photo (facultatif) :</label>
@@ -145,40 +145,49 @@
             </div>
         </form>
     </div>
-    <script defer>
+    <script>
         function googleTranslateElementInit() {
-            const translateElement = new google.translate.TranslateElement({
+            new google.translate.TranslateElement({
                 pageLanguage: 'fr',
-                includedLanguages: 'en,es,zh-CN,hi,ar,pt,ru,ja,de,ko,fr,vi,it,tr,pl,uk,nl,th,sv,cs,el,da,fi,he,hu,id,ms,no,ro,sk,sl,af,bg,hr,lt,lv,sr,et,ta,te,sw,zu,iw,fa,km,lo,my,ne,ps,xh,yo',
+                includedLanguages: 'en,es,zh-CN,hi,ar,pt,ru,ja,de,ko,vi,it,tr,pl,uk,nl,th,fr,sv,cs,el,da,fi,he,hu,id,ms,no,ro,sk,sl,af,bg,hr,lt,lv,sr,et,ta,te,sw,zu,fa,lo,my,ne,xh,yo',
                 layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
                 autoDisplay: false
             }, 'google_translate_element');
+        }
 
-            // Détection et traduction automatique
+        function detectUserLanguage() {
             const userLang = navigator.language || navigator.userLanguage;
-            const langCode = userLang.split('-')[0];
+            return userLang.split('-')[0];
+        }
 
+        function autoTranslate(detectedLanguage) {
             setTimeout(() => {
                 const translateCombo = document.querySelector('.goog-te-combo');
                 if (translateCombo) {
-                    translateCombo.value = langCode === 'fr' ? 'en' : langCode; // Mettre en anglais si langue d'origine est français
+                    translateCombo.value = detectedLanguage;
                     translateCombo.dispatchEvent(new Event('change'));
                 }
-            }, 2000);
+            }, 1500);
         }
 
-        window.addEventListener('load', () => {
+        function loadGoogleTranslateScript() {
             const script = document.createElement('script');
             script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
             script.async = true;
+            script.onload = () => {
+                const detectedLanguage = detectUserLanguage();
+                autoTranslate(detectedLanguage);
+            };
             script.onerror = () => {
                 document.getElementById('google_translate_element').innerHTML =
-                    '<p style="color: red; text-align: center;">Translation unavailable. Please refresh or try again later.</p>';
+                    '<p style="color: red; text-align: center;">Traduction indisponible. Veuillez réessayer plus tard.</p>';
             };
             document.body.appendChild(script);
-        });
+        }
 
         document.addEventListener("DOMContentLoaded", () => {
+            loadGoogleTranslateScript();
+
             const chiffresInput = document.getElementById("chiffres");
             const gridContainer = document.querySelector(".grid-container");
             for (let i = 0; i <= 84; i++) {
