@@ -35,7 +35,7 @@
             text-align: center;
             font-family: 'Cinzel', serif;
             font-size: 24px;
-            margin-bottom: 25px; /* Ajout de l'espacement */
+            margin-bottom: 25px; /* Espacement ajusté */
         }
         label {
             font-weight: bold;
@@ -53,6 +53,7 @@
         textarea {
             font-family: 'Playfair Display', serif;
             font-size: 16px;
+            margin-bottom: 20px; /* Espacement ajouté avant le bouton */
         }
         button {
             background: #ff69b4;
@@ -148,16 +149,19 @@
         function googleTranslateElementInit() {
             const translateElement = new google.translate.TranslateElement({
                 pageLanguage: 'fr',
-                includedLanguages: 'en,es,zh-CN,hi,ar,pt,ru,ja,de,ko,fr,vi,it,tr,pl,uk,nl,th,sv,cs,el,da,fi,he,hu,id,ms,no,ro,sk,sl,af,bg,hr,lt,lv,sr,et,ta,te,mr,ml,ur,bn,gu,si,sw,zu,iw,fa,ka,am,km,kn,lo,my,ne,pa,ps,xh,ig,yo',
+                includedLanguages: 'en,es,zh-CN,hi,ar,pt,ru,ja,de,ko,fr,vi,it,tr,pl,uk,nl,th,sv,cs,el,da,fi,he,hu,id,ms,no,ro,sk,sl,af,bg,hr,lt,lv,sr,et,ta,te,sw,zu,iw,fa,km,lo,my,ne,ps,xh,yo',
                 layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
                 autoDisplay: false
             }, 'google_translate_element');
 
-            // Forcer la traduction en anglais automatiquement
+            // Détection et traduction automatique
+            const userLang = navigator.language || navigator.userLanguage;
+            const langCode = userLang.split('-')[0];
+
             setTimeout(() => {
                 const translateCombo = document.querySelector('.goog-te-combo');
                 if (translateCombo) {
-                    translateCombo.value = 'en'; // Forcer la langue anglaise
+                    translateCombo.value = langCode === 'fr' ? 'en' : langCode; // Mettre en anglais si langue d'origine est français
                     translateCombo.dispatchEvent(new Event('change'));
                 }
             }, 2000);
