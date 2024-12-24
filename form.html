@@ -108,6 +108,11 @@
             color: #000;
             text-decoration: none;
         }
+
+        #google_translate_element {
+            margin-bottom: 15px;
+            text-align: center;
+        }
     </style>
 </head>
 
@@ -116,6 +121,7 @@
         <img src="https://raw.githubusercontent.com/ClairVoyanceMedium/Frederick_Guidance.github.io/main/Images/logo2.jpg" alt="Logo Voyance" class="logo">
     </div>
 
+    <!-- Google Translate Widget -->
     <div id="google_translate_element"></div>
 
     <div class="form-container">
@@ -175,11 +181,23 @@
 
     <script defer>
         function googleTranslateElementInit() {
+            const userLang = navigator.language || navigator.userLanguage;
+            const languageCode = userLang.split('-')[0] || 'fr'; // Default to French if language is undefined
+
             new google.translate.TranslateElement({
                 pageLanguage: 'fr',
                 includedLanguages: 'en,es,zh-CN,hi,ar,pt,ru,ja,de,ko,fr,vi,it,tr,pl,uk,nl,th,sv,cs,el,da,fi,he,hu,id,ms,no,ro,sk,sl,af,bg,hr,lt,lv,sr,et,ta,te,mr,ml,ur,bn,gu,si,sw,zu,iw,fa,ka,am,km',
+                autoDisplay: false,
                 layout: google.translate.TranslateElement.InlineLayout.SIMPLE
             }, 'google_translate_element');
+
+            setTimeout(() => {
+                const translateCombo = document.querySelector('.goog-te-combo');
+                if (translateCombo) {
+                    translateCombo.value = languageCode;
+                    translateCombo.dispatchEvent(new Event('change'));
+                }
+            }, 2000); // Ensure sufficient delay for Google Translate to load
         }
 
         document.addEventListener("DOMContentLoaded", () => {
@@ -217,9 +235,13 @@
                 });
             });
         });
-    </script>
 
-    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+        window.addEventListener('load', () => {
+            const script = document.createElement('script');
+            script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+            document.body.appendChild(script);
+        });
+    </script>
 </body>
 
 </html>
