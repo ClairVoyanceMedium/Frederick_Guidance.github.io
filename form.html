@@ -12,120 +12,82 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #fff;
-            color: #000;
             margin: 0;
             padding: 0;
+            background: #fff;
+            color: #000;
         }
 
         .logo-container {
             text-align: center;
-            margin: 20px 0;
+            margin: 15px 0;
         }
 
         .logo {
-            max-width: 252px;
+            max-width: 255px;
             height: auto;
             border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .form-container {
             max-width: 500px;
-            margin: 20px auto;
-            padding: 20px;
+            margin: 15px auto;
+            padding: 15px;
             background: #f9f9f9;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        .form-container h1 {
+        h1 {
             text-align: center;
-            margin-bottom: 40px;
             font-family: 'Cinzel', serif;
-            font-size: 28px;
-            font-weight: 700;
-            color: #333;
-        }
-
-        #google_translate_element {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .goog-te-gadget {
-            font-size: 16px !important;
-            text-align: center !important;
-        }
-
-        .goog-te-combo {
-            width: 100% !important;
-            max-width: 90vw !important;
-            height: 45px !important;
-            font-size: 16px !important;
-            border-radius: 8px !important;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .form-container label {
-            display: block;
-            margin: 10px 0 5px;
-            font-weight: bold;
-        }
-
-        .form-container input,
-        .form-container select,
-        .form-container textarea {
-            width: 100%;
-            padding: 10px;
+            font-size: 24px;
             margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
         }
 
-        .form-container button {
-            background-color: #ff69b4;
-            color: #fff;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
+        label {
+            font-weight: bold;
+            margin: 10px 0 5px;
+            display: block;
+        }
+
+        input,
+        select,
+        textarea,
+        button {
             width: 100%;
-        }
-
-        .form-container button:hover {
-            background-color: #ff85c1;
-        }
-
-        .form-container textarea {
-            font-family: 'Playfair Display', serif;
-            font-size: 18px;
-            line-height: 1.5;
-            color: #333;
-            background-color: #f4f4f4;
-            border: 1px solid #ccc;
-            border-radius: 6px;
             padding: 10px;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
         }
 
-        .form-container textarea:focus {
-            background-color: #fff;
-            border-color: #ff69b4;
-            outline: none;
+        textarea {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+        }
+
+        button {
+            background: #ff69b4;
+            color: #fff;
+            cursor: pointer;
+            border: none;
+        }
+
+        button:hover {
+            background: #ff85c1;
         }
 
         .grid-container {
             display: none;
             grid-template-columns: repeat(10, 1fr);
             gap: 5px;
-            margin-top: 10px;
         }
 
         .grid-item {
             padding: 10px;
-            background-color: #e0e0e0;
+            background: #e0e0e0;
             text-align: center;
             cursor: pointer;
             border-radius: 4px;
@@ -133,25 +95,18 @@
         }
 
         .grid-item.selected {
-            background-color: #ff69b4;
+            background: #ff69b4;
             color: #fff;
         }
 
         .contact-link {
             text-align: center;
-            margin-top: 40px;
-            font-family: "Georgia", serif;
             font-size: 14px;
         }
 
         .contact-link a {
             color: #000;
             text-decoration: none;
-            font-weight: normal;
-        }
-
-        .contact-link a:hover {
-            text-decoration: underline;
         }
     </style>
 </head>
@@ -161,12 +116,11 @@
         <img src="https://raw.githubusercontent.com/ClairVoyanceMedium/Frederick_Guidance.github.io/main/Images/logo2.jpg" alt="Logo Voyance" class="logo">
     </div>
 
-    <!-- Google Translate Widget -->
     <div id="google_translate_element"></div>
 
     <div class="form-container">
         <h1>Voyance privée par email</h1>
-        <form id="formulaire" action="https://formspree.io/f/xjkkkywn" method="POST">
+        <form id="formulaire" action="https://formspree.io/f/xjkkkywn" method="POST" enctype="multipart/form-data">
             <label for="nom">Nom / Prénom :</label>
             <input type="text" id="nom" name="nom" required>
 
@@ -177,10 +131,10 @@
             <input type="text" id="telephone" name="telephone">
 
             <label for="date_naissance">Date de naissance :</label>
-            <input type="text" id="date_naissance" name="date_naissance" required>
+            <input type="date" id="date_naissance" name="date_naissance" required>
 
             <label for="heure_naissance">Heure de naissance (facultatif) :</label>
-            <input type="text" id="heure_naissance" name="heure_naissance">
+            <input type="time" id="heure_naissance" name="heure_naissance">
 
             <label for="lieu_naissance">Lieu de naissance :</label>
             <input type="text" id="lieu_naissance" name="lieu_naissance">
@@ -206,7 +160,7 @@
             <input type="text" id="chiffres" name="chiffres" readonly required>
             <div class="grid-container"></div>
 
-            <label for="photo">Photo de face (facultatif) :</label>
+            <label for="photo">Ajouter une photo (facultatif) :</label>
             <input type="file" id="photo" name="photo" accept="image/*">
 
             <label for="questions">Vos questions :</label>
@@ -219,25 +173,13 @@
         </form>
     </div>
 
-    <script>
+    <script defer>
         function googleTranslateElementInit() {
-            const userLang = navigator.language || navigator.userLanguage;
-            const languageCode = userLang.split('-')[0];
-
             new google.translate.TranslateElement({
                 pageLanguage: 'fr',
                 includedLanguages: 'en,es,zh-CN,hi,ar,pt,ru,ja,de,ko,fr,vi,it,tr,pl,uk,nl,th,sv,cs,el,da,fi,he,hu,id,ms,no,ro,sk,sl,af,bg,hr,lt,lv,sr,et,ta,te,mr,ml,ur,bn,gu,si,sw,zu,iw,fa,ka,am,km',
-                autoDisplay: false,
                 layout: google.translate.TranslateElement.InlineLayout.SIMPLE
             }, 'google_translate_element');
-
-            setTimeout(() => {
-                const translateCombo = document.querySelector('.goog-te-combo');
-                if (translateCombo) {
-                    translateCombo.value = languageCode;
-                    translateCombo.dispatchEvent(new Event('change'));
-                }
-            }, 1000);
         }
 
         document.addEventListener("DOMContentLoaded", () => {
