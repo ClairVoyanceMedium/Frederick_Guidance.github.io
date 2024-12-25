@@ -35,9 +35,20 @@
     <meta name="baidu-site-verification" content="votre_code_de_verification">
     <meta name="yandex-verification" content="votre_code_de_verification">
     <!-- SEO multilingue -->
-    <link rel="alternate" hreflang="fr" href="https://clairvoyancemedium.github.io/VoyanceparEmail/fr/" />
-    <link rel="alternate" hreflang="en" href="https://clairvoyancemedium.github.io/VoyanceparEmail/en/" />
     <link rel="alternate" hreflang="x-default" href="https://clairvoyancemedium.github.io/VoyanceparEmail/" />
+    <!-- Détection automatique des pays -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "url": "https://clairvoyancemedium.github.io/VoyanceparEmail/",
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://clairvoyancemedium.github.io/VoyanceparEmail/?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+            }
+        }
+    </script>
     <!-- Meta pour les réseaux sociaux -->
     <meta property="og:title" content="Voyance par E-mail avec Frederick - Consultations Fiables et Rapides">
     <meta property="og:description" content="Consultez Frederick, guide spirituel expérimenté, pour des réponses claires et précises par e-mail. Voyance fiable et rapide, disponible 24h/7j.">
@@ -51,7 +62,7 @@
     <meta name="twitter:description" content="Consultez Frederick pour une voyance fiable et précise par e-mail.">
     <meta name="twitter:image" content="https://clairvoyancemedium.github.io/images/twitter-card.jpg">
     <!-- Content Security Policy -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://js.stripe.com; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https: data:; connect-src 'self' https://api.stripe.com; frame-src https://js.stripe.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://js.stripe.com https://ipapi.co; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https: data:; connect-src 'self' https://api.stripe.com https://ipapi.co; frame-src https://js.stripe.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;">
 </head>
 
 <body>
@@ -61,10 +72,11 @@
     </header>
 
     <main>
-        <section>
-            <a href="javascript:void(0);" id="checkout-link-1" class="cta-button prix" aria-label="Voyance privée par email - 1 question">1 Question - 6 €</a>
-            <a href="javascript:void(0);" id="checkout-link-2" class="cta-button prix" aria-label="Voyance privée par email - 3 questions">3 Questions - 15 €</a>
-            <a href="javascript:void(0);" id="checkout-link-3" class="cta-button prix" aria-label="Voyance privée par email - 5 questions">5 Questions - 28 €</a>
+        <section id="pricing">
+            <!-- Les prix seront mis à jour par JS -->
+            <a href="javascript:void(0);" id="checkout-link-1" class="cta-button prix" aria-label="Voyance privée par email - 1 question">1 Question - <span class="price">6 €</span></a>
+            <a href="javascript:void(0);" id="checkout-link-2" class="cta-button prix" aria-label="Voyance privée par email - 3 questions">3 Questions - <span class="price">15 €</span></a>
+            <a href="javascript:void(0);" id="checkout-link-3" class="cta-button prix" aria-label="Voyance privée par email - 5 questions">5 Questions - <span class="price">28 €</span></a>
         </section>
 
         <section class="avis">
@@ -79,9 +91,9 @@
         <section class="tarifs">
             <h2>Tarifs du Cabinet : Voyance par E-mail - 24h/7j</h2>
             <ul>
-                <li>1 question : 6 €</li>
-                <li>3 questions : 15 €</li>
-                <li>5 questions : 28 €</li>
+                <li>1 question : <span class="price">6 €</span></li>
+                <li>3 questions : <span class="price">15 €</span></li>
+                <li>5 questions : <span class="price">28 €</span></li>
             </ul>
         </section>
     </main>
@@ -94,18 +106,80 @@
     <script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=default" async></script>
     <script src="https://js.stripe.com/v3/" async></script>
     <script>
-    document.addEventListener("DOMContentLoaded",()=>{
-        const stripe=Stripe('pk_live_Cmzt2YN9ITdo6hUpO1lSZblJ');
-        function handleCheckout(nbQuestions){
-            fetch('checkout.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nbQuestions})})
-            .then(res=>res.json())
-            .then(session=>stripe.redirectToCheckout({sessionId:session.id}))
-            .catch(err=>console.error('Erreur paiement:',err));
-        }
-        document.getElementById('checkout-link-1').addEventListener('click',()=>handleCheckout(1));
-        document.getElementById('checkout-link-2').addEventListener('click',()=>handleCheckout(3));
-        document.getElementById('checkout-link-3').addEventListener('click',()=>handleCheckout(5));
-    });
+        document.addEventListener("DOMContentLoaded", () => {
+            const stripe = Stripe('pk_live_Cmzt2YN9ITdo6hUpO1lSZblJ');
+            const basePrices = [6, 15, 28]; // Prix en EUR
+            const defaultCurrency = 'EUR';
+
+            // Fonction pour obtenir le symbole de la devise
+            function getCurrencySymbol(currency) {
+                const symbols = {
+                    'EUR': '€', 'USD': '$', 'GBP': '£', 'JPY': '¥', 'CNY': '¥', 'INR': '₹'
+                };
+                return symbols[currency] || currency;
+            }
+
+            // Fonction pour convertir les prix
+            async function convertPrices() {
+                try {
+                    // Détection du pays via l'API IP
+                    const geoResponse = await fetch('https://ipapi.co/json/');
+                    const geoData = await geoResponse.json();
+                    const userCurrency = geoData.currency || defaultCurrency;
+
+                    // Conversion des prix si nécessaire
+                    if (userCurrency !== defaultCurrency) {
+                        const rateResponse = await fetch(`https://api.exchangerate-api.com/v4/latest/${defaultCurrency}`);
+                        const rateData = await rateResponse.json();
+                        const conversionRate = rateData.rates[userCurrency] || 1;
+
+                        document.querySelectorAll('.price').forEach((priceElement, index) => {
+                            const convertedPrice = (basePrices[index] * conversionRate).toFixed(2);
+                            priceElement.textContent = `${convertedPrice} ${getCurrencySymbol(userCurrency)}`;
+                        });
+                    }
+                } catch (error) {
+                    console.error('Erreur lors de la conversion des prix:', error);
+                    // Si conversion échoue, on garde les prix en EUR
+                }
+            }
+
+            convertPrices();
+
+            async function handleCheckout(nbQuestions) {
+                try {
+                    const response = await fetch('checkout.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ nbQuestions })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Erreur lors de la création de la session : ${response.status}`);
+                    }
+
+                    const session = await response.json();
+                    return stripe.redirectToCheckout({ sessionId: session.id });
+                } catch (error) {
+                    console.error("Erreur lors du paiement :", error);
+                }
+            }
+
+            // Événements de clic pour les boutons de paiement
+            document.getElementById('checkout-link-1').addEventListener('click', () => handleCheckout(1));
+            document.getElementById('checkout-link-2').addEventListener('click', () => handleCheckout(3));
+            document.getElementById('checkout-link-3').addEventListener('click', () => handleCheckout(5));
+
+            // Détection de la langue pour le SEO
+            const supportedLangs = ["fr", "en", "es", "zh", "hi", "ar", "pt", "ru", "ja", "de", "it", "ko", "bn"];
+            const userLang = navigator.language.split('-')[0] || 'fr';
+            if (supportedLangs.includes(userLang)) {
+                const hrefLang = document.querySelector(`link[hreflang="${userLang}"]`);
+                if (hrefLang) {
+                    window.location.href = hrefLang.href;
+                }
+            }
+        });
     </script>
 </body>
 </html>
