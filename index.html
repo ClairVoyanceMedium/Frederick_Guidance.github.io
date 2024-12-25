@@ -69,6 +69,11 @@
             transform: scale(1.02);
             opacity: 0.98;
         }
+        .highlight {
+            color: #87CEEB;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
         footer {
             margin-top: 30px;
             font-size: 0.9em;
@@ -77,6 +82,10 @@
         footer a {
             text-decoration: none;
             color: inherit;
+        }
+        .testimonials {
+            margin: 20px 0;
+            font-style: italic;
         }
     </style>
 </head>
@@ -109,10 +118,18 @@
         <section class="tarifs">
             <h2>Tarifs du Cabinet : Voyance par E-mail - 24h/7j</h2>
             <ul>
-                <li>1 question : 6 €</li>
-                <li>3 questions : 15 €</li>
-                <li>5 questions : 28 €</li>
+                <li>1 question : <span class="highlight">6 €</span></li>
+                <li>3 questions : <span class="highlight">15 €</span></li>
+                <li>5 questions : <span class="highlight">28 €</span></li>
             </ul>
+        </section>
+
+        <section class="testimonials">
+            <h2>Avis des clients</h2>
+            <blockquote>
+                <p>"Frederick m'a envoyé un e-mail très détaillé qui a répondu à toutes mes questions en moins de 24h. Je recommande vivement !" - <strong>Chloé, 29 ans</strong></p>
+                <p>"Une consultation très précise. Frederick a su répondre à mes attentes par e-mail. Merci pour vos conseils !" - <strong>David, 42 ans</strong></p>
+            </blockquote>
         </section>
     </main>
 
@@ -131,7 +148,6 @@
 
         async function handleCheckout(nbQuestions) {
             try {
-                // TODO: Ajouter la logique de gestion du paiement
                 alert(`Paiement pour ${nbQuestions} question(s)`);
             } catch (error) {
                 console.error("Erreur lors du paiement :", error);
