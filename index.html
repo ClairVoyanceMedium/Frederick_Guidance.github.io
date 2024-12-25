@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="description" content="Voyance par e-mail 24h/7j à partir de 6€. Des réponses claires et précises sur l'amour, le travail et la famille. Contactez Frederick pour une consultation fiable et rapide !">
+    <meta name="description" content="✉ Voyance par e-mail 24h/7j à partir de 6€. Des réponses claires et précises sur l'amour, le travail et la famille. Contactez Frederick pour une consultation fiable et rapide !">
     <meta name="keywords" content="Voyance par e-mail, Consultation voyance immédiate, Voyance fiable et rapide, Voyance retour affectif rapide, Consultation spirituelle par e-mail, Voyance travail et carrière, Voyance sérieuse et reconnue, Voyance à distance pas chère et rapide, Guide spirituel amour par e-mail, Voyance professionnelle avec médium reconnu">
     <meta name="author" content="Frederick - ClairvoyanceMedium.com">
     <meta name="robots" content="index, follow">
@@ -182,29 +182,23 @@
 
     <script src="https://js.stripe.com/v3/"></script>
     <script>
+        function handleCheckout(nbQuestions) {
+            const stripe = Stripe('pk_live_Cmzt2YN9ITdo6hUpO1lSZblJ');
+            fetch('/create-checkout-session', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ nbQuestions })
+            })
+                .then(response => response.json())
+                .then(session => stripe.redirectToCheckout({ sessionId: session.id }))
+                .catch(error => console.error('Erreur lors du démarrage de la session Stripe:', error));
+        }
+
         document.getElementById('checkout-link-1').addEventListener('click', () => handleCheckout(1));
         document.getElementById('checkout-link-2').addEventListener('click', () => handleCheckout(3));
         document.getElementById('checkout-link-3').addEventListener('click', () => handleCheckout(5));
-
-        async function handleCheckout(nbQuestions) {
-            const stripe = Stripe('pk_live_Cmzt2YN9ITdo6hUpO1lSZblJ');
-            try {
-                const response = await fetch('/create-checkout-session', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        quantity: nbQuestions
-                    })
-                });
-
-                const session = await response.json();
-                await stripe.redirectToCheckout({ sessionId: session.id });
-            } catch (error) {
-                console.error('Erreur lors du paiement :', error);
-            }
-        }
     </script>
 </body>
 
