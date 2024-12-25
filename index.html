@@ -109,90 +109,40 @@
 <body>
     <header>
         <p>VOYANCE PAR E-MAIL FIABLE, DÉTAILLÉE ET RAPIDE</p>
-        <p class="url-text">www.clairvoyancemedium.com</p>
         <h1>Consultation de Voyance Privée par E-mail</h1>
     </header>
 
     <main>
         <section>
-            <a href="javascript:void(0);" id="checkout-link-1" class="cta-button" aria-label="Voyance privée par email - 1 question">
-                1 Question - 6 €
-            </a>
-            <a href="javascript:void(0);" id="checkout-link-2" class="cta-button" aria-label="Voyance privée par email - 3 questions">
-                3 Questions - 15 €
-            </a>
-            <a href="javascript:void(0);" id="checkout-link-3" class="cta-button" aria-label="Voyance privée par email - 5 questions">
-                5 Questions - 28 €
-            </a>
-
-            <div id="success-message" style="display: none; color: green; text-align: center;" aria-live="polite">
-                Votre paiement a été validé avec succès ! Vous recevrez un e-mail récapitulatif sous peu.
-            </div>
-            <div id="error-message" style="display: none; color: red; text-align: center; margin: 10px 0;"></div>
+            <h2>Réservez votre consultation</h2>
+            <a href="javascript:void(0);" id="checkout-link-1" class="cta-button">1 Question - 6 €</a>
+            <a href="javascript:void(0);" id="checkout-link-2" class="cta-button">3 Questions - 15 €</a>
+            <a href="javascript:void(0);" id="checkout-link-3" class="cta-button">5 Questions - 28 €</a>
         </section>
 
-        <section class="tarifs">
-            <h2>Tarifs du Cabinet : Voyance par E-mail - 24h/7j</h2>
-            <ul>
-                <li>1 question : <span class="highlight">6 €</span></li>
-                <li>3 questions : <span class="highlight">15 €</span></li>
-                <li>5 questions : <span class="highlight">28 €</span></li>
-            </ul>
-        </section>
-
-        <section class="testimonials">
-            <h2>Avis des clients</h2>
+        <section>
+            <h2>Pourquoi choisir Frederick ?</h2>
+            <p>Avec plus de 25 années d'expérience, Frederick offre des consultations de voyance détaillées, fiables et rapides. Découvrez des réponses claires sur l'amour, le travail, et la famille.</p>
             <blockquote>
-                <p>"Frederick m'a envoyé un e-mail très détaillé qui a répondu à toutes mes questions en moins de 24h. Je recommande vivement !" - <strong>Chloé, 29 ans</strong></p>
-                <p>"Une consultation très précise. Frederick a su répondre à mes attentes par e-mail. Merci pour vos conseils !" - <strong>David, 42 ans</strong></p>
+                <p>"Frederick m'a donné des réponses précises et m'a guidé dans mes choix importants. Merci beaucoup !" - Cliente satisfaite</p>
             </blockquote>
         </section>
     </main>
 
     <footer>
-        <a href="https://www.clairvoyancemedium.com/Conditions-Generales-des-Ventes-et-d-Utilisation-ccsaaaaaa.asp" 
-           target="_blank" 
-           rel="noopener noreferrer">
-            &copy; 2025 ClairVoyanceMedium.com - Tous droits réservés
-        </a>
+        <p>&copy; 2025 ClairVoyanceMedium.com - Tous droits réservés</p>
+        <a href="https://clairvoyancemedium.github.io/politique-confidentialite">Politique de Confidentialité</a>
+        <a href="https://clairvoyancemedium.github.io/conditions-generales">Conditions Générales</a>
     </footer>
 
-    <!-- Script de gestion des devises -->
+    <script src="https://js.stripe.com/v3/"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", async () => {
-            const prixEnEuros = [6, 15, 28];
-            const deviseParDefaut = "EUR";
-            const elementsPrix = document.querySelectorAll(".cta-button");
-            const apiURL = "https://api.exchangerate-api.com/v4/latest/EUR";
-
-            try {
-                const response = await fetch(apiURL);
-                if (!response.ok) throw new Error("Erreur de connexion à l'API des taux de change");
-                const data = await response.json();
-
-                const deviseUtilisateur = (navigator.language || navigator.userLanguage).split("-")[1] || deviseParDefaut;
-                const tauxConversion = data.rates[deviseUtilisateur] || 1;
-
-                elementsPrix.forEach((element, index) => {
-                    const prixConverti = (prixEnEuros[index] * tauxConversion).toFixed(2);
-                    element.textContent = `${prixConverti} ${deviseUtilisateur}`;
-                });
-
-            } catch (error) {
-                console.error("Erreur lors de la conversion des devises :", error);
-                elementsPrix.forEach((element, index) => {
-                    element.textContent = `${prixEnEuros[index]} EUR`;
-                });
-            }
-        });
-    </script>
-
-    <!-- Stripe Integration -->
-    <script src="https://js.stripe.com/v3/" async></script>
-    <script>
-        const stripe = Stripe('pk_live_Cmzt2YN9ITdo6hUpO1lSZblJ');
+        document.getElementById('checkout-link-1').addEventListener('click', () => handleCheckout(1));
+        document.getElementById('checkout-link-2').addEventListener('click', () => handleCheckout(3));
+        document.getElementById('checkout-link-3').addEventListener('click', () => handleCheckout(5));
 
         async function handleCheckout(nbQuestions) {
+            const stripe = Stripe('pk_live_Cmzt2YN9ITdo6hUpO1lSZblJ');
             try {
                 const response = await fetch('/create-checkout-session', {
                     method: 'POST',
@@ -204,22 +154,12 @@
                     })
                 });
 
-                if (!response.ok) throw new Error('Network response was not ok');
-
                 const session = await response.json();
-                const { error } = await stripe.redirectToCheckout({ sessionId: session.id });
-
-                if (error) throw new Error(error.message);
+                await stripe.redirectToCheckout({ sessionId: session.id });
             } catch (error) {
-                document.getElementById('error-message').textContent = "Une erreur est survenue. Veuillez réessayer.";
-                document.getElementById('error-message').style.display = 'block';
-                console.error('Erreur Stripe:', error);
+                console.error('Erreur lors du paiement :', error);
             }
         }
-
-        document.getElementById('checkout-link-1').addEventListener('click', () => handleCheckout(1));
-        document.getElementById('checkout-link-2').addEventListener('click', () => handleCheckout(3));
-        document.getElementById('checkout-link-3').addEventListener('click', () => handleCheckout(5));
     </script>
 </body>
 
