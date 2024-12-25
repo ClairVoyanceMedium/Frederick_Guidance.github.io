@@ -141,6 +141,36 @@
         </a>
     </footer>
 
+    <!-- Script de gestion des devises -->
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const prixEnEuros = [6, 15, 28];
+            const deviseParDefaut = "EUR";
+            const elementsPrix = document.querySelectorAll(".cta-button");
+            const apiURL = "https://api.exchangerate-api.com/v4/latest/EUR";
+
+            try {
+                const response = await fetch(apiURL);
+                if (!response.ok) throw new Error("Erreur de connexion à l'API des taux de change");
+                const data = await response.json();
+
+                const deviseUtilisateur = (navigator.language || navigator.userLanguage).split("-")[1] || deviseParDefaut;
+                const tauxConversion = data.rates[deviseUtilisateur] || 1;
+
+                elementsPrix.forEach((element, index) => {
+                    const prixConverti = (prixEnEuros[index] * tauxConversion).toFixed(2);
+                    element.textContent = `${prixConverti} ${deviseUtilisateur}`;
+                });
+
+            } catch (error) {
+                console.error("Erreur lors de la conversion des devises :", error);
+                elementsPrix.forEach((element, index) => {
+                    element.textContent = `${prixEnEuros[index]} EUR`;
+                });
+            }
+        });
+    </script>
+
     <!-- Stripe Integration -->
     <script src="https://js.stripe.com/v3/" async></script>
     <script>
