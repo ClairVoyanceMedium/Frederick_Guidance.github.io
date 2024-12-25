@@ -12,166 +12,467 @@
     <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#000">
 
-    <!-- Open Graph / Social Media Tags -->
+    <!-- Meta pour les moteurs de recherche -->
+    <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="bingbot" content="index, follow">
+    <meta name="baidu-site-verification" content="votre_code_de_verification" />
+    <meta name="yandex-verification" content="votre_code_de_verification" />
+
+    <!-- SEO multilingue -->
+    <link rel="alternate" hreflang="fr" href="https://clairvoyancemedium.github.io/VoyanceparEmail/fr/" />
+    <link rel="alternate" hreflang="en" href="https://clairvoyancemedium.github.io/VoyanceparEmail/en/" />
+    <!-- Continuez avec les autres langues... -->
+    <link rel="alternate" hreflang="x-default" href="https://clairvoyancemedium.github.io/VoyanceparEmail/" />
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Roboto+Serif:wght@400;700&display=swap" as="style" onload="this.rel='stylesheet'">
+
+    <!-- Meta pour les réseaux sociaux -->
     <meta property="og:title" content="Voyance par E-mail avec Frederick - Consultations Fiables et Rapides">
     <meta property="og:description" content="Consultez Frederick, guide spirituel expérimenté, pour des réponses claires et précises par e-mail. Voyance fiable et rapide, disponible 24h/7j.">
     <meta property="og:url" content="https://clairvoyancemedium.github.io/VoyanceparEmail">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="fr_FR">
-    <meta property="og:image" content="https://clairvoyancemedium.github.io/images/social-share.jpg">
+    <meta property="og:image" content="https://clairvoyancemedium.github.io/images/twitter-card.jpg">
     <meta property="og:image:alt" content="Image représentant un guide spirituel offrant des consultations de voyance par e-mail, entouré d'une aura apaisante.">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Voyance par E-mail avec Frederick">
     <meta name="twitter:description" content="Consultez Frederick pour une voyance fiable et précise par e-mail.">
-    <meta name="twitter:image" content="https://clairvoyancemedium.github.io/images/social-share.jpg">
+    <meta name="twitter:image" content="https://clairvoyancemedium.github.io/images/twitter-card.jpg">
 
-    <!-- Multilingual SEO -->
-    <link rel="alternate" hreflang="fr" href="https://clairvoyancemedium.github.io/VoyanceparEmail/fr/" />
-    <link rel="alternate" hreflang="en" href="https://clairvoyancemedium.github.io/VoyanceparEmail/en/" />
-    <!-- Continuez avec les autres langues... -->
+    <!-- Content Security Policy -->
+    <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' https://js.stripe.com https://cdn.polyfill.io;
+    style-src 'self' https://fonts.googleapis.com;
+    font-src https://fonts.gstatic.com;
+    img-src 'self' https: data:;
+    connect-src 'self' https://api.stripe.com https://ipapi.co https://api.exchangerate-api.com;
+    frame-src https://js.stripe.com;
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self';
+    upgrade-insecure-requests;
+">
 
-    <!-- Structured Data -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {"@type": "Question", "name": "Quel est le tarif d'une consultation de voyance par e-mail ?", "acceptedAnswer": {"@type": "Answer", "text": "Frederick propose des consultations de voyance par e-mail à partir de 6 € pour une question. Les tarifs augmentent selon le nombre de questions."}},
-        {"@type": "Question", "name": "Combien de temps faut-il pour recevoir une réponse par e-mail ?", "acceptedAnswer": {"@type": "Answer", "text": "Frederick répond généralement sous 24 heures après réception de votre demande de consultation par e-mail."}},
-        {"@type": "Question", "name": "Est-ce que la voyance par e-mail est fiable ?", "acceptedAnswer": {"@type": "Answer", "text": "Oui, Frederick est un guide spirituel expérimenté avec plus de 25 années d'expertise et des centaines d'avis clients vérifiés."}}
-      ]
-    }
-    </script>
-
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Product",
-      "name": "Consultation de Voyance par E-mail",
-      "description": "Voyance par e-mail 24h/7j avec Frederick. Questions à partir de 6€.",
-      "image": "https://clairvoyancemedium.github.io/images/social-share.jpg",
-      "brand": {"@type": "Brand", "name": "ClairvoyanceMedium.com"},
-      "offers": [{"@type": "Offer", "priceCurrency": "EUR", "price": "6", "availability": "https://schema.org/InStock", "url": "https://clairvoyancemedium.github.io"}]
-    }
-    </script>
-
-    <!-- Fonts and Styles -->
+    <link rel="canonical" href="https://clairvoyancemedium.github.io/VoyanceparEmail">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Roboto+Serif:wght@400&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    
-    <style>
-    :root {
-        --main-bg-color: #000;
-        --main-text-color: #fff;
-        --accent-color: #FFD700;
-        --button-bg-color: #FF4500;
-        --button-hover-color: #FF6347;
-    }
-    body {
-        font-family: 'Roboto Serif', serif, Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: var(--main-bg-color);
-        color: var(--main-text-color);
-        text-align: center;
-    }
-    header {
-        padding: 20px;
-        background-color: #111;
-    }
-    header h1 {
-        font-size: 2.5em;
-        color: var(--accent-color);
-    }
-    .cta-button {
-        display: inline-block;
-        margin: 15px;
-        padding: 15px 25px;
-        font-size: 1.2em;
-        color: var(--main-text-color);
-        background-color: var(--button-bg-color);
-        text-decoration: none;
-        border-radius: 5px;
-        transition: background-color 0.3s ease;
-    }
-    .cta-button:hover {
-        background-color: var(--button-hover-color);
-    }
-    footer {
-        padding: 20px;
-        background-color: #111;
-        color: #aaa;
-    }
-    footer a {
-        color: var(--accent-color);
-        text-decoration: none;
-    }
-    footer a:hover {
-        text-decoration: underline;
-    }
-    </style>
-
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Roboto+Serif:wght@400&display=swap" rel="stylesheet">
+    <meta name="format-detection" content="email=no">
     <title>Voyance par E-mail - Consultations Fiables & Rapides - 24h/7j</title>
     <link rel="icon" href="favicon_voyancepartelephone.png" type="image/png">
-    <link rel="canonical" href="https://clairvoyancemedium.github.io/VoyanceparEmail">
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json">
+    <!-- ... (votre contenu JSON-LD ici) ... -->
+    </script>
+
+    <!-- Styles -->
+    <style>
+        body { 
+            font-family: 'Roboto Serif', serif, Arial, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            background-color: #000; 
+            color: #fff; 
+            text-align: center; 
+        }
+        header { 
+            color: #fff; 
+            padding: 20px 0; 
+        }
+        header img { 
+            max-width: 100%; 
+            height: auto; 
+            object-fit: cover; 
+            border-radius: 10px; 
+            display: block; 
+            margin: 0 auto; 
+            loading: lazy; 
+        }
+        .url-text { 
+            font-size: 1em; 
+            color: #87CEEB; 
+            font-family: 'Cinzel', serif; 
+            margin: 10px 0; 
+        }
+        header h1 { 
+            margin: 20px 0 10px; 
+            font-size: 2.2em; 
+            color: #fff; 
+            font-weight: bold; 
+            font-family: 'Cinzel', serif; 
+        }
+        .cta-button { 
+            display: inline-block; 
+            background: linear-gradient(145deg, #FFB6C1, #FF69B4); 
+            color: #fff; 
+            padding: 20px 30px; 
+            text-decoration: none; 
+            font-size: 1.6em; 
+            border-radius: 10px; 
+            margin-top: 20px; 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); 
+            transition: transform 0.3s ease, opacity 0.3s ease; 
+        }
+        .cta-button:hover { 
+            transform: scale(1.02); 
+            opacity: 0.98; 
+        }
+        .numero-direct { 
+            font-size: 1.5em; 
+            font-weight: bold; 
+            margin-top: 20px; 
+            font-family: 'Cinzel', serif; 
+        }
+        .highlight-number { 
+            font-size: 1.8em; 
+            font-weight: bold; 
+            color: #87CEEB; 
+            display: block; 
+            font-family: Helvetica, Arial, sans-serif; 
+        }
+        .tarifs h2 { 
+            font-family: 'Cinzel', serif; 
+            font-size: 1.8em; 
+            font-weight: bold; 
+            color: #fff; 
+        }
+        .tarifs ul { 
+            font-family: 'Cinzel', serif; 
+            font-size: 1.2em; 
+            color: #fff; 
+            font-weight: normal; 
+            list-style: none; 
+            padding: 0; 
+        }
+        #cookie-banner a{text-decoration:underline;color:#87CEEB;}#cookie-banner button:hover{opacity:0.9;}
+        footer { 
+            margin-top: 30px; 
+            font-size: 0.9em; 
+            color: #aaa; 
+        }
+        footer a { 
+            text-decoration: none; 
+            color: inherit; 
+            font-family: Helvetica, Arial, sans-serif; 
+        }
+    </style>
 </head>
 
 <body>
     <header>
-        <h1>Voyance par E-mail</h1>
-        <p>Consultations fiables et rapides par Frederick</p>
+        <p>VOYANCE PAR E-MAIL FIABLE, DÉTAILLÉE ET RAPIDE</p>
+        <p class="url-text">www.clairvoyancemedium.com</p>
+        <br>
+        <h1>Consultation de Voyance Privée par E-mail</h1>
     </header>
 
     <main>
-        <section aria-labelledby="booking-title">
-            <h2 id="booking-title">Réservez votre consultation</h2>
-            <a href="javascript:void(0);" id="checkout-link-1" class="cta-button" aria-label="Réservation pour 1 question à 6€">1 Question - 6 €</a>
-            <a href="javascript:void(0);" id="checkout-link-2" class="cta-button" aria-label="Réservation pour 3 questions à 15€">3 Questions - 15 €</a>
-            <a href="javascript:void(0);" id="checkout-link-3" class="cta-button" aria-label="Réservation pour 5 questions à 28€">5 Questions - 28 €</a>
+        <section>
+            <a href="javascript:void(0);" id="checkout-link-1" class="cta-button prix" aria-label="Voyance privée par email - 1 question">
+                1 Question - 6 €
+            </a>
+            <br>
+            <a href="javascript:void(0);" id="checkout-link-2" class="cta-button prix" aria-label="Voyance privée par email - 3 questions">
+                3 Questions - 15 €
+            </a>
+            <br>
+            <a href="javascript:void(0);" id="checkout-link-3" class="cta-button prix" aria-label="Voyance privée par email - 5 questions">
+                5 Questions - 28 €
+            </a>
+
+            <div id="success-message" style="display: none; color: green; text-align: center;" aria-live="polite">
+                Votre paiement a été validé avec succès ! Vous recevrez un e-mail récapitulatif sous peu.
+            </div>
+            <div id="loading-indicator" style="display: none; text-align: center;" aria-live="polite">
+                <div class="spinner"></div>
+                <p>Chargement en cours, veuillez patienter...</p>
+            </div>
+            <div id="fallback-message" style="display: none; color: red; text-align: center;" aria-live="polite">
+                La conversion des devises est indisponible. Les prix sont affichés en euros.
+            </div>
+            <div id="error-message" style="display: none; color: red; text-align: center; margin: 10px 0;"></div>
+
+            <div id="cookie-banner" style="display: block; padding: 20px; background-color: #000; color: #fff; position: fixed; bottom: 0; width: 100%; text-align: center; z-index: 1000;">
+                <p style="margin: 0;">
+                    Nous utilisons des cookies pour améliorer votre expérience. Les cookies essentiels sont toujours activés.
+                </p>
+                <div style="margin-top: 10px;">
+                    <button id="accept-cookies" style="background-color: #4CAF50 ; color: white; border: none; padding: 10px 15px; cursor: pointer; border-radius: 5px;">Accepter</button>
+                    <button id="decline-cookies" style="background-color: #f44336; color: white; border: none; padding: 10px 15px; cursor: pointer; border-radius: 5px;">Refuser</button>
+                </div>
+            </div>
+
+            <article>
+                <br><br>
+                <p>Profitez d'une <strong>consultation privée de voyance par e-mail</strong> avec Frederick, guide spirituel depuis plus de <strong>25 années</strong>. Des réponses claires et précises dans tous les domaines qui vous entourent : amour, travail, famille et plus encore.</p>
+                <br>
+                <p>Avis ⭐⭐⭐⭐⭐ (+ de 300 avis vérifiés)</p>
+                <blockquote>
+                    <p><em>"Frederick m'a envoyé un e-mail très détaillé qui a répondu à toutes mes questions en moins de 24h. Je recommande vivement !" — Chloé, 29 ans</em></p>
+                    <p><em>"Une consultation très précise. Frederick a su répondre à mes attentes par e-mail. Merci pour vos conseils !" — David, 42 ans</em></p>
+                </blockquote>
+            </article>
         </section>
 
-        <section aria-labelledby="why-choose-title">
-            <h2 id="why-choose-title">Pourquoi choisir Frederick ?</h2>
-            <p>Avec plus de 25 années d'expérience, Frederick offre des consultations détaillées, fiables et rapides.</p>
-            <blockquote>
-                <p>"Frederick m'a donné des réponses précises et m'a guidé dans mes choix importants. Merci beaucoup !" - Cliente satisfaite</p>
-            </blockquote>
+        <section class="tarifs">
+            <br><br>
+            <h2>Tarifs du Cabinet : Voyance par E-mail - 24h/7j</h2>
+            <ul>
+                <li>1 question : 6 €</li>
+                <li>3 questions : 15 €</li>
+                <li>5 questions : 28 €</li>
+            </ul>
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2025 ClairVoyanceMedium.com - Tous droits réservés</p>
-        <nav aria-label="Liens de pied de page">
-            <a href="https://clairvoyancemedium.github.io/politique-confidentialite">Politique de Confidentialité</a>
-            <a href="https://clairvoyancemedium.github.io/conditions-generales">Conditions Générales</a>
-        </nav>
+        <a href="https://www.clairvoyancemedium.com/Conditions-Generales-des-Ventes-et-d-Utilisation-ccsaaaaaa.asp" target="_blank" rel="noopener noreferrer">
+            © 2025 ClairVoyanceMedium.com - Tous droits réservés
+        </a>
+        <a href="Protections et Politiques de Confidentialité.html" target="_blank" rel="noopener noreferrer">
+            Politique de Confidentialité
+        </a>
+        <a href="#" id="revoke-cookies-link">Réinitialiser vos préférences</a>
     </footer>
+
+    <script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=default" async></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const prixEnEuros = [6, 15, 28]; // Liste des prix en euros
+            const tauxExpiration = 24 * 60 * 60 * 1000; // Expiration du cache (24 heures)
+            const elementsPrix = document.querySelectorAll(".prix");
+            const messageFallback = "La conversion des devises est indisponible. Les prix sont affichés en euros.";
+
+            // Taux de conversion par défaut (en cas d'échec des API)
+            const tauxConversionParDefaut = {
+                USD: 1.1,
+                GBP: 0.85,
+                EUR: 1,
+            };
+
+            if (!elementsPrix.length) {
+                console.warn("Aucun élément .prix trouvé pour l'affichage des prix.");
+                return;
+            }
+
+            // Affichage temporaire "chargement" pendant la conversion
+            elementsPrix.forEach((element) => (element.textContent = "Chargement..."));
+
+            let deviseLocale = localStorage.getItem("deviseLocale");
+            let tauxConversion = JSON.parse(localStorage.getItem("tauxConversion"));
+
+            try {
+                // Récupérer devise locale si non présente
+                if (!deviseLocale) {
+                    const geoResponse = await fetchWithTimeout("https://ipapi.co/json/", {}, 7000);
+                    const geoData = await geoResponse.json();
+                    deviseLocale = geoData.currency || "EUR";
+                    localStorage.setItem("deviseLocale", deviseLocale);
+                    console.log("Devise détectée et sauvegardée :", deviseLocale);
+                } else {
+                    console.log("Devise déjà sauvegardée :", deviseLocale);
+                }
+
+                // Vérifiez si les taux de conversion sont déjà stockés et valides
+                if (!tauxConversion || Date.now() - tauxConversion.timestamp > tauxExpiration) {
+                    console.log("Récupération des nouveaux taux...");
+                    const tauxResponse = await fetchWithTimeout("https://api.exchangerate-api.com/v4/latest/EUR", {}, 7000);
+                    const tauxData = await tauxResponse.json();
+
+                    tauxConversion = {
+                        rates: tauxData.rates,
+                        timestamp: Date.now(),
+                    };
+
+                    localStorage.setItem("tauxConversion", JSON.stringify(tauxConversion));
+                    console.log("Taux de conversion mis à jour et sauvegardés.");
+                }
+
+                // Utilisation des taux récupérés
+                const taux = tauxConversion.rates[deviseLocale] || tauxConversionParDefaut[deviseLocale] || 1;
+                elementsPrix.forEach((element, index) => {
+                    const prixConverti = (prixEnEuros[index] * taux).toFixed(2);
+                    element.textContent = `${prixConverti} ${getCurrencySymbol(deviseLocale, tauxConversion)}`;
+                });
+            } catch (error) {
+                console.error("Erreur lors de la gestion des taux de conversion :", error);
+
+                // Fallback : Utiliser les taux de conversion par défaut
+                const taux = tauxConversionParDefaut[deviseLocale] || 1;
+                elementsPrix.forEach((element, index) => {
+                    const prixConverti = (prixEnEuros[index] * taux).toFixed(2);
+                    element.textContent = `${prixConverti} ${getCurrencySymbol(deviseLocale, null)}`;
+                });
+
+                const fallbackContainer = document.getElementById("fallback-message");
+                if (fallbackContainer) {
+                    fallbackContainer.style.display = "block"; // Afficher le message de fallback
+                }
+            }
+
+            // Fonction pour obtenir le symbole de la devise
+            function getCurrencySymbol(currencyCode, ratesData) {
+                const defaultSymbols = { USD: "$", EUR: "€", GBP: "£", JPY: "¥", CNY: "¥", INR: "₹" };
+                return defaultSymbols[currencyCode] || currencyCode;
+            }
+
+            // Fonction utilitaire pour fetch avec timeout
+            async function fetchWithTimeout(resource, options = {}, timeout = 5000) {
+                const controller = new AbortController();
+                const signal = controller.signal;
+                const timer = setTimeout(() => controller.abort(), timeout);
+
+                try {
+                    const response = await fetch(resource, { ...options, signal });
+                    clearTimeout(timer);
+                    return response;
+                } catch (error) {
+                    console.error("Fetch timeout ou erreur :", error);
+                    throw error;
+                }
+            }
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const supportedLangs = ["fr", "en", "es", "zh", "hi", "ar", "pt", "ru", "ja", "de", "it", "ko", "bn"];
+            const defaultLang = "fr"; // Langue par défaut
+            const langCode = (navigator.language || navigator.userLanguage).split("-")[0]; // Langue du navigateur
+            const currentPath = window.location.pathname; // Chemin actuel de la page
+            const currentSearch = window.location.search; // Paramètres dans l'URL
+            const currentHash = window.location.hash; // Ancre dans l'URL
+
+            /**
+             * Fonction pour vérifier si le chemin contient une langue supportée.
+             * @param {string} path - Chemin de l'URL.
+             * @returns {boolean}
+             */
+            function isSupportedLang(path) {
+                return supportedLangs.some(lang => path.startsWith(`/${lang}/`));
+            }
+
+            /**
+             * Fonction pour générer un chemin normalisé.
+             * @param {string} path - Chemin à normaliser.
+             * @returns {string}
+             */
+            function normalizePath(path) {
+                return path.startsWith("/") ? path : `/${path}`;
+            }
+
+            /**
+             * Redirection vers la langue cible si nécessaire.
+             */
+            if (!isSupportedLang(currentPath)) {
+                const targetLang = supportedLangs.includes(langCode) ? langCode : defaultLang; // Langue cible
+                const normalizedPath = normalizePath(currentPath);
+
+                // Vérifie si la redirection est nécessaire (évite les boucles)
+                if (!normalizedPath.startsWith(`/${targetLang}/`)) {
+                    const newPath = `/${targetLang}${normalizedPath}${currentSearch}${currentHash}`;
+                    console.log(`Redirection vers : ${newPath}`);
+                    window.location.href = newPath; // Redirection vers la langue cible
+                } else {
+                    console.log("Aucune redirection nécessaire : Langue déjà correcte.");
+                }
+            } else {
+                console.log("Aucune redirection nécessaire : Chemin contient une langue supportée.");
+            }
+        });
+    </script>
 
     <script src="https://js.stripe.com/v3/" async></script>
     <script>
-        window.addEventListener('DOMContentLoaded', (event) => {
-            const stripe = Stripe('pk_live_Cmzt2YN9ITdo6hUpO1lSZblJ');
-            const handleCheckout = (nbQuestions) => {
-                fetch('/create-checkout-session', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ nbQuestions })
-                })
-                .then(response => response.json())
-                .then(session => stripe.redirectToCheckout({ sessionId: session.id }))
-                .catch(error => {
-                    console.error('Erreur lors du démarrage de la session Stripe:', error);
-                    alert('Une erreur est survenue lors du paiement. Veuillez réessayer plus tard.');
-                });
-            };
+        const stripe = Stripe('pk_live_Cmzt2YN9ITdo6hUpO1lSZblJ'); // Clé publique Stripe
 
-            document.getElementById('checkout-link-1').addEventListener('click', () => handleCheckout(1));
-            document.getElementById('checkout-link-2').addEventListener('click', () => handleCheckout(3));
-            document.getElementById('checkout-link-3').addEventListener('click', () => handleCheckout(5));
+        async function handleCheckout(nbQuestions) {
+            try {
+                // Afficher l'indicateur de chargement
+                document.getElementById('loading-indicator').style.display = 'block';
+
+                // Validation du nombre de questions
+                if (typeof nbQuestions !== 'number' || nbQuestions <= 0) {
+                    alert("Le nombre de questions sélectionné est invalide. Veuillez réessayer.");
+                    return;
+                }
+
+                // Envoyer la requête au backend pour créer une session Stripe
+                const response = await fetch('checkout.php', { // URL du backend
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nbQuestions }) // Envoie le nombre de questions
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erreur lors de la création de la session : ${response.status}`);
+                }
+
+                // Récupérer la session Stripe et rediriger
+                const session = await response.json();
+                const { error } = await stripe.redirectToCheckout({ sessionId: session.id });
+
+                if (error) {
+                    throw new Error(`Erreur lors de la redirection vers Stripe : ${error.message}`);
+                }
+            } catch (error) {
+                // Gérer les erreurs
+                console.error("Erreur lors du paiement :", error);
+
+                if (error.message.includes("session")) {
+                    alert("Une erreur est survenue lors de la création de la session. Veuillez réessayer.");
+                } else if (error.message.includes("redirection")) {
+                    alert("Redirection échouée. Essayez avec une autre méthode de paiement.");
+                } else {
+                    alert("Une erreur inconnue est survenue. Veuillez réessayer plus tard.");
+                }
+            } finally {
+                // Masquer l'indicateur de chargement
+                document.getElementById('loading-indicator').style.display = 'none';
+            }
+        }
+
+        // Associer chaque bouton à une session Stripe
+        document.getElementById('checkout-link-1').addEventListener('click', () => handleCheckout(1)); // 1 question
+        document.getElementById('checkout-link-2').addEventListener('click', () => handleCheckout(3)); // 3 questions
+        document.getElementById('checkout-link-3').addEventListener('click', () => handleCheckout(5)); // 5 questions
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const banner = document.getElementById('cookie-banner');
+            const acceptBtn = document.getElementById('accept-cookies');
+            const declineBtn = document.getElementById('decline-cookies');
+            const revokeLink = document.getElementById('revoke-cookies-link');
+
+            // Vérifie si l'utilisateur a déjà accepté l'utilisation des cookies
+            if (localStorage.getItem('cookiesAccepted') === 'true') {
+                banner.style.display = 'none';
+            }
+
+            // Gestion du clic sur le bouton "Accepter"
+            acceptBtn.addEventListener('click', () => {
+                localStorage.setItem('cookiesAccepted', 'true');
+                banner.style.display = 'none';
+            });
+
+            // Gestion du clic sur le bouton "Refuser"
+            declineBtn.addEventListener('click', () => {
+                localStorage.setItem('cookiesAccepted', 'false');
+                banner.style.display = 'none';
+            });
+
+            // Gestion du lien pour réinitialiser les préférences de cookies
+            revokeLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                localStorage.removeItem('cookiesAccepted');
+                alert("Vos préférences de cookies ont été réinitialisées.");
+                banner.style.display = 'block'; // Réaffiche la bannière de consentement
+            });
         });
     </script>
+
 </body>
 </html>
