@@ -12,6 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="icon" href="favicon_voyancepartelephone.png" type="image/png">
+    <link rel="preload" href="https://github.com/ClairVoyanceMedium/Frederick_Guidance.github.io/raw/main/Images/1%20-%20logo%20officiel(grande%20taille).jpg" as="image">
     <style>
         :root{--bg:#000;--text:#fff;--accent:#87CEEB;--button-bg:linear-gradient(145deg,#FFB6C1,#FF69B4);--button-txt:#fff}
         body{font-family:'Roboto Serif',serif,Arial,sans-serif;margin:0;padding:0;background:var(--bg);color:var(--text);text-align:center}
@@ -28,7 +29,8 @@
         p,blockquote{max-width:60ch;margin:0 auto}
         blockquote{font-style:italic}
         .avis{margin:1rem 0}
-        .logo{max-width:100%;height:auto}
+        .logo{max-width:100%;height:auto;opacity:0;transition:opacity 0.5s}
+        .logo.loaded{opacity:1}
         .cta-button:focus{outline:none;box-shadow:0 0 0 3px rgba(255,255,255,0.5)}
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Roboto+Serif:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -39,6 +41,10 @@
     <meta name="baidu-site-verification" content="votre_code_de_verification">
     <meta name="yandex-verification" content="votre_code_de_verification">
     <link rel="alternate" hreflang="x-default" href="https://clairvoyancemedium.github.io/VoyanceparEmail/" />
+    <!-- Ajoutez les hreflang pour toutes les langues supportées -->
+    <link rel="alternate" hreflang="fr" href="https://clairvoyancemedium.github.io/VoyanceparEmail/fr/" />
+    <link rel="alternate" hreflang="en" href="https://clairvoyancemedium.github.io/VoyanceparEmail/en/" />
+    <!-- Ajoutez d'autres langues ici -->
     <!-- JSON-LD pour SEO -->
     <script type="application/ld+json">
         {
@@ -68,109 +74,113 @@
 
 <body>
     <header>
-        <img src="https://github.com/ClairVoyanceMedium/Frederick_Guidance.github.io/raw/main/Images/1%20-%20logo%20officiel(grande%20taille).jpg" alt="Logo de ClairVoyanceMedium" class="logo">
+        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" 
+             data-src="https://github.com/ClairVoyanceMedium/Frederick_Guidance.github.io/raw/main/Images/1%20-%20logo%20officiel(grande%20taille).jpg" 
+             alt="Logo de ClairVoyanceMedium" class="logo lazy" loading="lazy">
         <h1>Consultation de Voyance Privée par E-mail</h1>
         <p class="url-text">www.clairvoyancemedium.com</p>
     </header>
 
     <main>
-        <section id="pricing">
+        <section id="pricing" aria-label="Options de tarification">
             <a href="javascript:void(0);" id="checkout-link-1" class="cta-button prix" aria-label="Voyance privée par email - 1 question">1 Question - <span class="price">6 €</span></a>
             <a href="javascript:void(0);" id="checkout-link-2" class="cta-button prix" aria-label="Voyance privée par email - 3 questions">3 Questions - <span class="price">15 €</span></a>
             <a href="javascript:void(0);" id="checkout-link-3" class="cta-button prix" aria-label="Voyance privée par email - 5 questions">5 Questions - <span class="price">28 €</span></a>
         </section>
 
-        <section class="avis">
+        <section class="avis" aria-label="Avis et Témoignages">
             <p>Profitez d'une <strong>consultation privée de voyance par e-mail</strong> avec Frederick, guide spirituel depuis plus de <strong>25 années</strong>. Des réponses claires et précises dans tous les domaines qui vous entourent : amour, travail, famille et plus encore.</p>
             <p>Avis ⭐⭐⭐⭐⭐ (+ de 300 avis vérifiés)</p>
-            <blockquote>
+            <blockquote aria-label="Témoignages des clients">
                 <p><em>"Frederick m'a envoyé un e-mail très détaillé qui a répondu à toutes mes questions en moins de 24h. Je recommande vivement !" — Chloé, 29 ans</em></p>
                 <p><em>"Une consultation très précise. Frederick a su répondre à mes attentes par e-mail. Merci pour vos conseils !" — David, 42 ans</em></p>
             </blockquote>
-        </section>
 
-        <section class="tarifs">
-            <h2>Tarifs du Cabinet : Voyance par E-mail - 24h/7j</h2>
-            <ul>
-                <li>1 question : <span class="price">6 €</span></li>
-                <li>3 questions : <span class="price">15 €</span></li>
-                <li>5 questions : <span class="price">28 €</span></li>
-            </ul>
-        </section>
-    </main>
+    <section class="tarifs" aria-label="Tarifs des consultations">
+        <h2>Tarifs du Cabinet : Voyance par E-mail - 24h/7j</h2>
+        <ul>
+            <li>1 question : <span class="price">6 €</span></li>
+            <li>3 questions : <span class="price">15 €</span></li>
+            <li>5 questions : <span class="price">28 €</span></li>
+        </ul>
+    </section>
+</main>
 
-    <footer>
-        <a href="https://www.clairvoyancemedium.com/Conditions-Generales-des-Ventes-et-d-Utilisation-ccsaaaaaa.asp" target="_blank" rel="noopener noreferrer">© 2025 ClairVoyanceMedium.com - Tous droits réservés</a>
-        <a href="Protections et Politiques de Confidentialité.html" target="_blank" rel="noopener noreferrer">Politique de Confidentialité</a>
-    </footer>
+<footer>
+    <a href="https://www.clairvoyancemedium.com/Conditions-Generales-des-Ventes-et-d-Utilisation-ccsaaaaaa.asp" target="_blank" rel="noopener noreferrer">© 2025 ClairVoyanceMedium.com - Tous droits réservés</a>
+    <a href="Protections et Politiques de Confidentialité.html" target="_blank" rel="noopener noreferrer">Politique de Confidentialité</a>
+</footer>
 
-    <!-- Polyfill pour fonctions modernes -->
-    <script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=default" async></script>
-    <script src="https://js.stripe.com/v3/" async></script>
-    <script>
-        (function() {
-            const stripe = Stripe('pk_live_Cmzt2YN9ITdo6hUpO1lSZblJ');
-            const basePrices = [6, 15, 28]; // Prix en EUR
-            const defaultCurrency = 'EUR';
+<!-- Polyfill pour fonctions modernes -->
+<script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=default" async></script>
+<script src="https://js.stripe.com/v3/" async></script>
+<script>
+    (function() {
+        const stripe = Stripe('pk_live_Cmzt2YN9ITdo6hUpO1lSZblJ');
+        const basePrices = [6, 15, 28]; // Prix en EUR
+        const defaultCurrency = 'EUR';
 
-            function getCurrencySymbol(currency) {
-                return {
-                    'EUR': '€', 'USD': '$', 'GBP': '£', 'JPY': '¥', 'CNY': '¥', 'INR': '₹'
-                }[currency] || currency;
-            }
+        function getCurrencySymbol(currency) {
+            return {
+                'EUR': '€', 'USD': '$', 'GBP': '£', 'JPY': '¥', 'CNY': '¥', 'INR': '₹'
+            }[currency] || currency;
+        }
 
-            async function convertPrices() {
-                try {
-                    const geoResponse = await fetch('https://ipapi.co/json/');
-                    const geoData = await geoResponse.json();
-                    const userCurrency = geoData.currency || defaultCurrency;
+        async function convertPrices() {
+            try {
+                const geoResponse = await fetch('https://ipapi.co/json/');
+                const geoData = await geoResponse.json();
+                const userCurrency = geoData.currency || defaultCurrency;
 
-                    if (userCurrency !== defaultCurrency) {
-                        const rateResponse = await fetch(`https://api.exchangerate-api.com/v4/latest/${defaultCurrency}`);
-                        const rateData = await rateResponse.json();
-                        const conversionRate = rateData.rates[userCurrency] || 1;
+                if (userCurrency !== defaultCurrency) {
+                    const rateResponse = await fetch(`https://api.exchangerate-api.com/v4/latest/${defaultCurrency}`);
+                    const rateData = await rateResponse.json();
+                    const conversionRate = rateData.rates[userCurrency] || 1;
 
-                        document.querySelectorAll('.price').forEach((priceElement, index) => {
-                            const convertedPrice = (basePrices[index] * conversionRate).toFixed(2);
-                            priceElement.textContent = `${convertedPrice} ${getCurrencySymbol(userCurrency)}`;
-                        });
-                    }
-                } catch (error) {
-                    console.error('Erreur lors de la conversion des prix:', error);
-                }
-            }
-
-            convertPrices();
-
-            async function handleCheckout(nbQuestions) {
-                try {
-                    const response = await fetch('checkout.php', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ nbQuestions })
+                    document.querySelectorAll('.price').forEach((priceElement, index) => {
+                        const convertedPrice = (basePrices[index] * conversionRate).toFixed(2);
+                        priceElement.textContent = `${convertedPrice} ${getCurrencySymbol(userCurrency)}`;
                     });
-
-                    if (!response.ok) {
-                        throw new Error(`Erreur lors de la création de la session : ${response.status}`);
-                    }
-
-                    const session = await response.json();
-                    await stripe.redirectToCheckout({ sessionId: session.id });
-                } catch (error) {
-                    console.error("Erreur lors du paiement :", error);
-                    alert("Une erreur est survenue lors du paiement. Veuillez réessayer.");
                 }
+            } catch (error) {
+                console.error('Erreur lors de la conversion des prix:', error);
+                document.querySelectorAll('.price').forEach(priceElement => {
+                    priceElement.textContent += ' (Conversion échouée)';
+                });
             }
+        }
 
-            document.getElementById('checkout-link-1').addEventListener('click', () => handleCheckout(1));
-            document.getElementById('checkout-link-2').addEventListener('click', () => handleCheckout(3));
-            document.getElementById('checkout-link-3').addEventListener('click', () => handleCheckout(5));
+        convertPrices();
 
-                    const supportedLangs = ["fr", "en", "es", "zh", "hi", "ar", "pt", "ru", "ja", "de", "it", "ko", "bn"];
+        async function handleCheckout(nbQuestions) {
+            try {
+                const response = await fetch('checkout.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nbQuestions })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erreur lors de la création de la session : ${response.status}`);
+                }
+
+                const session = await response.json();
+                await stripe.redirectToCheckout({ sessionId: session.id });
+            } catch (error) {
+                console.error("Erreur lors du paiement :", error);
+                alert("Une erreur est survenue lors du paiement. Veuillez réessayer.");
+            }
+        }
+
+        document.getElementById('checkout-link-1').addEventListener('click', () => handleCheckout(1));
+        document.getElementById('checkout-link-2').addEventListener('click', () => handleCheckout(3));
+        document.getElementById('checkout-link-3').addEventListener('click', () => handleCheckout(5));
+
+        const supportedLangs = ["fr", "en", "es", "zh", "hi", "ar", "pt", "ru", "ja", "de", "it", "ko", "bn"];
         const userLang = navigator.language.split('-')[0] || 'fr';
         if (supportedLangs.includes(userLang)) {
             const hrefLang = document.querySelector(`link[hreflang="${userLang}"]`);
-            if (hrefLang) {
+            if (hrefLang && window.location.pathname !== hrefLang.href) {
                 window.location.href = hrefLang.href;
             }
         }
@@ -193,14 +203,41 @@
                 script.setAttribute('nonce', nonce);
             }
         });
+
+        // Lazy Loading pour les images
+        document.addEventListener("DOMContentLoaded", function() {
+            const lazyImages = [].slice.call(document.querySelectorAll("img.lazy"));
+
+            if ("IntersectionObserver" in window) {
+                let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            let lazyImage = entry.target;
+                            lazyImage.src = lazyImage.dataset.src;
+                            lazyImage.classList.remove("lazy");
+                            lazyImage.classList.add("loaded");
+                            lazyImageObserver.unobserve(lazyImage);
+                        }
+                    });
+                });
+
+                lazyImages.forEach(function(lazyImage) {
+                    lazyImageObserver.observe(lazyImage);
+                });
+            } else {
+                // Fallback pour navigateurs sans IntersectionObserver
+                lazyImages.forEach(function(lazyImage) {
+                    lazyImage.src = lazyImage.dataset.src;
+                    lazyImage.classList.remove("lazy");
+                    lazyImage.classList.add("loaded");
+                });
+            }
+        });
     })();
 </script>
 
     </body>
 </html>
 
-
-
-
-
-                                    
+            
+        
