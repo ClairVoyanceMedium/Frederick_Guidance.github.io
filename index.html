@@ -148,11 +148,26 @@
 
         async function handleCheckout(nbQuestions) {
             try {
-                alert(`Paiement pour ${nbQuestions} question(s)`);
+                const response = await fetch('/create-checkout-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        quantity: nbQuestions
+                    })
+                });
+
+                if (!response.ok) throw new Error('Network response was not ok');
+
+                const session = await response.json();
+                const { error } = await stripe.redirectToCheckout({ sessionId: session.id });
+
+                if (error) throw new Error(error.message);
             } catch (error) {
-                console.error("Erreur lors du paiement :", error);
                 document.getElementById('error-message').textContent = "Une erreur est survenue. Veuillez réessayer.";
                 document.getElementById('error-message').style.display = 'block';
+                console.error('Erreur Stripe:', error);
             }
         }
 
