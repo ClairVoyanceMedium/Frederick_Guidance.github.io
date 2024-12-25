@@ -45,7 +45,7 @@
     style-src 'self' https://fonts.googleapis.com;
     font-src https://fonts.gstatic.com;
     img-src 'self' https: data:;
-    connect-src 'self' https://api.stripe.com https://ipapi.co https://api.exchangerate-api.com;
+    connect-src 'self' https://api.stripe.com https://ipapi.co;
     frame-src https://js.stripe.com;
     object-src 'none';
     base-uri 'self';
@@ -155,6 +155,12 @@
             color: inherit; 
             font-family: Helvetica, Arial, sans-serif; 
         }
+        @media (max-width: 768px) {
+            .cta-button {
+                padding: 15px 20px;
+                font-size: 1em;
+            }
+        }
     </style>
 </head>
 
@@ -180,18 +186,6 @@
                 5 Questions - 28 €
             </a>
 
-            <div id="success-message" style="display: none; color: green; text-align: center;" aria-live="polite">
-                Votre paiement a été validé avec succès ! Vous recevrez un e-mail récapitulatif sous peu.
-            </div>
-            <div id="loading-indicator" style="display: none; text-align: center;" aria-live="polite">
-                <div class="spinner"></div>
-                <p>Chargement en cours, veuillez patienter...</p>
-            </div>
-            <div id="fallback-message" style="display: none; color: red; text-align: center;" aria-live="polite">
-                La conversion des devises est indisponible. Les prix sont affichés en euros.
-            </div>
-            <div id="error-message" style="display: none; color: red; text-align: center; margin: 10px 0;"></div>
-
             <article>
                 <br><br>
                 <p>Profitez d'une <strong>consultation privée de voyance par e-mail</strong> avec Frederick, guide spirituel depuis plus de <strong>25 années</strong>. Des réponses claires et précises dans tous les domaines qui vous entourent : amour, travail, famille et plus encore.</p>
@@ -215,114 +209,16 @@
         </section>
     </main>
 
-    <footer>
-        <a href="https://www.clairvoyancemedium.com/Conditions-Generales-des-Ventes-et-d-Utilisation-ccsaaaaaa.asp" target="_blank" rel="noopener noreferrer">
-            © 2025 ClairVoyanceMedium.com - Tous droits réservés
-        </a>
-        <a href="Protections et Politiques de Confidentialité.html" target="_blank" rel="noopener noreferrer">
-            Politique de Confidentialité
-        </a>
-    </footer>
+  <footer>
+    <a href="https://www.clairvoyancemedium.com/Conditions-Generales-des-Ventes-et-d-Utilisation-ccsaaaaaa.asp" target="_blank" rel="noopener noreferrer">
+        © 2025 ClairVoyanceMedium.com - Tous droits réservés
+    </a>
+    <a href="Protections et Politiques de Confidentialité.html" target="_blank" rel="noopener noreferrer">
+        Politique de Confidentialité
+    </a>
+</footer>
 
-    <script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=default" async></script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", async () => {
-            const prixEnEuros = [6, 15, 28]; // Liste des prix en euros
-            const tauxExpiration = 24 * 60 * 60 * 1000; // Expiration du cache (24 heures)
-            const elementsPrix = document.querySelectorAll(".prix");
-            const messageFallback = "La conversion des devises est indisponible. Les prix sont affichés en euros.";      
-                
-        // Taux de conversion par défaut (en cas d'échec des API)
-            const tauxConversionParDefaut = {
-            USD: 1.1,
-            GBP: 0.85,
-            EUR: 1,
-        };
-
-        if (!elementsPrix.length) {
-            console.warn("Aucun élément .prix trouvé pour l'affichage des prix.");
-            return;
-        }
-
-        // Affichage temporaire "chargement" pendant la conversion
-        elementsPrix.forEach((element) => (element.textContent = "Chargement..."));
-
-        let deviseLocale = localStorage.getItem("deviseLocale");
-        let tauxConversion = JSON.parse(localStorage.getItem("tauxConversion"));
-
-        try {
-            // Récupérer devise locale si non présente
-            if (!deviseLocale) {
-                const geoResponse = await fetchWithTimeout("https://ipapi.co/json/", {}, 7000);
-                const geoData = await geoResponse.json();
-                deviseLocale = geoData.currency || "EUR";
-                localStorage.setItem("deviseLocale", deviseLocale);
-                console.log("Devise détectée et sauvegardée :", deviseLocale);
-            } else {
-                console.log("Devise déjà sauvegardée :", deviseLocale);
-            }
-
-            // Vérifiez si les taux de conversion sont déjà stockés et valides
-            if (!tauxConversion || Date.now() - tauxConversion.timestamp > tauxExpiration) {
-                console.log("Récupération des nouveaux taux...");
-                const tauxResponse = await fetchWithTimeout("https://api.exchangerate-api.com/v4/latest/EUR", {}, 7000);
-                const tauxData = await tauxResponse.json();
-
-                tauxConversion = {
-                    rates: tauxData.rates,
-                    timestamp: Date.now(),
-                };
-
-                localStorage.setItem("tauxConversion", JSON.stringify(tauxConversion));
-                console.log("Taux de conversion mis à jour et sauvegardés.");
-            }
-
-            // Utilisation des taux récupérés
-            const taux = tauxConversion.rates[deviseLocale] || tauxConversionParDefaut[deviseLocale] || 1;
-            elementsPrix.forEach((element, index) => {
-                const prixConverti = (prixEnEuros[index] * taux).toFixed(2);
-                element.textContent = `${prixConverti} ${getCurrencySymbol(deviseLocale, tauxConversion)}`;
-            });
-        } catch (error) {
-            console.error("Erreur lors de la gestion des taux de conversion :", error);
-
-            // Fallback : Utiliser les taux de conversion par défaut
-            const taux = tauxConversionParDefaut[deviseLocale] || 1;
-            elementsPrix.forEach((element, index) => {
-                const prixConverti = (prixEnEuros[index] * taux).toFixed(2);
-                element.textContent = `${prixConverti} ${getCurrencySymbol(deviseLocale, null)}`;
-            });
-
-            const fallbackContainer = document.getElementById("fallback-message");
-            if (fallbackContainer) {
-                fallbackContainer.style.display = "block"; // Afficher le message de fallback
-            }
-        }
-
-        // Fonction pour obtenir le symbole de la devise
-        function getCurrencySymbol(currencyCode, ratesData) {
-            const defaultSymbols = { USD: "$", EUR: "€", GBP: "£", JPY: "¥", CNY: "¥", INR: "₹" };
-            return defaultSymbols[currencyCode] || currencyCode;
-        }
-
-        // Fonction utilitaire pour fetch avec timeout
-        async function fetchWithTimeout(resource, options = {}, timeout = 5000) {
-            const controller = new AbortController();
-            const signal = controller.signal;
-            const timer = setTimeout(() => controller.abort(), timeout);
-
-            try {
-                const response = await fetch(resource, { ...options, signal });
-                clearTimeout(timer);
-                return response;
-            } catch (error) {
-                console.error("Fetch timeout ou erreur :", error);
-                throw error;
-            }
-        }
-    });
-</script>
+<script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=default" async></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -378,17 +274,8 @@
 
     async function handleCheckout(nbQuestions) {
         try {
-            // Afficher l'indicateur de chargement
-            document.getElementById('loading-indicator').style.display = 'block';
-
-            // Validation du nombre de questions
-            if (typeof nbQuestions !== 'number' || nbQuestions <= 0) {
-                alert("Le nombre de questions sélectionné est invalide. Veuillez réessayer.");
-                return;
-            }
-
             // Envoyer la requête au backend pour créer une session Stripe
-            const response = await fetch('checkout.php', { // URL du backend
+            const response = await fetch('checkout.php', { 
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ nbQuestions }) // Envoie le nombre de questions
@@ -406,19 +293,9 @@
                 throw new Error(`Erreur lors de la redirection vers Stripe : ${error.message}`);
             }
         } catch (error) {
-            // Gérer les erreurs
+            // Gérer les erreurs en silence pour une meilleure UX
             console.error("Erreur lors du paiement :", error);
-
-            if (error.message.includes("session")) {
-                alert("Une erreur est survenue lors de la création de la session. Veuillez réessayer.");
-            } else if (error.message.includes("redirection")) {
-                alert("Redirection échouée. Essayez avec une autre méthode de paiement.");
-            } else {
-                alert("Une erreur inconnue est survenue. Veuillez réessayer plus tard.");
-            }
-        } finally {
-            // Masquer l'indicateur de chargement
-            document.getElementById('loading-indicator').style.display = 'none';
+            // Ici, vous pourriez ajouter une fenêtre de dialogue ou un feedback visuel moins intrusif
         }
     }
 
@@ -427,6 +304,7 @@
     document.getElementById('checkout-link-2').addEventListener('click', () => handleCheckout(3)); // 3 questions
     document.getElementById('checkout-link-3').addEventListener('click', () => handleCheckout(5)); // 5 questions
 </script>
-
-    </body>
+                
+</body>
 </html>
+                
