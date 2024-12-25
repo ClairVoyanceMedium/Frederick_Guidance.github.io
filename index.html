@@ -145,7 +145,6 @@
             list-style: none; 
             padding: 0; 
         }
-        #cookie-banner a{text-decoration:underline;color:#87CEEB;}#cookie-banner button:hover{opacity:0.9;}
         footer { 
             margin-top: 30px; 
             font-size: 0.9em; 
@@ -193,16 +192,6 @@
             </div>
             <div id="error-message" style="display: none; color: red; text-align: center; margin: 10px 0;"></div>
 
-            <div id="cookie-banner" style="display: block; padding: 20px; background-color: #000; color: #fff; position: fixed; bottom: 0; width: 100%; text-align: center; z-index: 1000;">
-                <p style="margin: 0;">
-                    Nous utilisons des cookies pour améliorer votre expérience. Les cookies essentiels sont toujours activés.
-                </p>
-                <div style="margin-top: 10px;">
-                    <button id="accept-cookies" style="background-color: #4CAF50 ; color: white; border: none; padding: 10px 15px; cursor: pointer; border-radius: 5px;">Accepter</button>
-                    <button id="decline-cookies" style="background-color: #f44336; color: white; border: none; padding: 10px 15px; cursor: pointer; border-radius: 5px;">Refuser</button>
-                </div>
-            </div>
-
             <article>
                 <br><br>
                 <p>Profitez d'une <strong>consultation privée de voyance par e-mail</strong> avec Frederick, guide spirituel depuis plus de <strong>25 années</strong>. Des réponses claires et précises dans tous les domaines qui vous entourent : amour, travail, famille et plus encore.</p>
@@ -233,7 +222,6 @@
         <a href="Protections et Politiques de Confidentialité.html" target="_blank" rel="noopener noreferrer">
             Politique de Confidentialité
         </a>
-        <a href="#" id="revoke-cookies-link">Réinitialiser vos préférences</a>
     </footer>
 
     <script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=default" async></script>
@@ -243,236 +231,202 @@
             const prixEnEuros = [6, 15, 28]; // Liste des prix en euros
             const tauxExpiration = 24 * 60 * 60 * 1000; // Expiration du cache (24 heures)
             const elementsPrix = document.querySelectorAll(".prix");
-            const messageFallback = "La conversion des devises est indisponible. Les prix sont affichés en euros.";
-
-            // Taux de conversion par défaut (en cas d'échec des API)
+            const messageFallback = "La conversion des devises est indisponible. Les prix sont affichés en euros.";      
+                
+        // Taux de conversion par défaut (en cas d'échec des API)
             const tauxConversionParDefaut = {
-                USD: 1.1,
-                GBP: 0.85,
-                EUR: 1,
-            };
+            USD: 1.1,
+            GBP: 0.85,
+            EUR: 1,
+        };
 
-            if (!elementsPrix.length) {
-                console.warn("Aucun élément .prix trouvé pour l'affichage des prix.");
-                return;
-            }
+        if (!elementsPrix.length) {
+            console.warn("Aucun élément .prix trouvé pour l'affichage des prix.");
+            return;
+        }
 
-            // Affichage temporaire "chargement" pendant la conversion
-            elementsPrix.forEach((element) => (element.textContent = "Chargement..."));
+        // Affichage temporaire "chargement" pendant la conversion
+        elementsPrix.forEach((element) => (element.textContent = "Chargement..."));
 
-            let deviseLocale = localStorage.getItem("deviseLocale");
-            let tauxConversion = JSON.parse(localStorage.getItem("tauxConversion"));
+        let deviseLocale = localStorage.getItem("deviseLocale");
+        let tauxConversion = JSON.parse(localStorage.getItem("tauxConversion"));
 
-            try {
-                // Récupérer devise locale si non présente
-                if (!deviseLocale) {
-                    const geoResponse = await fetchWithTimeout("https://ipapi.co/json/", {}, 7000);
-                    const geoData = await geoResponse.json();
-                    deviseLocale = geoData.currency || "EUR";
-                    localStorage.setItem("deviseLocale", deviseLocale);
-                    console.log("Devise détectée et sauvegardée :", deviseLocale);
-                } else {
-                    console.log("Devise déjà sauvegardée :", deviseLocale);
-                }
-
-                // Vérifiez si les taux de conversion sont déjà stockés et valides
-                if (!tauxConversion || Date.now() - tauxConversion.timestamp > tauxExpiration) {
-                    console.log("Récupération des nouveaux taux...");
-                    const tauxResponse = await fetchWithTimeout("https://api.exchangerate-api.com/v4/latest/EUR", {}, 7000);
-                    const tauxData = await tauxResponse.json();
-
-                    tauxConversion = {
-                        rates: tauxData.rates,
-                        timestamp: Date.now(),
-                    };
-
-                    localStorage.setItem("tauxConversion", JSON.stringify(tauxConversion));
-                    console.log("Taux de conversion mis à jour et sauvegardés.");
-                }
-
-                // Utilisation des taux récupérés
-                const taux = tauxConversion.rates[deviseLocale] || tauxConversionParDefaut[deviseLocale] || 1;
-                elementsPrix.forEach((element, index) => {
-                    const prixConverti = (prixEnEuros[index] * taux).toFixed(2);
-                    element.textContent = `${prixConverti} ${getCurrencySymbol(deviseLocale, tauxConversion)}`;
-                });
-            } catch (error) {
-                console.error("Erreur lors de la gestion des taux de conversion :", error);
-
-                // Fallback : Utiliser les taux de conversion par défaut
-                const taux = tauxConversionParDefaut[deviseLocale] || 1;
-                elementsPrix.forEach((element, index) => {
-                    const prixConverti = (prixEnEuros[index] * taux).toFixed(2);
-                    element.textContent = `${prixConverti} ${getCurrencySymbol(deviseLocale, null)}`;
-                });
-
-                const fallbackContainer = document.getElementById("fallback-message");
-                if (fallbackContainer) {
-                    fallbackContainer.style.display = "block"; // Afficher le message de fallback
-                }
-            }
-
-            // Fonction pour obtenir le symbole de la devise
-            function getCurrencySymbol(currencyCode, ratesData) {
-                const defaultSymbols = { USD: "$", EUR: "€", GBP: "£", JPY: "¥", CNY: "¥", INR: "₹" };
-                return defaultSymbols[currencyCode] || currencyCode;
-            }
-
-            // Fonction utilitaire pour fetch avec timeout
-            async function fetchWithTimeout(resource, options = {}, timeout = 5000) {
-                const controller = new AbortController();
-                const signal = controller.signal;
-                const timer = setTimeout(() => controller.abort(), timeout);
-
-                try {
-                    const response = await fetch(resource, { ...options, signal });
-                    clearTimeout(timer);
-                    return response;
-                } catch (error) {
-                    console.error("Fetch timeout ou erreur :", error);
-                    throw error;
-                }
-            }
-        });
-    </script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const supportedLangs = ["fr", "en", "es", "zh", "hi", "ar", "pt", "ru", "ja", "de", "it", "ko", "bn"];
-            const defaultLang = "fr"; // Langue par défaut
-            const langCode = (navigator.language || navigator.userLanguage).split("-")[0]; // Langue du navigateur
-            const currentPath = window.location.pathname; // Chemin actuel de la page
-            const currentSearch = window.location.search; // Paramètres dans l'URL
-            const currentHash = window.location.hash; // Ancre dans l'URL
-
-            /**
-             * Fonction pour vérifier si le chemin contient une langue supportée.
-             * @param {string} path - Chemin de l'URL.
-             * @returns {boolean}
-             */
-            function isSupportedLang(path) {
-                return supportedLangs.some(lang => path.startsWith(`/${lang}/`));
-            }
-
-            /**
-             * Fonction pour générer un chemin normalisé.
-             * @param {string} path - Chemin à normaliser.
-             * @returns {string}
-             */
-            function normalizePath(path) {
-                return path.startsWith("/") ? path : `/${path}`;
-            }
-
-            /**
-             * Redirection vers la langue cible si nécessaire.
-             */
-            if (!isSupportedLang(currentPath)) {
-                const targetLang = supportedLangs.includes(langCode) ? langCode : defaultLang; // Langue cible
-                const normalizedPath = normalizePath(currentPath);
-
-                // Vérifie si la redirection est nécessaire (évite les boucles)
-                if (!normalizedPath.startsWith(`/${targetLang}/`)) {
-                    const newPath = `/${targetLang}${normalizedPath}${currentSearch}${currentHash}`;
-                    console.log(`Redirection vers : ${newPath}`);
-                    window.location.href = newPath; // Redirection vers la langue cible
-                } else {
-                    console.log("Aucune redirection nécessaire : Langue déjà correcte.");
-                }
+        try {
+            // Récupérer devise locale si non présente
+            if (!deviseLocale) {
+                const geoResponse = await fetchWithTimeout("https://ipapi.co/json/", {}, 7000);
+                const geoData = await geoResponse.json();
+                deviseLocale = geoData.currency || "EUR";
+                localStorage.setItem("deviseLocale", deviseLocale);
+                console.log("Devise détectée et sauvegardée :", deviseLocale);
             } else {
-                console.log("Aucune redirection nécessaire : Chemin contient une langue supportée.");
+                console.log("Devise déjà sauvegardée :", deviseLocale);
             }
-        });
-    </script>
 
-    <script src="https://js.stripe.com/v3/" async></script>
-    <script>
-        const stripe = Stripe('pk_live_Cmzt2YN9ITdo6hUpO1lSZblJ'); // Clé publique Stripe
+            // Vérifiez si les taux de conversion sont déjà stockés et valides
+            if (!tauxConversion || Date.now() - tauxConversion.timestamp > tauxExpiration) {
+                console.log("Récupération des nouveaux taux...");
+                const tauxResponse = await fetchWithTimeout("https://api.exchangerate-api.com/v4/latest/EUR", {}, 7000);
+                const tauxData = await tauxResponse.json();
 
-        async function handleCheckout(nbQuestions) {
-            try {
-                // Afficher l'indicateur de chargement
-                document.getElementById('loading-indicator').style.display = 'block';
+                tauxConversion = {
+                    rates: tauxData.rates,
+                    timestamp: Date.now(),
+                };
 
-                // Validation du nombre de questions
-                if (typeof nbQuestions !== 'number' || nbQuestions <= 0) {
-                    alert("Le nombre de questions sélectionné est invalide. Veuillez réessayer.");
-                    return;
-                }
+                localStorage.setItem("tauxConversion", JSON.stringify(tauxConversion));
+                console.log("Taux de conversion mis à jour et sauvegardés.");
+            }
 
-                // Envoyer la requête au backend pour créer une session Stripe
-                const response = await fetch('checkout.php', { // URL du backend
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ nbQuestions }) // Envoie le nombre de questions
-                });
+            // Utilisation des taux récupérés
+            const taux = tauxConversion.rates[deviseLocale] || tauxConversionParDefaut[deviseLocale] || 1;
+            elementsPrix.forEach((element, index) => {
+                const prixConverti = (prixEnEuros[index] * taux).toFixed(2);
+                element.textContent = `${prixConverti} ${getCurrencySymbol(deviseLocale, tauxConversion)}`;
+            });
+        } catch (error) {
+            console.error("Erreur lors de la gestion des taux de conversion :", error);
 
-                if (!response.ok) {
-                    throw new Error(`Erreur lors de la création de la session : ${response.status}`);
-                }
+            // Fallback : Utiliser les taux de conversion par défaut
+            const taux = tauxConversionParDefaut[deviseLocale] || 1;
+            elementsPrix.forEach((element, index) => {
+                const prixConverti = (prixEnEuros[index] * taux).toFixed(2);
+                element.textContent = `${prixConverti} ${getCurrencySymbol(deviseLocale, null)}`;
+            });
 
-                // Récupérer la session Stripe et rediriger
-                const session = await response.json();
-                const { error } = await stripe.redirectToCheckout({ sessionId: session.id });
-
-                if (error) {
-                    throw new Error(`Erreur lors de la redirection vers Stripe : ${error.message}`);
-                }
-            } catch (error) {
-                // Gérer les erreurs
-                console.error("Erreur lors du paiement :", error);
-
-                if (error.message.includes("session")) {
-                    alert("Une erreur est survenue lors de la création de la session. Veuillez réessayer.");
-                } else if (error.message.includes("redirection")) {
-                    alert("Redirection échouée. Essayez avec une autre méthode de paiement.");
-                } else {
-                    alert("Une erreur inconnue est survenue. Veuillez réessayer plus tard.");
-                }
-            } finally {
-                // Masquer l'indicateur de chargement
-                document.getElementById('loading-indicator').style.display = 'none';
+            const fallbackContainer = document.getElementById("fallback-message");
+            if (fallbackContainer) {
+                fallbackContainer.style.display = "block"; // Afficher le message de fallback
             }
         }
 
-        // Associer chaque bouton à une session Stripe
-        document.getElementById('checkout-link-1').addEventListener('click', () => handleCheckout(1)); // 1 question
-        document.getElementById('checkout-link-2').addEventListener('click', () => handleCheckout(3)); // 3 questions
-        document.getElementById('checkout-link-3').addEventListener('click', () => handleCheckout(5)); // 5 questions
-    </script>
+        // Fonction pour obtenir le symbole de la devise
+        function getCurrencySymbol(currencyCode, ratesData) {
+            const defaultSymbols = { USD: "$", EUR: "€", GBP: "£", JPY: "¥", CNY: "¥", INR: "₹" };
+            return defaultSymbols[currencyCode] || currencyCode;
+        }
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const banner = document.getElementById('cookie-banner');
-            const acceptBtn = document.getElementById('accept-cookies');
-            const declineBtn = document.getElementById('decline-cookies');
-            const revokeLink = document.getElementById('revoke-cookies-link');
+        // Fonction utilitaire pour fetch avec timeout
+        async function fetchWithTimeout(resource, options = {}, timeout = 5000) {
+            const controller = new AbortController();
+            const signal = controller.signal;
+            const timer = setTimeout(() => controller.abort(), timeout);
 
-            // Vérifie si l'utilisateur a déjà accepté l'utilisation des cookies
-            if (localStorage.getItem('cookiesAccepted') === 'true') {
-                banner.style.display = 'none';
+            try {
+                const response = await fetch(resource, { ...options, signal });
+                clearTimeout(timer);
+                return response;
+            } catch (error) {
+                console.error("Fetch timeout ou erreur :", error);
+                throw error;
+            }
+        }
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const supportedLangs = ["fr", "en", "es", "zh", "hi", "ar", "pt", "ru", "ja", "de", "it", "ko", "bn"];
+        const defaultLang = "fr"; // Langue par défaut
+        const langCode = (navigator.language || navigator.userLanguage).split("-")[0]; // Langue du navigateur
+        const currentPath = window.location.pathname; // Chemin actuel de la page
+        const currentSearch = window.location.search; // Paramètres dans l'URL
+        const currentHash = window.location.hash; // Ancre dans l'URL
+
+        /**
+         * Fonction pour vérifier si le chemin contient une langue supportée.
+         * @param {string} path - Chemin de l'URL.
+         * @returns {boolean}
+         */
+        function isSupportedLang(path) {
+            return supportedLangs.some(lang => path.startsWith(`/${lang}/`));
+        }
+
+        /**
+         * Fonction pour générer un chemin normalisé.
+         * @param {string} path - Chemin à normaliser.
+         * @returns {string}
+         */
+        function normalizePath(path) {
+            return path.startsWith("/") ? path : `/${path}`;
+        }
+
+        /**
+         * Redirection vers la langue cible si nécessaire.
+         */
+        if (!isSupportedLang(currentPath)) {
+            const targetLang = supportedLangs.includes(langCode) ? langCode : defaultLang; // Langue cible
+            const normalizedPath = normalizePath(currentPath);
+
+            // Vérifie si la redirection est nécessaire (évite les boucles)
+            if (!normalizedPath.startsWith(`/${targetLang}/`)) {
+                const newPath = `/${targetLang}${normalizedPath}${currentSearch}${currentHash}`;
+                console.log(`Redirection vers : ${newPath}`);
+                window.location.href = newPath; // Redirection vers la langue cible
+            } else {
+                console.log("Aucune redirection nécessaire : Langue déjà correcte.");
+            }
+        } else {
+            console.log("Aucune redirection nécessaire : Chemin contient une langue supportée.");
+        }
+    });
+</script>
+
+<script src="https://js.stripe.com/v3/" async></script>
+<script>
+    const stripe = Stripe('pk_live_Cmzt2YN9ITdo6hUpO1lSZblJ'); // Clé publique Stripe
+
+    async function handleCheckout(nbQuestions) {
+        try {
+            // Afficher l'indicateur de chargement
+            document.getElementById('loading-indicator').style.display = 'block';
+
+            // Validation du nombre de questions
+            if (typeof nbQuestions !== 'number' || nbQuestions <= 0) {
+                alert("Le nombre de questions sélectionné est invalide. Veuillez réessayer.");
+                return;
             }
 
-            // Gestion du clic sur le bouton "Accepter"
-            acceptBtn.addEventListener('click', () => {
-                localStorage.setItem('cookiesAccepted', 'true');
-                banner.style.display = 'none';
+            // Envoyer la requête au backend pour créer une session Stripe
+            const response = await fetch('checkout.php', { // URL du backend
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nbQuestions }) // Envoie le nombre de questions
             });
 
-            // Gestion du clic sur le bouton "Refuser"
-            declineBtn.addEventListener('click', () => {
-                localStorage.setItem('cookiesAccepted', 'false');
-                banner.style.display = 'none';
-            });
+            if (!response.ok) {
+                throw new Error(`Erreur lors de la création de la session : ${response.status}`);
+            }
 
-            // Gestion du lien pour réinitialiser les préférences de cookies
-            revokeLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                localStorage.removeItem('cookiesAccepted');
-                alert("Vos préférences de cookies ont été réinitialisées.");
-                banner.style.display = 'block'; // Réaffiche la bannière de consentement
-            });
-        });
-    </script>
+            // Récupérer la session Stripe et rediriger
+            const session = await response.json();
+            const { error } = await stripe.redirectToCheckout({ sessionId: session.id });
 
-</body>
+            if (error) {
+                throw new Error(`Erreur lors de la redirection vers Stripe : ${error.message}`);
+            }
+        } catch (error) {
+            // Gérer les erreurs
+            console.error("Erreur lors du paiement :", error);
+
+            if (error.message.includes("session")) {
+                alert("Une erreur est survenue lors de la création de la session. Veuillez réessayer.");
+            } else if (error.message.includes("redirection")) {
+                alert("Redirection échouée. Essayez avec une autre méthode de paiement.");
+            } else {
+                alert("Une erreur inconnue est survenue. Veuillez réessayer plus tard.");
+            }
+        } finally {
+            // Masquer l'indicateur de chargement
+            document.getElementById('loading-indicator').style.display = 'none';
+        }
+    }
+
+    // Associer chaque bouton à une session Stripe
+    document.getElementById('checkout-link-1').addEventListener('click', () => handleCheckout(1)); // 1 question
+    document.getElementById('checkout-link-2').addEventListener('click', () => handleCheckout(3)); // 3 questions
+    document.getElementById('checkout-link-3').addEventListener('click', () => handleCheckout(5)); // 5 questions
+</script>
+
+    </body>
 </html>
