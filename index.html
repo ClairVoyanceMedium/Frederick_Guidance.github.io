@@ -180,16 +180,16 @@
 
 <body>
     <header>
-        <img src="https://i.imgur.com/ajZF0ae.jpg" alt="Logo de ClairVoyanceMedium" class="logo" loading="eager">
+        <img src="https://i.imgur.com/ajZF0ae.jpg" alt="Logo de ClairVoyanceMedium" class="logo" onload="this.style.opacity='1';">
         <h1>Consultation de Voyance Privée par E-mail</h1>
         <p class="url-text">www.clairvoyancemedium.com</p>
     </header>
 
     <main>
         <section id="pricing">
-            <button class="cta-button prix" data-stripe-url="https://buy.stripe.com/14kdRe0EQ4iH1uoaFa" aria-label="Voyance privée par email - 1 question" role="button">1 Question - <span class="price">6 €</span></button>
-            <button class="cta-button prix" data-stripe-url="https://buy.stripe.com/dR614scnycPddd66oV" aria-label="Voyance privée par email - 3 questions" role="button">3 Questions - <span class="price">15 €</span></button>
-            <button class="cta-button prix" data-stripe-url="https://buy.stripe.com/28o3cA0EQ5mL0qk14C" aria-label="Voyance privée par email - 5 questions" role="button">5 Questions - <span class="price">28 €</span></button>
+            <a href="#" class="cta-button prix" data-stripe-url="https://buy.stripe.com/14kdRe0EQ4iH1uoaFa" aria-label="Voyance privée par email - 1 question" role="button">1 Question - <span class="price">6 €</span></a>
+            <a href="#" class="cta-button prix" data-stripe-url="https://buy.stripe.com/dR614scnycPddd66oV" aria-label="Voyance privée par email - 3 questions" role="button">3 Questions - <span class="price">15 €</span></a>
+            <a href="#" class="cta-button prix" data-stripe-url="https://buy.stripe.com/28o3cA0EQ5mL0qk14C" aria-label="Voyance privée par email - 5 questions" role="button">5 Questions - <span class="price">28 €</span></a>
         </section>
 
         <section class="avis">
@@ -221,7 +221,7 @@
     <!-- Polyfill pour fonctions modernes -->
     <script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=default" async></script>
     <script src="https://js.stripe.com/v3/" async></script>
-    <script>
+    <script nonce="{{nonce}}">
         (function() {
             const stripe = Stripe('pk_live_Cmzt2YN9ITdo6hUpO1lSZblJ');
             const basePrices = [6, 15, 28]; // Prix en EUR
@@ -246,7 +246,7 @@
                     const geoData = await geoResponse.json();
                     const userCurrency = geoData.currency || defaultCurrency;
 
-                if (userCurrency !== defaultCurrency) {
+                    if (userCurrency !== defaultCurrency) {
                         const rateResponse = await fetch(`https://api.exchangerate-api.com/v4/latest/${defaultCurrency}`);
                         const rateData = await rateResponse.json();
                         const conversionRate = rateData.rates[userCurrency] || 1;
@@ -268,9 +268,10 @@
 
             // Fonction pour rediriger vers Stripe avec gestion des erreurs
             function redirectToStripe(event) {
+                event.preventDefault();
                 if (loading) return;
                 loading = true;
-                const button = event.target;
+                const button = event.target.closest('.prix');
                 const originalText = button.innerHTML;
                 button.innerHTML = '<div class="loading"></div>';
                 
@@ -322,9 +323,9 @@
             });
 
             // Animation d'apparition pour le logo
-            document.querySelector('.logo').addEventListener('load', function() {
+            document.querySelector('.logo').onload = function() {
                 this.style.opacity = '1';
-            });
+            };
 
             // Amélioration de l'accessibilité pour les boutons
             document.querySelectorAll('.prix').forEach(button => {
