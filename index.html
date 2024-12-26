@@ -199,11 +199,17 @@
 
     <main>
         <section id="pricing">
-            <a href="https://buy.stripe.com/14kdRe0EQ4iH1uoaFa" id="checkout-link-1" class="cta-button prix" aria-label="Voyance privée par email - 1 question">1 Question - <span class="price">6 €</span></a>
-            <a href="https://buy.stripe.com/dR614scnycPddd66oV" id="checkout-link-2" class="cta-button prix" aria-label="Voyance privée par email - 3 questions">3 Questions - <span class="price">15 €</span></a>
-            <a href="https://buy.stripe.com/28o3cA0EQ5mL0qk14C" id="checkout-link-3" class="cta-button prix" aria-label="Voyance privée par email - 5 questions">5 Questions - <span class="price">28 €</span></a>
+            <button id="checkout-link-1" class="cta-button" aria-label="Voyance privée par email - 1 question">
+                1 Question - <span class="price">6€</span>
+            </button>
+            <button id="checkout-link-2" class="cta-button" aria-label="Voyance privée par email - 3 questions">
+                3 Questions - <span class="price">15€</span>
+            </button>
+            <button id="checkout-link-3" class="cta-button" aria-label="Voyance privée par email - 5 questions">
+                5 Questions - <span class="price">28€</span>
+            </button>
         </section>
-
+            
         <section class="avis">
             <p>Profitez d'une <strong>consultation privée de voyance par e-mail</strong> avec Frederick, guide spirituel depuis plus de <strong>25 années</strong>. Des réponses claires et précises dans tous les domaines qui vous entourent : amour, travail, famille et plus encore.</p>
             <p>Avis ⭐⭐⭐⭐⭐ (+ de 300 avis vérifiés)</p>
@@ -275,11 +281,6 @@
                 window.location.href = url;
             }
 
-            // Écouteurs d'événements pour les boutons d'achat
-            document.getElementById('checkout-link-1').addEventListener('click', () => redirectToStripe('https://buy.stripe.com/14kdRe0EQ4iH1uoaFa'));
-            document.getElementById('checkout-link-2').addEventListener('click', () => redirectToStripe('https://buy.stripe.com/dR614scnycPddd66oV'));
-            document.getElementById('checkout-link-3').addEventListener('click', () => redirectToStripe('https://buy.stripe.com/28o3cA0EQ5mL0qk14C'));
-
             // Langue automatique
             const supportedLangs = ["fr", "en", "es", "zh", "hi", "ar", "pt", "ru", "ja", "de", "it", "ko", "bn"];
             const userLang = navigator.language.split('-')[0] || 'fr';
@@ -310,6 +311,27 @@
                 }
             });
         })();
+     </script>
+
+        
+        <script>
+        const stripeLinks = {
+            "checkout-link-1": "https://buy.stripe.com/14kdRe0EQ4iH1uoaFa",
+            "checkout-link-2": "https://buy.stripe.com/dR614scnycPddd66oV",
+            "checkout-link-3": "https://buy.stripe.com/28o3cA0EQ5mL0qk14C"
+        };
+    
+        document.querySelectorAll(".cta-button").forEach(button => {
+            button.addEventListener("click", (event) => {
+                const stripeUrl = stripeLinks[event.target.id];
+                if (stripeUrl) {
+                    window.location.href = stripeUrl;
+                } else {
+                    console.error("URL Stripe introuvable pour", event.target.id);
+                }
+            });
+        });
+
     </script>
 </body>
 </html>  
