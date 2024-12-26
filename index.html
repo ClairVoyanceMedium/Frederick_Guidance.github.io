@@ -76,7 +76,114 @@
                 "query-input": "required name=search_term_string"
             }
         }
+
+    <!-- JSON-LD pour FAQ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Quel est le tarif d'une consultation de voyance par e-mail ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Frederick propose des consultations de voyance par e-mail à partir de 6 € pour une question. Les tarifs augmentent selon le nombre de questions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Combien de temps faut-il pour recevoir une réponse par e-mail ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Frederick répond généralement sous 24 heures après réception de votre demande de consultation par e-mail."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Est-ce que la voyance par e-mail est fiable ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Oui, Frederick est un guide spirituel expérimenté avec plus de 25 années d'expertise et des centaines d'avis clients vérifiés."
+          }
+        }
+      ]
+    }
     </script>
+
+    <!-- JSON-LD pour Person -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Frederick",
+      "description": "Guide spirituel et voyant professionnel proposant des consultations fiables et rapides par e-mail.",
+      "url": "https://clairvoyancemedium.github.io/VoyanceparEmail",
+      "sameAs": [
+        "https://facebook.com/clairvoyancemedium",
+        "https://twitter.com/clairvoyancemedium",
+        "https://linkedin.com/in/clairvoyancemedium"
+      ],
+      "worksFor": {
+        "@type": "Organization",
+        "name": "ClairvoyanceMedium.com",
+        "url": "https://clairvoyancemedium.github.io"
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "Consultation de Voyance par E-mail",
+    "description": "Voyance par e-mail 24h/7j avec Frederick. Questions à partir de 6€.",
+    "image": "https://clairvoyancemedium.github.io/images/voyance.jpg",
+    "brand": {
+        "@type": "Brand",
+        "name": "ClairvoyanceMedium.com"
+    },
+    "offers": [
+        {
+            "@type": "Offer",
+            "priceCurrency": "EUR",
+            "price": "6",
+            "availability": "https://schema.org/InStock",
+            "url": "https://clairvoyancemedium.github.io"
+        }
+    ]
+}
+</script>
+
+    <!-- Unique balise Speakable -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": [
+      "h1",
+      "p.url-text",
+      ".cta-button",
+      ".tarifs ul",
+      "blockquote",
+      "p",
+      "footer"
+    ]
+  },
+  "inLanguage": [
+    "fr-FR", "en-US", "es-ES", "pt-BR", "zh-CN", "hi-IN", 
+    "ar-SA", "ru-RU", "de-DE", "it-IT", "ja-JP", "ko-KR",
+    "bn-BD", "id-ID", "vi-VN", "tr-TR", "th-TH", "nl-NL", 
+    "pl-PL", "ro-RO", "sv-SE", "no-NO", "da-DK", "fi-FI", 
+    "el-GR", "hu-HU", "cs-CZ", "sk-SK", "bg-BG", "uk-UA", 
+    "he-IL", "ms-MY", "ta-IN", "te-IN", "mr-IN", "kn-IN",
+    "ur-PK", "fa-IR", "sw-KE", "yo-NG", "am-ET", "zu-ZA"
+  ]
+}    
+    </script>
+
+    
     <meta property="og:title" content="Voyance par E-mail avec Frederick - Consultations Fiables et Rapides">
     <meta property="og:description" content="Consultez Frederick, guide spirituel expérimenté, pour des réponses claires et précises par e-mail. Voyance fiable et rapide, disponible 24h/7j.">
     <meta property="og:url" content="https://clairvoyancemedium.github.io/VoyanceparEmail">
