@@ -154,28 +154,27 @@
     }
     </script>
 
+    <!-- Unique balise Speakable -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "speakable": {
+        "@type": "SpeakableSpecification",
+        "cssSelector": [
+          "h1",
+          "p.url-text",
+          ".cta-button",
+          ".tarifs ul",
+          "blockquote",
+          "p",
+          "footer"
+        ]
+      },
+      "inLanguage": ["fr-FR", "en-US", "es-ES", "pt-BR", "zh-CN", "hi-IN", "ar-SA", "ru-RU"]
+    }
+    </script>
 
-    <!-- Balise Speakable avec toutes les langues disponibles -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  "speakable": {
-    "@type": "SpeakableSpecification",
-    "cssSelector": [
-      "h1",
-      ".cta-button",
-      ".avis p",
-      ".tarifs ul"
-    ]
-  },
-  "inLanguage": [
-    "fr-FR", "en-US", "es-ES", "zh-CN", "hi-IN", "ar-SA", "pt-BR", "ru-RU", "ja-JP", "de-DE", "it-IT", "pl-PL", "ko-KR", "nl-NL", "tr-TR", "vi-VN", "th-TH", "id-ID", "bn-IN", "ta-IN", "ms-MY", "pa-IN", "mr-IN", "ur-PK", "ro-RO", "hu-HU", "cs-CZ", "el-GR", "da-DK", "fi-FI", "no-NO", "sw-KE", "am-ET", "ha-NG", "yo-NG", "kn-IN", "sd-PK"
-  ]
-}
-</script>
-    
-   
     <meta property="og:title" content="Voyance par E-mail avec Frederick - Consultations Fiables et Rapides">
     <meta property="og:description" content="Consultez Frederick, guide spirituel expérimenté, pour des réponses claires et précises par e-mail. Voyance fiable et rapide, disponible 24h/7j.">
     <meta property="og:url" content="https://clairvoyancemedium.github.io/VoyanceparEmail">
@@ -199,17 +198,11 @@
 
     <main>
         <section id="pricing">
-            <button id="checkout-link-1" class="cta-button" aria-label="Voyance privée par email - 1 question">
-                1 Question - <span class="price">6€</span>
-            </button>
-            <button id="checkout-link-2" class="cta-button" aria-label="Voyance privée par email - 3 questions">
-                3 Questions - <span class="price">15€</span>
-            </button>
-            <button id="checkout-link-3" class="cta-button" aria-label="Voyance privée par email - 5 questions">
-                5 Questions - <span class="price">28€</span>
-            </button>
+            <a href="https://buy.stripe.com/14kdRe0EQ4iH1uoaFa" id="checkout-link-1" class="cta-button prix" aria-label="Voyance privée par email - 1 question">1 Question - <span class="price">6 €</span></a>
+            <a href="https://buy.stripe.com/dR614scnycPddd66oV" id="checkout-link-2" class="cta-button prix" aria-label="Voyance privée par email - 3 questions">3 Questions - <span class="price">15 €</span></a>
+            <a href="https://buy.stripe.com/28o3cA0EQ5mL0qk14C" id="checkout-link-3" class="cta-button prix" aria-label="Voyance privée par email - 5 questions">5 Questions - <span class="price">28 €</span></a>
         </section>
-            
+
         <section class="avis">
             <p>Profitez d'une <strong>consultation privée de voyance par e-mail</strong> avec Frederick, guide spirituel depuis plus de <strong>25 années</strong>. Des réponses claires et précises dans tous les domaines qui vous entourent : amour, travail, famille et plus encore.</p>
             <p>Avis ⭐⭐⭐⭐⭐ (+ de 300 avis vérifiés)</p>
@@ -230,8 +223,6 @@
     </main>
 
     <footer>
-        <a href="mailto:contact.clairvoyancemedium@gmail.com" target="_blank" rel="noopener noreferrer">CONTACT</a>
-        <br>
         <a href="https://www.clairvoyancemedium.com/Conditions-Generales-des-Ventes-et-d-Utilisation-ccsaaaaaa.asp" target="_blank" rel="noopener noreferrer">© 2025 ClairVoyanceMedium.com - Tous droits réservés</a>
         <a href="Protections et Politiques de Confidentialité.html" target="_blank" rel="noopener noreferrer"> / Politique de Confidentialité</a>
         <br>
@@ -281,6 +272,11 @@
                 window.location.href = url;
             }
 
+            // Écouteurs d'événements pour les boutons d'achat
+            document.getElementById('checkout-link-1').addEventListener('click', () => redirectToStripe('https://buy.stripe.com/14kdRe0EQ4iH1uoaFa'));
+            document.getElementById('checkout-link-2').addEventListener('click', () => redirectToStripe('https://buy.stripe.com/dR614scnycPddd66oV'));
+            document.getElementById('checkout-link-3').addEventListener('click', () => redirectToStripe('https://buy.stripe.com/28o3cA0EQ5mL0qk14C'));
+
             // Langue automatique
             const supportedLangs = ["fr", "en", "es", "zh", "hi", "ar", "pt", "ru", "ja", "de", "it", "ko", "bn"];
             const userLang = navigator.language.split('-')[0] || 'fr';
@@ -311,27 +307,6 @@
                 }
             });
         })();
-     </script>
-
-        
-        <script>
-        const stripeLinks = {
-            "checkout-link-1": "https://buy.stripe.com/14kdRe0EQ4iH1uoaFa",
-            "checkout-link-2": "https://buy.stripe.com/dR614scnycPddd66oV",
-            "checkout-link-3": "https://buy.stripe.com/28o3cA0EQ5mL0qk14C"
-        };
-    
-        document.querySelectorAll(".cta-button").forEach(button => {
-            button.addEventListener("click", (event) => {
-                const stripeUrl = stripeLinks[event.target.id];
-                if (stripeUrl) {
-                    window.location.href = stripeUrl;
-                } else {
-                    console.error("URL Stripe introuvable pour", event.target.id);
-                }
-            });
-        });
-
     </script>
 </body>
 </html>  
