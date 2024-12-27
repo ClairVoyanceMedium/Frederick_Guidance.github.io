@@ -9,11 +9,10 @@
         :root {
             --primary-color: #000;
             --text-color: #000;
-            --button-bg: #FFC0CB;
+            --button-bg: #FF1493; /* Rose plus intense */
             --button-hover-bg: #FF69B4;
             --font-family: 'Cinzel Regular', serif;
         }
-        
         body {
             font-family: var(--font-family);
             margin: 0;
@@ -50,10 +49,19 @@
             border-radius: 5px;
             text-decoration: none;
             cursor: pointer;
+            animation: blink 1s infinite;
             transition: background-color 0.3s;
         }
         .cta-button:hover {
             background-color: var(--button-hover-bg);
+        }
+        @keyframes blink {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
         }
     </style>
 </head>
@@ -120,6 +128,10 @@
         if (translations[userLang]) {
             ctaButton.textContent = translations[userLang];
         }
+        <br>
+        <br>  
+        <br>   
+        <br>   
     </script>
 </body>
 </html>
