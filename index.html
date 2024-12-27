@@ -370,7 +370,7 @@
     <meta name="twitter:title" content="Voyance par E-mail avec Frederick">
     <meta name="twitter:description" content="Consultez Frederick pour une voyance fiable et précise par e-mail.">
     <meta name="twitter:image" content="https://github.com/ClairVoyanceMedium/Frederick_Guidance.github.io/raw/main/Images/1%20-%20logo%20officiel(grande%20taille).jpg">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-{{nonce}}' https://js.stripe.com https://ipapi.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://*.github.com https://i.imgur.com; connect-src 'self' https://api.stripe.com https://ipapi.co; frame-src https://js.stripe.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-123456' https://js.stripe.com https://ipapi.co; style-src 'self' 'sha256-xLMEslxoiI4Ym8GZV/x2lmfwEtz6a6GWrN+zRoOBCFY=' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://*.github.com https://i.imgur.com; connect-src 'self' https://api.stripe.com https://ipapi.co; frame-src https://js.stripe.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;">
 </head>
 
 <body>
@@ -504,5 +504,11 @@
             });
         })();
     </script>
+    
+    <!-- Script sécurisé avec nonce placé à la fin -->
+    <script nonce="123456">
+        console.log('Script sécurisé avec nonce');
+    </script>
+    
 </body>
 </html>  
