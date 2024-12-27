@@ -143,5 +143,46 @@
         <br>   
         <br>   
     </script>
+
+    <script>
+        // Traductions pour différents éléments de la page
+        const translations = {
+            fr: {
+                title: "Merci pour votre paiement",
+                heading: "Merci pour votre paiement",
+                success-message: "Votre paiement a été reçu avec succès.",
+                instructions: "Pour finaliser votre consultation, <br> veuillez remplir le formulaire en cliquant sur le bouton ci-dessous.",
+                "cta-button": "La voyance à vos questions ICI"
+            },
+            en: {
+                title: "Thank you for your payment",
+                heading: "Thank you for your payment",
+                success-message: "Your payment has been successfully received.",
+                instructions: "To complete your consultation, <br> please fill out the form by clicking the button below.",
+                "cta-button": "Fortune-telling to your questions HERE"
+            },
+            es: {
+                title: "Gracias por su pago",
+                heading: "Gracias por su pago",
+                success-message: "Su pago se ha recibido con éxito.",
+                instructions: "Para completar su consulta, <br> complete el formulario haciendo clic en el botón a continuación.",
+                "cta-button": "La adivinación a sus preguntas AQUÍ"
+            },
+            // Ajoutez d'autres langues ici si nécessaire...
+        };
+
+        // Détecter la langue de l'utilisateur
+        const userLang = navigator.language.slice(0, 2);
+        const pageTexts = translations[userLang] || translations["fr"];
+
+        // Appliquer les traductions
+        document.querySelectorAll("[data-i18n-key]").forEach(el => {
+            const key = el.getAttribute("data-i18n-key");
+            if (pageTexts[key]) {
+                el.innerHTML = pageTexts[key];
+            }
+        });
+    </script>
 </body>
 </html>
+
