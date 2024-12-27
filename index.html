@@ -401,10 +401,16 @@
             const translateCombo = document.querySelector('.goog-te-combo');
             if (translateCombo) {
                 clearInterval(translateInterval);
-                translateCombo.value = userLang;
-                translateCombo.dispatchEvent(new Event('change'));
+                setTimeout(() => {
+                    try {
+                        translateCombo.value = userLang;
+                        translateCombo.dispatchEvent(new Event('change'));
+                    } catch (error) {
+                        console.error('Erreur lors de la sélection de la langue :', error);
+                    }
+                }, 500); // Petit délai pour garantir la disponibilité
             }
-        }, 500); // Vérification toutes les 500ms
+        }, 1000); // Vérification toutes les 1000ms
     }
 
     function loadGoogleTranslateScript() {
