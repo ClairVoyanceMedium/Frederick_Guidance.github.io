@@ -4,84 +4,121 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Merci pour votre achat</title>
+    <title>Merci pour votre paiement</title>
     <style>
+        :root {
+            --primary-color: #000;
+            --text-color: #000;
+            --button-bg: #FFC0CB;
+            --button-hover-bg: #FF69B4;
+            --font-family: 'Cinzel Regular', serif;
+        }
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f9f9f9;
+            font-family: var(--font-family);
             margin: 0;
             padding: 0;
+            background-color: #f4f4f4;
+            text-align: center;
         }
-
-        .container {
-            max-width: 600px;
-            margin: 50px auto;
-            background: #fff;
+        header {
+            background-color: #fff;
             padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
         }
-
+        .logo {
+            max-width: 200px;
+            height: auto;
+        }
         h1 {
-            color: #4CAF50;
+            font-family: var(--font-family);
+            font-size: 2rem;
+            color: var(--text-color);
+            font-weight: bold;
         }
-
         p {
-            color: #555;
+            font-size: 1.2rem;
+            color: #333;
         }
-
         .cta-button {
             display: inline-block;
             margin-top: 20px;
-            padding: 15px 25px;
-            font-size: 18px;
+            padding: 15px 30px;
+            font-size: 1.2rem;
             color: #fff;
-            background: #4CAF50;
-            text-decoration: none;
+            background-color: var(--button-bg);
+            border: none;
             border-radius: 5px;
-            transition: background 0.3s;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
-
         .cta-button:hover {
-            background: #45a049;
+            background-color: var(--button-hover-bg);
         }
     </style>
-    <script>
-        // Traductions pour le bouton
-        const translations = {
-            "fr": "La voyance à vos questions ICI",
-            "en": "Your fortune-telling HERE",
-            "es": "La adivinación a tus preguntas AQUÍ",
-            "de": "Die Wahrsagerei zu Ihren Fragen HIER",
-            "it": "La chiaroveggenza alle tue domande QUI",
-            "zh": "在这里解答您的问题",
-            "ja": "あなたの質問はこちらで",
-            "ko": "여기에서 귀하의 질문 점 보기",
-            "ru": "Предсказание на ваши вопросы ЗДЕСЬ",
-            "ar": "التنجيم للإجابة على أسئلتك هنا",
-            "hi": "आपके सवालों की ज्योतिष यहाँ",
-            // Ajoutez d'autres traductions ici
-        };
-
-        // Détecter la langue du navigateur
-        const userLang = navigator.language.split('-')[0] || 'fr';
-
-        // Appliquer la traduction appropriée
-        document.addEventListener("DOMContentLoaded", () => {
-            const ctaButton = document.getElementById('cta-button');
-            ctaButton.textContent = translations[userLang] || translations["fr"];
-        });
-    </script>
 </head>
 <body>
-    <div class="container">
-        <h1>Merci pour votre achat !</h1>
-        <p>Votre paiement a été confirmé avec succès. Pour finaliser votre demande, veuillez remplir le formulaire en cliquant sur le lien ci-dessous.</p>
+    <header>
+        <img src="https://chicsensation101.imgur.com/all" alt="Logo ClairvoyanceMedium" class="logo">
+    </header>
+    <main>
+        <h1>Merci pour votre paiement</h1>
+        <p>Votre paiement a été reçu avec succès.</p>
+        <p>Pour finaliser votre consultation, <br> veuillez remplir le formulaire en cliquant sur le bouton ci-dessous.</p>
+        <a href="https://clairvoyancemedium.github.io/Frederick_Guidance.github.io/form.html#" class="cta-button" data-i18n-key="cta-button">La voyance à vos questions ICI</a>
+    </main>
+    <script>
+        const translations = {
+            fr: "La voyance à vos questions ICI",
+            en: "Fortune-telling to your questions HERE",
+            es: "La adivinación a sus preguntas AQUÍ",
+            de: "Wahrsagerei zu Ihren Fragen HIER",
+            it: "La chiaroveggenza alle tue domande QUI",
+            pt: "A adivinhação para suas perguntas AQUI",
+            zh: "占卜在这里回答您的问题",
+            ja: "あなたの質問への占いはこちら",
+            ko: "여기에서 귀하의 질문에 대한 점술",
+            ru: "Гадание на ваши вопросы ЗДЕСЬ",
+            ar: "التنجيم لأسئلتك هنا",
+            hi: "आपके प्रश्नों के लिए ज्योतिष यहाँ",
+            bn: "আপনার প্রশ্নের জন্য জ্যোতিষশাস্ত্র এখানে",
+            ms: "Ramalan untuk soalan anda DI SINI",
+            id: "Peramal untuk pertanyaan Anda DI SINI",
+            th: "การทำนายดวงชะตาสำหรับคำถามของคุณที่นี่",
+            vi: "Bói toán cho câu hỏi của bạn TẠI ĐÂY",
+            tr: "Sorularınız için fal BURADA",
+            nl: "Waarzeggen voor uw vragen HIER",
+            pl: "Wróżbiarstwo na twoje pytania TUTAJ",
+            sv: "Spådom - dina frågor HÄR",
+            no: "Spådom til dine spørsmål HER",
+            da: "Spådom til dine spørgsmål HER",
+            fi: "Ennustus kysymyksiisi TÄÄLLÄ",
+            el: "Μαντεία στις ερωτήσεις σας ΕΔΩ",
+            he: "ניחוש עתידות לשאלות שלך כאן",
+            cs: "Věštění na vaše otázky ZDE",
+            sk: "Veštenie na vaše otázky TU",
+            hu: "Jóslás kérdéseidhez ITT",
+            ro: "Prezicere pentru întrebările tale AICI",
+            bg: "Пророчество за вашите въпроси ТУК",
+            uk: "Ворожіння на ваші питання ТУТ",
+            sr: "Гатање на ваша питања ОВДЕ",
+            hr: "Proricanje za vaša pitanja OVDJE",
+            lt: "Būrimas jūsų klausimams ČIA",
+            lv: "Zīlēšana jūsu jautājumiem ŠEIT",
+            et: "Ennustamine teie küsimustele SIIN",
+            sl: "Prerokovanje za vaša vprašanja TUKAJ",
+            mt: "Ħsieb għall-mistoqsijiet tiegħek HAWN",
+            ga: "Tuar do do cheisteanna ANSEO",
+            cy: "Darogan i'ch cwestiynau YMA",
+            is: "Spádómur fyrir spurningarnar þínar HÉR",
+            sq: "Parashikim për pyetjet tuaja KËTU"
+        };
 
-        <a id="cta-button" class="cta-button" href="https://clairvoyancemedium.github.io/Frederick_Guidance.github.io/form.html#" target="_blank">
-            La voyance à vos questions ICI
-        </a>
-    </div>
+        const userLang = navigator.language.slice(0, 2);
+        const ctaButton = document.querySelector(".cta-button");
+
+        if (translations[userLang]) {
+            ctaButton.textContent = translations[userLang];
+        }
+    </script>
 </body>
 </html>
