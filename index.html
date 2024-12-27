@@ -383,44 +383,47 @@
         <picture><source srcset="https://i.imgur.com/ajZF0ae.webp" type="image/webp"><img src="https://i.imgur.com/ajZF0ae.jpg" alt="Voyance fiable ClairVoyanceMedium - Voyance par email rapide et discount" class="logo" loading="lazy" width="450" height="auto"></picture>
        
         <!-- Widget Google Translate -->
-    <div id="google_translate_element"></div>
-    <script>
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({
-                pageLanguage: 'fr',
-                includedLanguages: 'en,es,zh-CN,hi,ar,pt,ru,ja,de,ko,vi,it,tr,pl,uk,nl,th,fr,sv,cs,el,da,fi,he,hu,id,ms,no,ro,sk,sl,af,bg,hr,lt,lv,sr,et,ta,te,sw,zu,fa,lo,my,ne,xh,yo',
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-                autoDisplay: false
-            }, 'google_translate_element');
-        }
+<div id="google_translate_element"></div>
+<script>
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'fr',
+            includedLanguages: 'en,es,zh-CN,hi,ar,pt,ru,ja,de,ko,vi,it,tr,pl,uk,nl,th,fr,sv,cs,el,da,fi,he,hu,id,ms,no,ro,sk,sl,af,bg,hr,lt,lv,sr,et,ta,te,sw,zu,fa,lo,my,ne,xh,yo',
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+            autoDisplay: false
+        }, 'google_translate_element');
+    }
 
-        function autoTranslate() {
-            const userLang = navigator.language.split('-')[0] || 'fr';
-            setTimeout(() => {
-                const translateCombo = document.querySelector('.goog-te-combo');
-                if (translateCombo) {
-                    translateCombo.value = userLang;
-                    translateCombo.dispatchEvent(new Event('change'));
-                }
-            }, 2000);
-        }
+    function autoTranslate() {
+        const userLang = navigator.language.split('-')[0] || 'fr';
+        // Utilisation d'un intervalle pour vérifier si le widget est chargé
+        const translateInterval = setInterval(() => {
+            const translateCombo = document.querySelector('.goog-te-combo');
+            if (translateCombo) {
+                clearInterval(translateInterval);
+                translateCombo.value = userLang;
+                translateCombo.dispatchEvent(new Event('change'));
+            }
+        }, 500); // Vérification toutes les 500ms
+    }
 
-        function loadGoogleTranslateScript() {
-            const script = document.createElement('script');
-            script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-            script.async = true;
-            script.onload = autoTranslate;
-            script.onerror = () => {
-                document.getElementById('google_translate_element').innerHTML =
-                    '<p style="color: red; text-align: center;">Traduction indisponible. Veuillez réessayer plus tard.</p>';
-            };
-            document.body.appendChild(script);
-        }
+    function loadGoogleTranslateScript() {
+        const script = document.createElement('script');
+        script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+        script.async = true;
+        script.onload = autoTranslate;
+        script.onerror = () => {
+            document.getElementById('google_translate_element').innerHTML =
+                '<p style="color: red; text-align: center;">Traduction indisponible. Veuillez réessayer plus tard.</p>';
+        };
+        document.body.appendChild(script);
+    }
 
-        document.addEventListener("DOMContentLoaded", () => {
-            loadGoogleTranslateScript();
-        });
-    </script>
+    // Assurer que le script se charge une fois le DOM prêt
+    document.addEventListener("DOMContentLoaded", () => {
+        loadGoogleTranslateScript();
+    });
+</script>
         
         <h1>Consultation de Voyance Privée par E-mail</h1>
         <p class="url-text">www.clairvoyancemedium.com</p>
