@@ -161,17 +161,26 @@
             // Ajoutez d'autres langues ici si nécessaire...
         };
 
-        // Détecter la langue de l'utilisateur
-        const userLang = navigator.language.slice(0, 2);
-        const pageTexts = translations[userLang] || translations["fr"];
+        // Détection de la langue
+    const userLang = navigator.language.slice(0, 2);
+    console.log(`Langue détectée : ${userLang}`);
 
-        // Appliquer les traductions
-        document.querySelectorAll("[data-i18n-key]").forEach(el => {
-            const key = el.getAttribute("data-i18n-key");
-            if (pageTexts[key]) {
-                el.innerHTML = pageTexts[key];
-            }
-        });
-    </script>
+    // Récupération des traductions
+    const pageTexts = translations[userLang] || translations["fr"];
+
+    // Application des traductions
+    document.querySelectorAll("[data-i18n-key]").forEach(el => {
+        const key = el.getAttribute("data-i18n-key");
+        if (pageTexts[key]) {
+            el.innerHTML = pageTexts[key];
+        }
+    });
+
+    // Mise à jour du titre
+    const titleElement = document.querySelector("title");
+    if (pageTexts["title"]) {
+        titleElement.textContent = pageTexts["title"];
+    }
+  </script>
 </body>
 </html>
