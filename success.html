@@ -162,7 +162,7 @@
         };
 
         // Détection de la langue
-    const userLang = navigator.language.slice(0, 2);
+    const userLang = navigator.language.split('-')[0]; // Garde la langue sans la région
     console.log(`Langue détectée : ${userLang}`);
 
     // Récupération des traductions
