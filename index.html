@@ -32,6 +32,8 @@
         .logo{max-width:100%;height:auto;width:450px;margin:0 auto;display:block}
         .cta-button:focus{outline:none;box-shadow:0 0 0 3px rgba(255,255,255,0.5)}
     </style>
+    <style>body {font-family: Arial, sans-serif; text-align: center; padding: 20px;} #google_translate_element {margin: 20px 0;}</style>
+
     
     <link rel="preload" href="https://fonts.gstatic.com/s/playfairdisplay/v28/nuFiD-vYSZviVYUb_rj3ij__anPXDTg.woff2" as="font" type="font/woff2" crossorigin="anonymous">
     <link rel="preload" href="https://fonts.gstatic.com/s/cinzel/v12/Cinzel-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous">
@@ -384,7 +386,6 @@
         
         <!-- Ajoutez ce code à l'endroit où le widget doit s'afficher -->
         <div id="google_translate_element"></div>
-        <!-- Ajoutez ce code dans la section <head> -->
 <script>
     function googleTranslateElementInit() {
         new google.translate.TranslateElement({
@@ -423,19 +424,16 @@
     }
 
     function loadGoogleTranslateScript() {
-        const script = document.createElement('script');
-        script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-        script.async = true;
-        script.onload = detectLanguageByIP;
-        script.onerror = () => {
-            document.getElementById('google_translate_element').innerHTML =
-                '<p style="color: red; text-align: center;">Traduction indisponible. Veuillez réessayer plus tard.</p>';
-        };
-        document.body.appendChild(script);
-    }
+            const script = document.createElement('script');
+            script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+            script.async = true;
+            script.onload = () => console.log("Google Translate script loaded.");
+            script.onerror = () => console.error("Failed to load Google Translate script.");
+            document.body.appendChild(script);
+        }
 
-    document.addEventListener("DOMContentLoaded", loadGoogleTranslateScript);
-</script>
+        document.addEventListener("DOMContentLoaded", loadGoogleTranslateScript);
+    </script>
 
         
         <h1>Consultation de Voyance Privée par E-mail</h1>
