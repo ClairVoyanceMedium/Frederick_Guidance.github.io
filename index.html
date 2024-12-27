@@ -426,9 +426,14 @@
     }
 
     // Assurer que le script se charge une fois le DOM prêt
-    document.addEventListener("DOMContentLoaded", () => {
-        loadGoogleTranslateScript();
-    });
+    document.addEventListener('DOMContentLoaded', () => {
+    const widget = document.getElementById('google_translate_element');
+    if (!widget || widget.innerHTML.trim() === '') {
+        console.error('Widget non initialisé correctement.');
+    } else {
+        console.log('Widget Google Translate initialisé avec succès.');
+    }
+});
 </script>
         
         <h1>Consultation de Voyance Privée par E-mail</h1>
