@@ -79,10 +79,10 @@
     <header>
         <img src="https://i.imgur.com/ajZF0ae.jpg" alt="ClairVoyanceMedium" class="responsive-img">
     </header>
-    <main>
-        <h1>Merci pour votre paiement</h1>
-        <p>Votre paiement a été reçu avec succès.</p>
-        <p>Pour finaliser votre consultation, <br> veuillez remplir le formulaire en cliquant sur le bouton ci-dessous.</p>
+    main>
+        <h1 data-i18n-key="heading">Merci pour votre paiement</h1>
+        <p data-i18n-key="success-message">Votre paiement a été reçu avec succès.</p>
+        <p data-i18n-key="instructions">Pour finaliser votre consultation, <br> veuillez remplir le formulaire en cliquant sur le bouton ci-dessous.</p>
         <a href="https://clairvoyancemedium.github.io/Frederick_Guidance.github.io/form.html#" class="cta-button" data-i18n-key="cta-button">La voyance à vos questions ICI</a>
     </main>
     <script>
@@ -138,36 +138,113 @@
         if (translations[userLang]) {
             ctaButton.textContent = translations[userLang];
         }
-        <br>
-        <br>  
-        <br>   
-        <br>   
+
+        
     </script>
 
+    <!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title data-i18n-key="title">Merci pour votre paiement</title>
+    <style>
+        :root {
+            --primary-color: #000;
+            --text-color: #000;
+            --button-bg: #FF1493; /* Rose plus intense */
+            --button-hover-bg: #FF69B4;
+            --font-family: 'Cinzel Regular', serif;
+        }
+        body {
+            font-family: var(--font-family);
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        header {
+            background-color: #fff;
+            padding: 20px;
+        }
+        .responsive-img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+        h1 {
+            font-family: var(--font-family);
+            font-size: 2rem;
+            color: var(--text-color);
+            font-weight: bold;
+        }
+        p {
+            font-size: 1.2rem;
+            color: #333;
+        }
+        .cta-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            color: #fff;
+            background-color: var(--button-bg);
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            animation: blink 1s infinite;
+            transition: background-color 0.3s;
+        }
+        .cta-button:hover {
+            background-color: var(--button-hover-bg);
+        }
+        @keyframes blink {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="https://i.imgur.com/ajZF0ae.jpg" alt="ClairVoyanceMedium" class="responsive-img">
+    </header>
+    <main>
+        <h1 data-i18n-key="heading">Merci pour votre paiement</h1>
+        <p data-i18n-key="success-message">Votre paiement a été reçu avec succès.</p>
+        <p data-i18n-key="instructions">Pour finaliser votre consultation, <br> veuillez remplir le formulaire en cliquant sur le bouton ci-dessous.</p>
+        <a href="https://clairvoyancemedium.github.io/Frederick_Guidance.github.io/form.html#" class="cta-button" data-i18n-key="cta-button">La voyance à vos questions ICI</a>
+    </main>
     <script>
         // Traductions pour différents éléments de la page
         const translations = {
             fr: {
                 title: "Merci pour votre paiement",
                 heading: "Merci pour votre paiement",
-                success-message: "Votre paiement a été reçu avec succès.",
+                "success-message": "Votre paiement a été reçu avec succès.",
                 instructions: "Pour finaliser votre consultation, <br> veuillez remplir le formulaire en cliquant sur le bouton ci-dessous.",
                 "cta-button": "La voyance à vos questions ICI"
             },
             en: {
                 title: "Thank you for your payment",
                 heading: "Thank you for your payment",
-                success-message: "Your payment has been successfully received.",
+                "success-message": "Your payment has been successfully received.",
                 instructions: "To complete your consultation, <br> please fill out the form by clicking the button below.",
                 "cta-button": "Fortune-telling to your questions HERE"
             },
             es: {
                 title: "Gracias por su pago",
                 heading: "Gracias por su pago",
-                success-message: "Su pago se ha recibido con éxito.",
+                "success-message": "Su pago se ha recibido con éxito.",
                 instructions: "Para completar su consulta, <br> complete el formulario haciendo clic en el botón a continuación.",
                 "cta-button": "La adivinación a sus preguntas AQUÍ"
-            },
+            }
             // Ajoutez d'autres langues ici si nécessaire...
         };
 
@@ -185,4 +262,3 @@
     </script>
 </body>
 </html>
-
