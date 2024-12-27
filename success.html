@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Merci pour votre paiement</title>
+    <title data-i18n-key="title">Merci pour votre paiement</title>
     <style>
         :root {
             --primary-color: #000;
@@ -24,9 +24,11 @@
             background-color: #fff;
             padding: 20px;
         }
-        .logo {
-            max-width: 200px;
+        .responsive-img {
+            max-width: 100%;
             height: auto;
+            display: block;
+            margin: 0 auto;
         }
         h1 {
             font-family: var(--font-family);
@@ -64,16 +66,6 @@
             }
         }
     </style>
-
-    <style>
-    .responsive-img {
-        max-width: 100%;
-        height: auto;
-        display: block;
-        margin: 0 auto;
-    }
-</style>
-
 </head>
 <body>
     <header>
