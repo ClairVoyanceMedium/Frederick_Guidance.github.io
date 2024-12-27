@@ -384,57 +384,13 @@
     <header>
         <picture><source srcset="https://i.imgur.com/ajZF0ae.webp" type="image/webp"><img src="https://i.imgur.com/ajZF0ae.jpg" alt="Voyance fiable ClairVoyanceMedium - Voyance par email rapide et discount" class="logo" loading="lazy" width="450" height="auto"></picture>
         
-        <!-- Ajoutez ce code à l'endroit où le widget doit s'afficher -->
-        <div id="google_translate_element"></div>
-<script>
-    function googleTranslateElementInit() {
-    console.log('Google Translate Init called');
-    new google.translate.TranslateElement({
-        pageLanguage: 'fr',
-        includedLanguages: 'en,es,zh-CN,hi,ar,pt,ru,ja,de,ko,vi,it,tr,pl,uk,nl,th,fr,sv,cs,el,da,fi,he,hu,id,ms,no,ro,sk,sl,af,bg,hr,lt,lv,sr,et,ta,te,sw,zu,fa,lo,my,ne,xh,yo',
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-        autoDisplay: false
-        }, 'google_translate_element');
-    }
+        <header>
+    <h1>Bienvenue sur mon site</h1>
+    <a href="https://translate.google.com/translate?hl=en&sl=fr&u=https://votre-site.com" target="_blank">
+        Traduire cette page
+    </a>
+</header>
 
-    function autoTranslate(detectedLanguage) {
-        setTimeout(() => {
-            const translateCombo = document.querySelector('.goog-te-combo');
-            if (translateCombo) {
-                translateCombo.value = detectedLanguage;
-                translateCombo.dispatchEvent(new Event('change'));
-            }
-        }, 2000);
-    }
-
-    async function detectLanguageByIP() {
-        try {
-            const response = await fetch('https://ipinfo.io?token=<YOUR_API_TOKEN>');
-            const data = await response.json();
-            const countryCode = data.country.toLowerCase();
-            const langMap = {
-                us: 'en', fr: 'fr', es: 'es', de: 'de', it: 'it', ru: 'ru', il: 'he',
-                cn: 'zh-CN', jp: 'ja', kr: 'ko', in: 'hi', pt: 'pt', ar: 'ar', vi: 'vi'
-            };
-            const detectedLanguage = langMap[countryCode] || 'en';
-            autoTranslate(detectedLanguage);
-        } catch (error) {
-            console.error('IP-based detection failed, falling back to browser language:', error);
-            autoTranslate(navigator.language.split('-')[0]);
-        }
-    }
-
-    function loadGoogleTranslateScript() {
-            const script = document.createElement('script');
-            script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-            script.async = true;
-            script.onload = () => console.log("Google Translate script loaded.");
-            script.onerror = () => console.error("Failed to load Google Translate script.");
-            document.body.appendChild(script);
-        }
-
-        document.addEventListener("DOMContentLoaded", loadGoogleTranslateScript);
-    </script>
 
         
         <h1>Consultation de Voyance Privée par E-mail</h1>
