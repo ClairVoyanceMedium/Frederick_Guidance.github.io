@@ -26,7 +26,7 @@ $cacheTime = 86400; // Cache valide pendant 24 heures
 if (file_exists($cacheFile) && (time() - filemtime($cacheFile) < $cacheTime)) {
     $exchangeRates = json_decode(file_get_contents($cacheFile), true);
 } else {
-    $exchangeRatesXml = simplexml_load_file('https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml');
+    $exchangeRatesXml = @simplexml_load_file('https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml');
     if ($exchangeRatesXml) {
         $exchangeRates = [];
         foreach ($exchangeRatesXml->Cube->Cube->Cube as $rateNode) {
@@ -154,6 +154,7 @@ try {
 
     echo json_encode(['sessionId' => $session->id, 'currency' => $deviseLocale, 'price' => $convertedPrice]);
 } catch (\Stripe\Exception\ApiErrorException $e) {
+    error_log("Erreur Stripe : " . $e->getMessage()); // Log de l'erreur
     http_response_code(500);
     echo json_encode(['error' => "Erreur Stripe : " . $e->getMessage()]);
 }
