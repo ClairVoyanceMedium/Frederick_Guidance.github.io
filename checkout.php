@@ -121,6 +121,11 @@ if (!array_key_exists($nbQuestions, $basePrices)) {
 $convertedPrice = $basePrices[$nbQuestions];
 if ($deviseLocale !== $defaultCurrency) {
     $rate = $exchangeRates[$deviseLocale];
+    if (!isset($rate) || $rate <= 0) {
+        http_response_code(500);
+        echo json_encode(['error' => "Taux de conversion invalide pour la devise {$deviseLocale}."]);
+        exit;
+    }
     $convertedPrice = intval($convertedPrice * $rate);
 } 
 
@@ -167,7 +172,7 @@ try {
     ]);
 
     echo json_encode(['sessionId' => $session->id, 'currency' => $deviseLocale, 'price' => $convertedPrice]);
-} catch (\Exception $e) {
+} catch (\Stripe\Exception\ApiErrorException $e) {
     http_response_code(500);
-    echo json_encode(['error' => "Erreur interne avec le service de paiement. Veuillez réessayer plus tard."]);
+    echo json_encode(['error' => "Erreur Stripe : " . $e->getMessage()]);
 }
