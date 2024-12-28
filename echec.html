@@ -82,7 +82,6 @@
     </main>
   
     <script>
-        // Traductions pour différents éléments de la page
         const translations = {
             fr: {
                 title: "Échec du paiement",
@@ -105,10 +104,72 @@
                 instructions: "Inténtelo de nuevo haciendo clic en el botón a continuación.",
                 "cta-button": "Reintentar el pago"
             },
-            // Ajoutez ici les autres langues (zh, hi, ar, pt, etc.)
+            zh: {
+                title: "付款失败",
+                heading: "付款失败",
+                "error-message": "我们无法处理您的付款。",
+                instructions: "请点击下面的按钮再试一次。",
+                "cta-button": "重试付款"
+            },
+            hi: {
+                title: "भुगतान विफल रहा",
+                heading: "भुगतान विफल रहा",
+                "error-message": "हम आपका भुगतान संसाधित नहीं कर सके।",
+                instructions: "कृपया नीचे दिए गए बटन पर क्लिक करके पुनः प्रयास करें।",
+                "cta-button": "भुगतान पुनः प्रयास करें"
+            },
+            ar: {
+                title: "فشل الدفع",
+                heading: "فشل الدفع",
+                "error-message": "لم نتمكن من معالجة دفعتك.",
+                instructions: "يرجى المحاولة مرة أخرى بالنقر على الزر أدناه.",
+                "cta-button": "إعادة المحاولة للدفع"
+            },
+            pt: {
+                title: "Pagamento falhou",
+                heading: "Pagamento falhou",
+                "error-message": "Não conseguimos processar o seu pagamento.",
+                instructions: "Por favor, tente novamente clicando no botão abaixo.",
+                "cta-button": "Tentar novamente"
+            },
+            ru: {
+                title: "Платеж не прошел",
+                heading: "Платеж не прошел",
+                "error-message": "Мы не смогли обработать ваш платеж.",
+                instructions: "Попробуйте еще раз, нажав на кнопку ниже.",
+                "cta-button": "Повторить оплату"
+            },
+            ja: {
+                title: "支払いに失敗しました",
+                heading: "支払いに失敗しました",
+                "error-message": "お支払いを処理できませんでした。",
+                instructions: "以下のボタンをクリックしてもう一度お試しください。",
+                "cta-button": "支払いを再試行する"
+            },
+            de: {
+                title: "Zahlung fehlgeschlagen",
+                heading: "Zahlung fehlgeschlagen",
+                "error-message": "Wir konnten Ihre Zahlung nicht verarbeiten.",
+                instructions: "Bitte versuchen Sie es erneut, indem Sie auf die Schaltfläche unten klicken.",
+                "cta-button": "Zahlung erneut versuchen"
+            },
+            ko: {
+                title: "결제 실패",
+                heading: "결제 실패",
+                "error-message": "결제를 처리할 수 없습니다.",
+                instructions: "아래 버튼을 클릭하여 다시 시도하십시오.",
+                "cta-button": "결제 다시 시도하기"
+            },
+            it: {
+                title: "Pagamento fallito",
+                heading: "Pagamento fallito",
+                "error-message": "Non siamo riusciti a elaborare il tuo pagamento.",
+                instructions: "Riprova cliccando sul pulsante qui sotto.",
+                "cta-button": "Riprova il pagamento"
+            },
+            // Ajoutez les autres langues de manière similaire
         };
 
-        // Détection de la langue
         const userLang = navigator.language.split('-')[0];
         const pageTexts = translations[userLang] || translations["fr"];
 
@@ -124,11 +185,9 @@
             titleElement.textContent = pageTexts["title"];
         }
 
-        // Fonction pour réessayer le paiement
         function retryPayment() {
-            window.history.back(); // Retourne à la page précédente
+            window.history.back();
         }
     </script>
 </body>
 </html>
-
