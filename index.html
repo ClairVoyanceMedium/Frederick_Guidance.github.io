@@ -386,7 +386,7 @@
     </header>
 
     <main>
-        <section id="pricing">
+    <section id="pricing">
     <button id="checkout-link-1" class="cta-button prix" data-questions="1">1 Question</button>
     <button id="checkout-link-2" class="cta-button prix" data-questions="3">3 Questions</button>
     <button id="checkout-link-3" class="cta-button prix" data-questions="5">5 Questions</button>
@@ -512,34 +512,34 @@
 
     
     <script>
-    const buttons = document.querySelectorAll('.cta-button');
+        const buttons = document.querySelectorAll('.cta-button');
 
-    buttons.forEach(button => {
-        button.addEventListener('click', async () => {
-            const nbQuestions = button.dataset.questions;
-            try {
-                const response = await fetch('path/to/checkout.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        nbQuestions: parseInt(nbQuestions),
-                        currency: 'EUR' // Vous pouvez détecter la devise utilisateur ici
-                    }),
-                });
+        buttons.forEach(button => {
+            button.addEventListener('click', async () => {
+                const nbQuestions = button.dataset.questions;
+                try {
+                    const response = await fetch('/checkout.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            nbQuestions: parseInt(nbQuestions),
+                            currency: 'EUR'
+                        }),
+                    });
 
-                const data = await response.json();
-                if (data.sessionId) {
-                    const stripe = Stripe('pk_live_Cmzt2YN9ITdo6hUpO1lSZblJ');
-                    await stripe.redirectToCheckout({ sessionId: data.sessionId });
-                } else {
-                    console.error(data.error || 'Erreur inconnue');
+                    const data = await response.json();
+                    if (data.sessionId) {
+                        const stripe = Stripe('pk_live_Cmzt2YN9ITdo6hUpO1lSZblJ');
+                        await stripe.redirectToCheckout({ sessionId: data.sessionId });
+                    } else {
+                        console.error(data.error || 'Erreur inconnue');
+                    }
+                } catch (error) {
+                    console.error('Erreur réseau ou serveur', error);
                 }
-            } catch (error) {
-                console.error('Erreur réseau ou serveur', error);
-            }
+            });
         });
-    });
-</script>
+    </script>
 
 </body>
 </html>  
