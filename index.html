@@ -512,34 +512,39 @@
 
     
     <script>
+        // Initialiser Stripe avec la clé publique
+        const stripe = Stripe('pk_live_Cmzt2YN9ITdo6hUpO1lSZblJ');
+        
+        // Sélectionner les boutons
         const buttons = document.querySelectorAll('.cta-button');
 
+        // Ajouter un gestionnaire d'événements pour chaque bouton
         buttons.forEach(button => {
             button.addEventListener('click', async () => {
                 const nbQuestions = button.dataset.questions;
+
                 try {
+                    // Faire une requête POST à checkout.php pour créer une session Stripe
                     const response = await fetch('/checkout.php', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            nbQuestions: parseInt(nbQuestions),
-                            currency: 'EUR'
-                        }),
+                        body: JSON.stringify({ nbQuestions: parseInt(nbQuestions), currency: 'EUR' }),
                     });
 
                     const data = await response.json();
+
+                    // Vérifier si une sessionId a été reçue
                     if (data.sessionId) {
-                        const stripe = Stripe('pk_live_Cmzt2YN9ITdo6hUpO1lSZblJ');
+                        // Rediriger vers Stripe Checkout
                         await stripe.redirectToCheckout({ sessionId: data.sessionId });
                     } else {
-                        console.error(data.error || 'Erreur inconnue');
+                        console.error('Erreur côté serveur:', data.error || 'Session ID non reçue');
                     }
                 } catch (error) {
-                    console.error('Erreur réseau ou serveur', error);
+                    console.error('Erreur réseau ou serveur:', error);
                 }
             });
         });
     </script>
-
 </body>
-</html>  
+</html>
