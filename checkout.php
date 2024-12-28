@@ -141,13 +141,14 @@ try {
             'quantity' => 1,
         ]],
         'mode' => 'payment',
-        'success_url' => 'https://clairvoyancemedium.github.io/Frederick_Guidance.github.io/success.html',
-        'cancel_url' => 'https://clairvoyancemedium.github.io/Frederick_Guidance.github.io/echec.html',
+        'success_url' => 'https://clairvoyancemedium.github.io/success.html',
+        'cancel_url' => 'https://clairvoyancemedium.github.io/echec.html',
         'locale' => $lang,
     ]);
 
     echo json_encode(['id' => $session->id]);
-} catch (Exception $e) {
+} catch (\Stripe\Exception\ApiErrorException $e) {
     http_response_code(500);
-    echo json_encode(['error' => $e->getMessage()]);
+    echo json_encode(['error' => 'Erreur Stripe : ' . $e->getMessage()]);
+    exit;
 }
