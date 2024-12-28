@@ -323,25 +323,21 @@
         };
 
         // Détection de la langue
-    const userLang = navigator.language.split('-')[0]; // Garde la langue sans la région
-    console.log(`Langue détectée : ${userLang}`);
+    const userLang = navigator.language.split('-')[0]; // Détecte la langue
+const pageTexts = translations[userLang] || translations["fr"]; // Valeur par défaut : français
 
-    // Récupération des traductions
-    const pageTexts = translations[userLang] || translations["fr"];
-
-    // Application des traductions
-    document.querySelectorAll("[data-i18n-key]").forEach(el => {
-        const key = el.getAttribute("data-i18n-key");
-        if (pageTexts[key]) {
-            el.innerHTML = pageTexts[key];
-        }
-    });
-
-    // Mise à jour du titre
-    const titleElement = document.querySelector("title");
-    if (pageTexts["title"]) {
-        titleElement.textContent = pageTexts["title"];
+document.querySelectorAll("[data-i18n-key]").forEach(el => {
+    const key = el.getAttribute("data-i18n-key");
+    if (pageTexts[key]) {
+        el.innerHTML = pageTexts[key];
     }
+});
+
+const titleElement = document.querySelector("title");
+if (pageTexts["title"]) {
+    titleElement.textContent = pageTexts["title"];
+}
+
   </script>
 </body>
 </html>
