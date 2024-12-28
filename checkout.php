@@ -1,10 +1,11 @@
 <?php
-require_once 'lib/init.php';
+require_once 'lib/init.php'; // Chargez vos fichiers nécessaires ici, comme Stripe et d'autres dépendances.
 
 // Validation stricte du format de la clé Stripe
 function isValidStripeKey($key) {
     return preg_match('/^sk_[a-zA-Z0-9]{24}$/', $key) === 1;
 }
+
 
 $stripeSecretKey = getenv('sk_live_qFFqmqh3jYq4iczMGXnf9qZk');
 if (!$stripeSecretKey || !isValidStripeKey($stripeSecretKey)) {
@@ -111,7 +112,9 @@ $basePrices = [
 ];
 
 if (!array_key_exists($nbQuestions, $basePrices)) {
-    throw new Exception($text['error_invalid_questions']);
+    http_response_code(400);
+    echo json_encode(['error' => 'Nombre de questions invalide.']);
+    exit;
 }
 
 // Conversion du prix en fonction de la devise locale avec arrondi précis
