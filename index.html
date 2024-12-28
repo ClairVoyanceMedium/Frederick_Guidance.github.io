@@ -520,31 +520,28 @@
 
         // Ajouter un gestionnaire d'événements pour chaque bouton
         buttons.forEach(button => {
-            button.addEventListener('click', async () => {
-                const nbQuestions = button.dataset.questions;
+        button.addEventListener('click', async () => {
+        const nbQuestions = parseInt(button.dataset.questions);
 
-                try {
-                    // Faire une requête POST à checkout.php pour créer une session Stripe
-                    const response = await fetch('/checkout.php', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ nbQuestions: parseInt(nbQuestions), currency: 'EUR' }),
-                    });
-
-                    const data = await response.json();
-
-                    // Vérifier si une sessionId a été reçue
-                    if (data.sessionId) {
-                        // Rediriger vers Stripe Checkout
-                        await stripe.redirectToCheckout({ sessionId: data.sessionId });
-                    } else {
-                        console.error('Erreur côté serveur:', data.error || 'Session ID non reçue');
-                    }
-                } catch (error) {
-                    console.error('Erreur réseau ou serveur:', error);
-                }
+        try {
+            const response = await fetch('/checkout.php', { // Chemin vers la racine
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nbQuestions: nbQuestions, currency: 'EUR' }),
             });
-        });
-    </script>
+
+            const data = await response.json();
+
+            if (data.id) {
+                await stripe.redirectToCheckout({ sessionId: data.id });
+            } else {
+                console.error('Erreur côté serveur :', data.error || 'Session ID manquante');
+            }
+        } catch (error) {
+            console.error('Erreur réseau :', error);
+        }
+    });
+});
+
 </body>
 </html>
