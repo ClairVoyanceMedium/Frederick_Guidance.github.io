@@ -136,8 +136,8 @@ try {
             'quantity' => 1,
         ]],
         'mode' => 'payment',
-        'success_url' => 'https://votre-site.com/success', // URL de redirection après succès
-        'cancel_url' => 'https://votre-site.com/cancel',   // URL de redirection après annulation
+        'success_url' => 'https://clairvoyancemedium.github.io/Frederick_Guidance.github.io/success.html', // URL de redirection après succès
+        'cancel_url' => 'https://clairvoyancemedium.github.io/Frederick_Guidance.github.io/echec.html',   // URL de redirection après annulation
     ]);
 
     // Retourner l'ID de la session au client
