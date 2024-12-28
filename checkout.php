@@ -1,16 +1,18 @@
 <?php
-require_once 'lib/init.php'; // Chargez vos fichiers nécessaires ici, comme Stripe et d'autres dépendances.
+require_once 'lib/init.php'; // Chargez vos fichiers nécessaires, comme Stripe et d'autres dépendances.
 
-// Validation stricte du format de la clé Stripe
+header('Content-Type: application/json'); // Toujours définir le type de contenu.
+
+// Fonction pour valider le format de la clé Stripe
 function isValidStripeKey($key) {
     return preg_match('/^sk_[a-zA-Z0-9]{24}$/', $key) === 1;
 }
 
-
+// Chargement de la clé Stripe
 $stripeSecretKey = getenv('sk_live_qFFqmqh3jYq4iczMGXnf9qZk');
 if (!$stripeSecretKey || !isValidStripeKey($stripeSecretKey)) {
     http_response_code(500);
-    echo json_encode(['error' => "La configuration de la clé secrète Stripe est manquante, incorrecte ou mal formatée."]);
+    echo json_encode(['error' => "Clé Stripe manquante ou invalide."]);
     exit;
 }
 
@@ -30,22 +32,25 @@ if (file_exists($cacheFile) && (time() - filemtime($cacheFile) < $cacheTime)) {
         foreach ($exchangeRatesXml->Cube->Cube->Cube as $rateNode) {
             $exchangeRates[(string)$rateNode['currency']] = (float)$rateNode['rate'];
         }
-        $exchangeRates['EUR'] = 1; // EUR est la base, donc taux de change de 1 pour lui-même
-        file_put_contents($cacheFile, json_encode($exchangeRates));
+        $exchangeRates['EUR'] = 1; // L'EUR est la base
+        if (!file_put_contents($cacheFile, json_encode($exchangeRates))) {
+            http_response_code(500);
+            echo json_encode(['error' => "Impossible de sauvegarder le cache des taux de change."]);
+            exit;
+        }
     } else {
-        throw new Exception("Impossible de charger les taux de change de la BCE.");
+        http_response_code(500);
+        echo json_encode(['error' => "Impossible de charger les taux de change."]);
+        exit;
     }
 }
 
-// Détection de la devise avec rotation des APIs de fallback
+// Détection de la devise locale avec rotation des APIs de fallback
 $geoApis = [
     'http://ip-api.com/json/',
     'https://ipinfo.io/json',
     'https://ipapi.co/json/',
-    // Ajoutez d'autres APIs ici si possible
 ];
-
-$geoData = null;
 $deviseLocale = $defaultCurrency;
 foreach ($geoApis as $api) {
     try {
@@ -62,7 +67,7 @@ foreach ($geoApis as $api) {
     }
 }
 
-// Définir un cookie sécurisé
+// Définir un cookie sécurisé pour la devise locale
 setcookie('deviseLocale', $deviseLocale, [
     'expires' => time() + 86400,
     'path' => '/',
@@ -72,9 +77,39 @@ setcookie('deviseLocale', $deviseLocale, [
     'samesite' => 'Strict',
 ]);
 
-header('Content-Type: application/json');
+// Lire et valider les données d'entrée
+$input = file_get_contents('php://input');
+$data = json_decode($input, true);
 
-// Langues supportées avec plus de traductions dynamiques
+if (!$data || !isset($data['nbQuestions']) || !is_numeric($data['nbQuestions']) || $data['nbQuestions'] <= 0) {
+    http_response_code(400);
+    echo json_encode(['error' => 'Requête invalide. Assurez-vous que nbQuestions est correctement envoyé.']);
+    exit;
+}
+
+$nbQuestions = intval($data['nbQuestions']);
+
+// Définir les prix en centimes
+$basePrices = [
+    1 => 600,
+    3 => 1500,
+    5 => 2800,
+];
+
+if (!array_key_exists($nbQuestions, $basePrices)) {
+    http_response_code(400);
+    echo json_encode(['error' => 'Nombre de questions invalide.']);
+    exit;
+}
+
+// Conversion du prix
+$convertedPrice = $basePrices[$nbQuestions];
+if ($deviseLocale !== $defaultCurrency && isset($exchangeRates[$deviseLocale])) {
+    $rate = $exchangeRates[$deviseLocale];
+    $convertedPrice = intval($convertedPrice * $rate);
+}
+
+// Traductions dynamiques
 $defaultLang = 'fr';
 $supportedLangs = ['fr', 'en', 'es', 'de', 'it', 'pt', 'zh', 'ja', 'ko', 'ru'];
 $translations = [
@@ -94,42 +129,9 @@ $translations = [
 $clientLang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? $defaultLang, 0, 2);
 $lang = in_array($clientLang, $supportedLangs) ? $clientLang : $defaultLang;
 $text = $translations[$lang] ?? $translations[$defaultLang];
+$productName = str_replace('{nbQuestions}', $nbQuestions, $text['product_name']);
 
-// Lire et valider les données d'entrée
-$input = file_get_contents('php://input');
-$data = json_decode($input, true);
-
-if (!is_array($data) || !isset($data['nbQuestions']) || !is_int(filter_var($data['nbQuestions'], FILTER_VALIDATE_INT)) || $data['nbQuestions'] <= 0) {
-    throw new Exception($text['error_invalid_questions']);
-}
-$nbQuestions = $data['nbQuestions'];
-
-// Définir les prix en centimes pour la devise par défaut
-$basePrices = [
-    1 => 600,
-    3 => 1500,
-    5 => 2800,
-];
-
-if (!array_key_exists($nbQuestions, $basePrices)) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Nombre de questions invalide.']);
-    exit;
-}
-
-// Conversion du prix en fonction de la devise locale avec arrondi précis
-$convertedPrice = $basePrices[$nbQuestions];
-if ($deviseLocale !== $defaultCurrency) {
-    if (isset($exchangeRates[$deviseLocale])) {
-        $rate = $exchangeRates[$deviseLocale];
-        $convertedPrice = number_format($convertedPrice * $rate, 2, '.', '');
-        $convertedPrice = intval(str_replace('.', '', $convertedPrice)); // Convertir en centimes
-    } else {
-        throw new Exception("Impossible d'obtenir un taux de change pour la devise {$deviseLocale}.");
-    }
-}
-
-// Créer une session Stripe Checkout
+// Créer une session Stripe
 try {
     $session = \Stripe\Checkout\Session::create([
         'payment_method_types' => ['card'],
@@ -137,7 +139,7 @@ try {
             'price_data' => [
                 'currency' => strtolower($deviseLocale),
                 'product_data' => [
-                    'name' => str_replace('{nbQuestions}', $nbQuestions, $text['product_name']),
+                    'name' => $productName,
                 ],
                 'unit_amount' => $convertedPrice,
             ],
@@ -149,9 +151,8 @@ try {
         'locale' => $lang,
     ]);
 
-    echo json_encode(['id' => $session->id]);
+    echo json_encode(['sessionId' => $session->id, 'currency' => $deviseLocale, 'price' => $convertedPrice]);
 } catch (\Stripe\Exception\ApiErrorException $e) {
     http_response_code(500);
     echo json_encode(['error' => 'Erreur Stripe : ' . $e->getMessage()]);
-    exit;
 }
