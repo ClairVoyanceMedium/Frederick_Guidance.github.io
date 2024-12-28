@@ -54,7 +54,7 @@ $geoApis = [
 $deviseLocale = $defaultCurrency;
 foreach ($geoApis as $api) {
     try {
-        $geoResponse = file_get_contents($api);
+        $geoResponse = @file_get_contents($api);
         $geoData = json_decode($geoResponse, true);
         if (isset($geoData['currency'])) {
             $deviseLocale = $geoData['currency'];
@@ -67,11 +67,24 @@ foreach ($geoApis as $api) {
     }
 }
 
+if ($deviseLocale === $defaultCurrency) {
+    error_log("Devise locale non détectée, utilisation par défaut : {$defaultCurrency}");
+    http_response_code(500);
+    echo json_encode(['error' => "Impossible de détecter votre devise locale."]);
+    exit;
+}
+
+if (!isset($exchangeRates[$deviseLocale])) {
+    http_response_code(500);
+    echo json_encode(['error' => "Taux de change indisponible pour la devise {$deviseLocale}."]);
+    exit;
+}
+
 // Définir un cookie sécurisé pour la devise locale
 setcookie('deviseLocale', $deviseLocale, [
     'expires' => time() + 86400,
     'path' => '/',
-    'domain' => 'clairvoyancemedium.github.io',
+    'domain' => $_SERVER['HTTP_HOST'],
     'secure' => true,
     'httponly' => true,
     'samesite' => 'Strict',
@@ -81,13 +94,15 @@ setcookie('deviseLocale', $deviseLocale, [
 $input = file_get_contents('php://input');
 $data = json_decode($input, true);
 
-if (!$data || !isset($data['nbQuestions']) || !is_numeric($data['nbQuestions']) || $data['nbQuestions'] <= 0) {
+error_log("Données reçues : " . json_encode($data));
+
+if (!$data || !isset($data['nbQuestions']) || !filter_var($data['nbQuestions'], FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]])) {
     http_response_code(400);
-    echo json_encode(['error' => 'Requête invalide. Assurez-vous que nbQuestions est correctement envoyé.']);
+    echo json_encode(['error' => 'Requête invalide. Assurez-vous que nbQuestions est un entier positif.']);
     exit;
 }
 
-$nbQuestions = intval($data['nbQuestions']);
+$nbQuestions = $data['nbQuestions'];
 
 // Définir les prix en centimes
 $basePrices = [
@@ -104,10 +119,18 @@ if (!array_key_exists($nbQuestions, $basePrices)) {
 
 // Conversion du prix
 $convertedPrice = $basePrices[$nbQuestions];
-if ($deviseLocale !== $defaultCurrency && isset($exchangeRates[$deviseLocale])) {
+if ($deviseLocale !== $defaultCurrency) {
     $rate = $exchangeRates[$deviseLocale];
     $convertedPrice = intval($convertedPrice * $rate);
+} 
+
+if (!$convertedPrice) {
+    http_response_code(500);
+    echo json_encode(['error' => "Impossible de calculer le prix."]);
+    exit;
 }
+
+error_log("Devise locale : {$deviseLocale}");
 
 // Traductions dynamiques
 $defaultLang = 'fr';
@@ -115,14 +138,6 @@ $supportedLangs = ['fr', 'en', 'es', 'de', 'it', 'pt', 'zh', 'ja', 'ko', 'ru'];
 $translations = [
     'fr' => ['product_name' => "Voyance - {nbQuestions} question(s)", 'error_invalid_questions' => "Nombre de questions invalide."],
     'en' => ['product_name' => "Fortune Telling - {nbQuestions} question(s)", 'error_invalid_questions' => "Invalid number of questions."],
-    'es' => ['product_name' => "Lectura de fortuna - {nbQuestions} pregunta(s)", 'error_invalid_questions' => "Número de preguntas no válido."],
-    'de' => ['product_name' => "Wahrsagerei - {nbQuestions} Frage(n)", 'error_invalid_questions' => "Ungültige Anzahl von Fragen."],
-    'it' => ['product_name' => "Cartomanzia - {nbQuestions} domanda(e)", 'error_invalid_questions' => "Numero di domande non valido."],
-    'pt' => ['product_name' => "Adivinhação - {nbQuestions} pergunta(s)", 'error_invalid_questions' => "Número de perguntas inválido."],
-    'zh' => ['product_name' => "占卜 - {nbQuestions} 问题", 'error_invalid_questions' => "问题数量无效。"],
-    'ja' => ['product_name' => "占い - {nbQuestions} 質問", 'error_invalid_questions' => "無効な質問数。"],
-    'ko' => ['product_name' => "점술 - {nbQuestions} 질문", 'error_invalid_questions' => "잘못된 질문 수."],
-    'ru' => ['product_name' => "Гадание - {nbQuestions} вопрос(ов)", 'error_invalid_questions' => "Недопустимое количество вопросов."],
     // Ajoutez plus de traductions ici selon les besoins
 ];
 
@@ -152,7 +167,7 @@ try {
     ]);
 
     echo json_encode(['sessionId' => $session->id, 'currency' => $deviseLocale, 'price' => $convertedPrice]);
-} catch (\Stripe\Exception\ApiErrorException $e) {
+} catch (\Exception $e) {
     http_response_code(500);
-    echo json_encode(['error' => 'Erreur Stripe : ' . $e->getMessage()]);
+    echo json_encode(['error' => "Erreur interne avec le service de paiement. Veuillez réessayer plus tard."]);
 }
