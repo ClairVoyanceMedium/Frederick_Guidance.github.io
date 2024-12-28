@@ -1,1 +1,134 @@
-ggfbhgh
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="Page d'échec de paiement pour des services de voyance ClairVoyanceMedium.com.">
+    <title data-i18n-key="title">Échec du paiement</title>
+    <style>
+        :root {
+            --primary-color: #000;
+            --text-color: #000;
+            --button-bg: #FF1493; /* Rose plus intense */
+            --button-hover-bg: #FF69B4;
+            --font-family: 'Cinzel Regular', serif;
+        }
+        body {
+            font-family: var(--font-family);
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        header {
+            background-color: #fff;
+            padding: 20px;
+        }
+        .responsive-img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+        h1 {
+            font-family: var(--font-family);
+            font-size: 2rem;
+            color: var(--text-color);
+            font-weight: bold;
+        }
+        p {
+            font-size: 1.2rem;
+            color: #333;
+        }
+        .cta-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            color: #fff;
+            background-color: var(--button-bg);
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            animation: blink 1s infinite;
+            transition: background-color 0.3s;
+        }
+        .cta-button:hover {
+            background-color: var(--button-hover-bg);
+        }
+        @keyframes blink {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+    
+<body>
+    <header>
+        <img src="https://i.imgur.com/ajZF0ae.jpg" alt="ClairVoyanceMedium" class="responsive-img">
+    </header>
+   
+    <main>
+        <h1 data-i18n-key="heading">Échec du paiement</h1>
+        <p data-i18n-key="error-message">Nous n'avons pas pu traiter votre paiement.</p>
+        <p data-i18n-key="instructions">Veuillez réessayer en cliquant sur le bouton ci-dessous.</p>
+        <button onclick="retryPayment()" class="cta-button" data-i18n-key="cta-button">Réessayer le paiement</button>
+    </main>
+  
+    <script>
+        // Traductions pour différents éléments de la page
+        const translations = {
+            fr: {
+                title: "Échec du paiement",
+                heading: "Échec du paiement",
+                "error-message": "Nous n'avons pas pu traiter votre paiement.",
+                instructions: "Veuillez réessayer en cliquant sur le bouton ci-dessous.",
+                "cta-button": "Réessayer le paiement"
+            },
+            en: {
+                title: "Payment Failed",
+                heading: "Payment Failed",
+                "error-message": "We were unable to process your payment.",
+                instructions: "Please try again by clicking the button below.",
+                "cta-button": "Retry Payment"
+            },
+            es: {
+                title: "Pago fallido",
+                heading: "Pago fallido",
+                "error-message": "No pudimos procesar su pago.",
+                instructions: "Inténtelo de nuevo haciendo clic en el botón a continuación.",
+                "cta-button": "Reintentar el pago"
+            },
+            // Ajoutez ici les autres langues (zh, hi, ar, pt, etc.)
+        };
+
+        // Détection de la langue
+        const userLang = navigator.language.split('-')[0];
+        const pageTexts = translations[userLang] || translations["fr"];
+
+        document.querySelectorAll("[data-i18n-key]").forEach(el => {
+            const key = el.getAttribute("data-i18n-key");
+            if (pageTexts[key]) {
+                el.innerHTML = pageTexts[key];
+            }
+        });
+
+        const titleElement = document.querySelector("title");
+        if (pageTexts["title"]) {
+            titleElement.textContent = pageTexts["title"];
+        }
+
+        // Fonction pour réessayer le paiement
+        function retryPayment() {
+            window.history.back(); // Retourne à la page précédente
+        }
+    </script>
+</body>
+</html>
+
