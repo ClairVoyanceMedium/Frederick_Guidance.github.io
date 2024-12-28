@@ -9,7 +9,7 @@ function isValidStripeKey($key) {
 }
 
 // Chargement de la clé Stripe
-$stripeSecretKey = getenv('sk_live_qFFqmqh3jYq4iczMGXnf9qZk');
+$stripeSecretKey = getenv('STRIPE_SECRET_KEY'); // Utilisez une variable d'environnement
 if (!$stripeSecretKey || !isValidStripeKey($stripeSecretKey)) {
     http_response_code(500);
     echo json_encode(['error' => "Clé Stripe manquante ou invalide."]);
@@ -67,28 +67,9 @@ foreach ($geoApis as $api) {
     }
 }
 
-if ($deviseLocale === $defaultCurrency) {
-    error_log("Devise locale non détectée, utilisation par défaut : {$defaultCurrency}");
-    http_response_code(500);
-    echo json_encode(['error' => "Impossible de détecter votre devise locale."]);
-    exit;
-}
-
 if (!isset($exchangeRates[$deviseLocale])) {
-    http_response_code(500);
-    echo json_encode(['error' => "Taux de change indisponible pour la devise {$deviseLocale}."]);
-    exit;
+    $deviseLocale = $defaultCurrency; // Utilisez la devise par défaut si la devise locale n'est pas supportée
 }
-
-// Définir un cookie sécurisé pour la devise locale
-setcookie('deviseLocale', $deviseLocale, [
-    'expires' => time() + 86400,
-    'path' => '/',
-    'domain' => $_SERVER['HTTP_HOST'],
-    'secure' => true,
-    'httponly' => true,
-    'samesite' => 'Strict',
-]);
 
 // Lire et valider les données d'entrée
 $input = file_get_contents('php://input');
