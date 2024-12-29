@@ -425,34 +425,35 @@
     <!-- Polyfill pour fonctions modernes -->
     <script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=default" async onerror="console.error('Le polyfill n\'a pas pu être chargé.')"></script>
     <script src="https://js.stripe.com/v3/" async onerror="console.error('Le script Stripe n\'a pas pu être chargé.')"></script>
+    
     <script>
-        (function() {
-            const stripe = Stripe('pk_live_Cmzt2YN9ITdo6hUpO1lSZblJ');
-            
-            document.querySelectorAll('.cta-button').forEach(button => {
-                button.addEventListener('click', async () => {
-                    const nbQuestions = parseInt(button.dataset.questions);
+        document.addEventListener('DOMContentLoaded', function () {
+    const stripe = Stripe('pk_live_Cmzt2YN9ITdo6hUpO1lSZblJ');
 
-                    try {
-                        const response = await fetch('/checkout.php', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ nbQuestions: nbQuestions }),
-                        });
+    document.querySelectorAll('.cta-button').forEach(button => {
+        button.addEventListener('click', async () => {
+            const nbQuestions = parseInt(button.dataset.questions);
 
-                        const data = await response.json();
-
-                        if (data.sessionId) {
-                            await stripe.redirectToCheckout({ sessionId: data.sessionId });
-                        } else {
-                            console.error('Erreur côté serveur :', data.error || 'Session ID manquante');
-                        }
-                    } catch (error) {
-                        console.error('Erreur réseau :', error);
-                    }
+            try {
+                const response = await fetch('/checkout.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nbQuestions: nbQuestions }),
                 });
-            });
-        })();
+
+                const data = await response.json();
+
+                if (data.sessionId) {
+                    await stripe.redirectToCheckout({ sessionId: data.sessionId });
+                } else {
+                    console.error('Erreur côté serveur :', data.error || 'Session ID manquante');
+                }
+            } catch (error) {
+                console.error('Erreur réseau :', error);
+            }
+        });
+    });
+});
     </script>
 </body>
 </html>
