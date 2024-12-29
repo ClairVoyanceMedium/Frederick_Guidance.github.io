@@ -120,7 +120,7 @@ error_log("Devise locale : {$deviseLocale}");
 
 // Traductions dynamiques
 $defaultLang = 'fr';
-$supportedLangs = ['fr', 'en', 'es', 'de', 'it', 'pt', 'zh', 'ja', 'ko', 'ru'];
+$supportedLangs = ['fr', 'en', 'es', 'de', 'it', 'pt', 'zh', 'ja', 'ko', 'ru', 'hi', 'ar', 'vi', 'tr', 'pl', 'nl', 'id', 'th', 'ms', 'fa', 'uk', 'ro', 'hu', 'sv', 'fi', 'no', 'cs', 'da', 'el', 'bg', 'he', 'lt', 'lv', 'sk', 'hr', 'sr', 'sl', 'et', 'sq', 'az', 'ka'];
 $translations = [
     'fr' => ['product_name' => "Voyance - {nbQuestions} question(s)", 'error_invalid_questions' => "Nombre de questions invalide."],
     'en' => ['product_name' => "Fortune Telling - {nbQuestions} question(s)", 'error_invalid_questions' => "Invalid number of questions."],
