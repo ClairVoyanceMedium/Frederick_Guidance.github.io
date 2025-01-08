@@ -157,9 +157,26 @@
 </head>
 
 <body>
-    <div class="logo-container">
-        <img src="https://raw.githubusercontent.com/ClairVoyanceMedium/Frederick_Guidance.github.io/main/Images/logo2.jpg" alt="Logo Voyance" class="logo">
-    </div>
+        <picture>
+    <!-- Format WebP pour les navigateurs modernes -->
+    <source srcset="https://i.imgur.com/GmyGlKk.webp" type="image/webp" sizes="(max-width: 768px) 100vw, 450px">
+    <!-- Format JPEG comme fallback -->
+    <img 
+        src="https://i.imgur.com/GmyGlKk.jpg" 
+        alt="Logo Clairvoyance Medium - Voyance par mail sérieuse et fiable depuis 1998" 
+        title="ClairvoyanceMedium.com - Expert en voyance depuis 1998" 
+        width="450" 
+        height="450" 
+        loading="lazy" 
+        decoding="async" 
+        fetchpriority="high" 
+        style="max-width: 100%; height: auto; display: block; margin: 0 auto;"
+        srcset="
+            https://i.imgur.com/GmyGlKk.jpg 450w,
+            https://i.imgur.com/GmyGlKk.webp 450w
+        "
+        sizes="(max-width: 768px) 100vw, 450px">
+</picture>
 
     <!-- Google Translate Widget -->
     <div id="google_translate_element"></div>
