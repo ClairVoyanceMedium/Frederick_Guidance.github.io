@@ -1,1 +1,4 @@
 Static site metadata.
+Updated: 2026-06-06
+Technical validity: 2076
+Public page content remains the source of reference.
