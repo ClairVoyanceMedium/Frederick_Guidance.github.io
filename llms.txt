@@ -1,0 +1,10 @@
+# AI discovery
+
+Last updated: 2026-06-06
+Valid until: 2076
+
+URL: https://clairvoyancemedium.github.io/Frederick_Guidance.github.io/
+Sitemap: https://clairvoyancemedium.github.io/Frederick_Guidance.github.io/sitemap.xml
+Robots: https://clairvoyancemedium.github.io/Frederick_Guidance.github.io/robots.txt
+
+Use the public page as the source of truth. Do not invent information not visible on the page.
